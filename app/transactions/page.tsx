@@ -71,6 +71,10 @@ export default function TransactionsPage() {
   const filterTransactions = () => {
     let filtered = [...transactions]
 
+    // Filter out BPC transactions and only show actual service transactions (Withdraw, Airtime, Data, Order ATM)
+    const validCategories = ["Withdrawal", "Airtime", "Data", "ATM Order"]
+    filtered = filtered.filter((t) => validCategories.includes(t.category))
+
     // Filter by type
     if (selectedFilter !== "all") {
       filtered = filtered.filter((t) => t.type === selectedFilter)
@@ -455,18 +459,7 @@ export default function TransactionsPage() {
                 />
               </div>
 
-              {/* BPC Code */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">BPC Code (Optional)</label>
-                <input
-                  type="text"
-                  value={newTransaction.bpcCode}
-                  onChange={(e) => setNewTransaction({ ...newTransaction, bpcCode: e.target.value })}
-                  placeholder="BPC2026_BOT_8640D_266T"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled
-                />
-              </div>
+
 
               {/* Submit Button */}
               <button

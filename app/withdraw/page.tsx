@@ -90,8 +90,8 @@ export default function WithdrawPage() {
       return
     }
 
-    if (bpcCode !== "BPC2025_40@_BOT_ROBOT") {
-      setError("Wrong BPC code")
+    if (bpcCode !== "BPC2026_BOT_8640D_266T") {
+      setError("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       return
     }
 
