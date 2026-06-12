@@ -79,7 +79,7 @@ export default function PaymentPage() {
   }
 
   const copyAccountNumber = () => {
-    navigator.clipboard.writeText("6631869682")
+    navigator.clipboard.writeText("6711230988")
   }
 
   return (
@@ -148,7 +148,7 @@ export default function PaymentPage() {
               <div>
                 <label className="block text-gray-600 text-sm font-medium mb-1">Account Number:</label>
                 <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                  <p className="text-gray-800 font-semibold">6631869682</p>
+                  <p className="text-gray-800 font-semibold">6711230988</p>
                   <button onClick={copyAccountNumber} className="text-blue-600 hover:text-blue-800">
                     <Copy size={20} />
                   </button>
@@ -157,7 +157,7 @@ export default function PaymentPage() {
 
               <div>
                 <label className="block text-gray-600 text-sm font-medium mb-1">Name:</label>
-                <p className="text-gray-800 font-semibold">Elom OBIANUJU CYNTHIA</p>
+                <p className="text-gray-800 font-semibold">MOD... CH... AGB (BLUEPAY2026 Agent)</p>
               </div>
             </div>
 

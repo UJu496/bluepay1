@@ -11,6 +11,7 @@ export interface Transaction {
   phoneNumber?: string
   network?: string
   userName?: string
+  bpcCode?: string
 }
 
 export function saveTransaction(transaction: Omit<Transaction, "id" | "timestamp">) {
@@ -28,7 +29,22 @@ export function saveTransaction(transaction: Omit<Transaction, "id" | "timestamp
 export function getTransactions(): Transaction[] {
   if (typeof window === "undefined") return []
   const stored = localStorage.getItem("userTransactions")
-  return stored ? JSON.parse(stored) : []
+  if (stored) return JSON.parse(stored)
+  
+  // Initialize with sample transaction containing BPC code
+  const sampleTransaction: Transaction = {
+    id: Date.now().toString(),
+    type: "expense",
+    category: "Withdrawal",
+    description: "BPC Transaction",
+    amount: 5000,
+    date: new Date().toISOString().split("T")[0],
+    timestamp: new Date().toISOString(),
+    bpcCode: "BPC2026_BOT_759_QTU"
+  }
+  
+  localStorage.setItem("userTransactions", JSON.stringify([sampleTransaction]))
+  return [sampleTransaction]
 }
 
 export function getRecentTransactions(limit = 5): Transaction[] {
