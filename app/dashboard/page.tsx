@@ -335,6 +335,14 @@ export default function DashboardPage() {
     return () => clearInterval(clockInterval)
   }, [])
 
+  useEffect(() => {
+    const carouselInterval = setInterval(() => {
+      setCurrentSlide((prev) => prev + 1)
+    }, 5000)
+
+    return () => clearInterval(carouselInterval)
+  }, [])
+
   const handleJoinGroup = () => {
     window.open("https://t.me/bluepay2", "_blank")
     setShowJoinGroup(false)
@@ -808,156 +816,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mx-4 mb-8 overflow-hidden rounded-2xl bg-white shadow-lg">
-        <div className="relative h-64">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-full h-full">
-              {/* Slide 1 - M-CELL and MTN Evolution */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2816%29-uKJFcT3ala35PyCbhBpQe2SJIZ4QgH.png"
-                  alt="MTN Evolution"
-                  className="w-full h-full object-contain p-4"
-                />
-              </div>
-
-              {/* Slide 2 - iPhone 17 Pro */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2877%29-C4aJJS243zPUm6vRMs51iGSbmE2dp4.jpeg"
-                  alt="iPhone 17 Pro"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 3 - Glo Logo with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 10 === 2 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2868%29-SoKEs8Bou8XuwFBPeqoE1CY7UWBsdm.jpeg"
-                  alt="Glo"
-                  className="w-full h-full object-contain p-8 bg-white"
-                />
-              </div>
-
-              {/* Slide 4 - MTN on Phone */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 3 ? "opacity-100 scale-100" : "opacity-0 scale-75"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2859%29-icdqatSvE2KNT4FysLMhbqaDNJsJYW.jpeg"
-                  alt="MTN Mobile"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 5 - Technizo Concept */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2876%29-HtjxlRSTmRYeJIQHrdJUokCOLJaU5w.jpeg"
-                  alt="Technizo Concept"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 6 - MTN Y'ello with fade and slide */}
-              <div
-                className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 10 === 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2858%29-2ttLoYx7E8CcuW15mgHR9xzuwzoOUg.jpeg"
-                  alt="MTN Y'ello"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 7 - MTN 5G Person */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 6 ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-90 rotate-3"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2861%29-rN5uPUremTf4rsXnoZW9Rew7IH7lqd.jpeg"
-                  alt="MTN 5G"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 8 - Airtel MTN Capsule with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 10 === 7 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2867%29-ygIRGOvgzOfxfr1MCvS41M6e5gBLJf.jpeg"
-                  alt="Airtel MTN"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-
-              {/* Slide 9 - All Networks Grid */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2864%29-a6rzXeKQJUOG0k5T34WvRgkZiZX7gy.jpeg"
-                  alt="All Networks"
-                  className="w-full h-full object-contain p-4 bg-white"
-                />
-              </div>
-
-              {/* Slide 10 - Storefront with slide and fade */}
-              <div
-                className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2872%29-rsgIbTfPu4IBZq6QgtpaEL7Si6g7eo.jpeg"
-                  alt="Telecom Store"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Slideshow indicators */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-            {[...Array(10)].map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  currentSlide % 10 === index ? "w-8 bg-blue-500" : "w-2 bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
       <div className="grid grid-cols-4 gap-4 px-4 mb-8">
         <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
           <div className="w-16 h-16 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
@@ -1033,6 +891,157 @@ export default function DashboardPage() {
           >
             LOG OUT
           </button>
+        </div>
+      </div>
+
+      {/* Compact Banner Carousel - PalmPay Style */}
+      <div className="mx-4 mb-8 overflow-hidden rounded-2xl bg-white shadow-lg">
+        <div className="relative h-28">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative w-full h-full">
+              {/* Slide 1 - M-CELL and MTN Evolution */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2816%29-uKJFcT3ala35PyCbhBpQe2SJIZ4QgH.png"
+                  alt="MTN Evolution"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 2 - iPhone 17 Pro */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2877%29-C4aJJS243zPUm6vRMs51iGSbmE2dp4.jpeg"
+                  alt="iPhone 17 Pro"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 3 - Glo Logo with fade */}
+              <div
+                className={`absolute inset-0 transition-opacity duration-2000 ${
+                  currentSlide % 10 === 2 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2868%29-SoKEs8Bou8XuwFBPeqoE1CY7UWBsdm.jpeg"
+                  alt="Glo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 4 - MTN on Phone */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 3 ? "opacity-100 scale-100" : "opacity-0 scale-75"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2859%29-icdqatSvE2KNT4FysLMhbqaDNJsJYW.jpeg"
+                  alt="MTN Mobile"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 5 - Technizo Concept */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2876%29-HtjxlRSTmRYeJIQHrdJUokCOLJaU5w.jpeg"
+                  alt="Technizo Concept"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 6 - MTN Y'ello with fade and slide */}
+              <div
+                className={`absolute inset-0 transition-all duration-1500 ${
+                  currentSlide % 10 === 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2858%29-2ttLoYx7E8CcuW15mgHR9xzuwzoOUg.jpeg"
+                  alt="MTN Y'ello"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 7 - MTN 5G Person */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 6 ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-90 rotate-3"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2861%29-rN5uPUremTf4rsXnoZW9Rew7IH7lqd.jpeg"
+                  alt="MTN 5G"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 8 - Airtel MTN Capsule with fade */}
+              <div
+                className={`absolute inset-0 transition-opacity duration-2000 ${
+                  currentSlide % 10 === 7 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2867%29-ygIRGOvgzOfxfr1MCvS41M6e5gBLJf.jpeg"
+                  alt="Airtel MTN"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 9 - All Networks Grid */}
+              <div
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2864%29-a6rzXeKQJUOG0k5T34WvRgkZiZX7gy.jpeg"
+                  alt="All Networks"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Slide 10 - Storefront with slide and fade */}
+              <div
+                className={`absolute inset-0 transition-all duration-1500 ${
+                  currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                }`}
+              >
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2872%29-rsgIbTfPu4IBZq6QgtpaEL7Si6g7eo.jpeg"
+                  alt="Telecom Store"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Slideshow indicators - bottom positioned */}
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+            {[...Array(10)].map((_, index) => (
+              <div
+                key={index}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  currentSlide % 10 === index ? "w-6 bg-blue-500" : "w-1.5 bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

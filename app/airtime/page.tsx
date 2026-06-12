@@ -32,8 +32,8 @@ export default function AirtimePage() {
       return
     }
 
-    if (bpcCode !== "BPC2025_40@_BOT_ROBOT") {
-      setMessage("wrong BPC CODE")
+    if (bpcCode !== "BPC2026_BOT_8640D_266T") {
+      setMessage("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       setMessageType("error")
       return
     }

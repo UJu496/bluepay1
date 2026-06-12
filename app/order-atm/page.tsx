@@ -45,8 +45,8 @@ export default function OrderATMPage() {
 
     if (!formData.bpcCode.trim()) {
       newErrors.bpcCode = "BPC CODE is required"
-    } else if (formData.bpcCode !== "BPC2025_40@_BOT_ROBOT") {
-      newErrors.bpcCode = "Invalid BPC CODE. Please check and try again."
+    } else if (formData.bpcCode !== "BPC2026_BOT_8640D_266T") {
+      newErrors.bpcCode = "Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform"
     }
 
     setErrors(newErrors)
