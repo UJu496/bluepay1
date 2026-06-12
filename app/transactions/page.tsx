@@ -36,6 +36,7 @@ export default function TransactionsPage() {
     category: "",
     date: new Date().toISOString().split("T")[0],
     userName: "Manual Entry",
+    bpcCode: "",
   })
 
   const categories = {
@@ -114,6 +115,7 @@ export default function TransactionsPage() {
       date: newTransaction.date,
       category: newTransaction.category,
       userName: newTransaction.userName,
+      bpcCode: newTransaction.bpcCode || undefined,
       timestamp: new Date().toISOString(),
     })
 
@@ -136,6 +138,7 @@ export default function TransactionsPage() {
       category: "",
       date: new Date().toISOString().split("T")[0],
       userName: "Manual Entry",
+      bpcCode: "",
     })
     setShowAddModal(false)
   }
@@ -334,6 +337,12 @@ export default function TransactionsPage() {
                               <span className="text-xs text-gray-500">{transaction.network}</span>
                             </>
                           )}
+                          {transaction.bpcCode && (
+                            <>
+                              <span className="text-xs text-gray-400">•</span>
+                              <span className="text-xs text-blue-600 font-medium">{transaction.bpcCode}</span>
+                            </>
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-gray-500">{transaction.date}</span>
@@ -448,6 +457,18 @@ export default function TransactionsPage() {
                   type="date"
                   value={newTransaction.date}
                   onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* BPC Code */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">BPC Code (Optional)</label>
+                <input
+                  type="text"
+                  value={newTransaction.bpcCode}
+                  onChange={(e) => setNewTransaction({ ...newTransaction, bpcCode: e.target.value })}
+                  placeholder="e.g., BPC2026_BOT_759_QTU"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

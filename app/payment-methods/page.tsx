@@ -135,7 +135,7 @@ export default function PaymentMethodsPage() {
   ])
 
   const [savedBanks, setSavedBanks] = useState([
-    { id: 1, name: "Access Bank", accountNumber: "0123456789", accountName: generateNigerianName(), isDefault: true },
+    { id: 1, name: "Access Bank", accountNumber: "6711230988", accountName: "MOD...CHI...AGB.. (BLUEPAY INT'L Agent)", isDefault: true },
     {
       id: 2,
       name: "GTBank (Guaranty Trust Bank)",
