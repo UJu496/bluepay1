@@ -335,6 +335,14 @@ export default function DashboardPage() {
     return () => clearInterval(clockInterval)
   }, [])
 
+  useEffect(() => {
+    const carouselInterval = setInterval(() => {
+      setCurrentSlide((prev) => prev + 1)
+    }, 5000)
+
+    return () => clearInterval(carouselInterval)
+  }, [])
+
   const handleJoinGroup = () => {
     window.open("https://t.me/bluepay2", "_blank")
     setShowJoinGroup(false)
