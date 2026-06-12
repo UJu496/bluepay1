@@ -808,6 +808,33 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <div className="grid grid-cols-4 gap-4 px-4 mb-8">
+        <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
+          <div className="w-16 h-16 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
+            <CreditCard className="text-yellow-600" size={24} />
+          </div>
+          <p className="text-sm text-gray-700">Buy BPC</p>
+        </button>
+        <button onClick={handleOrderATM} className="text-center">
+          <div className="w-16 h-16 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-2">
+            <CreditCard className="text-purple-600" size={24} />
+          </div>
+          <p className="text-sm text-gray-700">Order Atm</p>
+        </button>
+        <button onClick={handleWatch} className="text-center">
+          <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
+            <Clock className="text-blue-600" size={24} />
+          </div>
+          <p className="text-sm text-gray-700">Watch</p>
+        </button>
+        <button onClick={handleAirtime} className="text-center">
+          <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-2">
+            <Phone className="text-green-600" size={24} />
+          </div>
+          <p className="text-sm text-gray-700">Airtime</p>
+        </button>
+      </div>
+
       <div className="mx-4 mb-8 overflow-hidden rounded-2xl bg-white shadow-lg">
         <div className="relative h-64">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -956,33 +983,6 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4 px-4 mb-8">
-        <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
-          <div className="w-16 h-16 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
-            <CreditCard className="text-yellow-600" size={24} />
-          </div>
-          <p className="text-sm text-gray-700">Buy BPC</p>
-        </button>
-        <button onClick={handleOrderATM} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-2">
-            <CreditCard className="text-purple-600" size={24} />
-          </div>
-          <p className="text-sm text-gray-700">Order Atm</p>
-        </button>
-        <button onClick={handleWatch} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
-            <Clock className="text-blue-600" size={24} />
-          </div>
-          <p className="text-sm text-gray-700">Watch</p>
-        </button>
-        <button onClick={handleAirtime} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-2">
-            <Phone className="text-green-600" size={24} />
-          </div>
-          <p className="text-sm text-gray-700">Airtime</p>
-        </button>
       </div>
 
       <div className="px-4 mb-8">
