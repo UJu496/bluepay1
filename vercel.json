@@ -1,8 +1,5 @@
 {
   "buildCommand": "next build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install",
-  "env": {
-    "NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL": "@NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL"
-  }
+  "installCommand": "pnpm install"
 }
