@@ -462,8 +462,9 @@ export default function TransactionsPage() {
                   type="text"
                   value={newTransaction.bpcCode}
                   onChange={(e) => setNewTransaction({ ...newTransaction, bpcCode: e.target.value })}
-                  placeholder="e.g., BPC2026_BOT_759_QTU"
+                  placeholder="BPC2026_BOT_8640D_266T"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled
                 />
               </div>
 

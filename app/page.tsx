@@ -41,7 +41,7 @@ export default function HomePage() {
                 className="text-3xl font-light ml-2 animate-pulse"
                 style={{ animationDelay: "0.7s", animationDuration: "2s", animationIterationCount: "infinite" }}
               >
-                2025
+                2026
               </span>
               {isVerified && (
                 <div className="ml-2 animate-bounce">
@@ -72,7 +72,7 @@ export default function HomePage() {
               animation: "slideRtlContinuous 3s linear infinite",
             }}
           >
-            BLUEPAY2025
+            BLUEPAY2026
           </div>
           {isVerified && <CheckCircle className="text-green-500 ml-2" size={20} />}
         </div>

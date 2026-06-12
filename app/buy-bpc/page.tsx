@@ -29,7 +29,7 @@ export default function BuyBPCPage() {
   const router = useRouter()
   const [userName, setUserName] = useState("User")
   const [userEmail, setUserEmail] = useState("user@example.com")
-  const [amount] = useState("₦9,150.00")
+  const [amount] = useState("₦10,257.00")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
