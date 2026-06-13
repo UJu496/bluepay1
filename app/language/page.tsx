@@ -228,7 +228,7 @@ export default function LanguagePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">{t.title}</h1>
+            <h1 className="text-xl font-bold text-gray-900">{t.title}</h1>
             <p className="text-sm text-gray-600">{t.subtitle}</p>
           </div>
           <Globe className="h-8 w-8 text-blue-600" />
@@ -245,7 +245,7 @@ export default function LanguagePage() {
         )}
 
         {/* Language Selection */}
-        <Card className="p-6 mb-4">
+        <Card className="p-4 mb-4">
           <h2 className="text-lg font-semibold mb-2">{t.languageSection}</h2>
           <p className="text-sm text-gray-600 mb-4">{t.languageDesc}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -259,7 +259,7 @@ export default function LanguagePage() {
                     : "border-gray-200 hover:border-blue-300"
                 }`}
               >
-                <span className="text-3xl">{lang.flag}</span>
+                <span className="text-xl">{lang.flag}</span>
                 <div className="flex-1 text-left">
                   <div className="font-medium">{lang.name}</div>
                   <div className="text-sm text-gray-600">{lang.nativeName}</div>
@@ -271,7 +271,7 @@ export default function LanguagePage() {
         </Card>
 
         {/* Region Selection */}
-        <Card className="p-6 mb-4">
+        <Card className="p-4 mb-4">
           <h2 className="text-lg font-semibold mb-2">{t.regionSection}</h2>
           <p className="text-sm text-gray-600 mb-4">{t.regionDesc}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -298,7 +298,7 @@ export default function LanguagePage() {
         </Card>
 
         {/* Format Settings */}
-        <Card className="p-6 mb-4">
+        <Card className="p-4 mb-4">
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">{t.dateFormat}</label>
@@ -328,7 +328,7 @@ export default function LanguagePage() {
 
         {/* Current Settings Summary */}
         {selectedRegionData && (
-          <Card className="p-6 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+          <Card className="p-4 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
             <h3 className="font-semibold mb-3">Current Settings</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -354,7 +354,7 @@ export default function LanguagePage() {
         {/* Apply Button */}
         <Button
           onClick={handleApplyChanges}
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-6 text-lg font-semibold"
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 text-lg font-semibold"
         >
           {t.applyChanges}
         </Button>

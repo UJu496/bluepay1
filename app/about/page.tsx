@@ -68,15 +68,15 @@ export default function AboutPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">About BLUEPAY INT'L</h1>
+            <h1 className="text-xl font-bold text-gray-900">About BLUEPAY INT'L</h1>
             <p className="text-sm text-gray-600">Empowering financial freedom for all Nigerians</p>
           </div>
           <Globe className="h-8 w-8 text-blue-600" />
         </div>
 
         {/* Hero Section */}
-        <Card className="p-6 mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-          <h2 className="text-2xl font-bold mb-3">Our Mission</h2>
+        <Card className="p-4 mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+          <h2 className="text-xl font-bold mb-3">Our Mission</h2>
           <p className="text-lg leading-relaxed opacity-95">
             To provide accessible, secure, and innovative financial services that empower every Nigerian to achieve
             their financial goals and build a prosperous future.
@@ -87,14 +87,14 @@ export default function AboutPage() {
         <div className="grid grid-cols-3 gap-3 mb-6">
           {achievements.map((item, idx) => (
             <Card key={idx} className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600 mb-1">{item.metric}</div>
+              <div className="text-xl font-bold text-blue-600 mb-1">{item.metric}</div>
               <div className="text-xs text-gray-600">{item.label}</div>
             </Card>
           ))}
         </div>
 
         {/* Our Story */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Award className="h-6 w-6 text-blue-600" />
             Our Story
@@ -121,7 +121,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Timeline */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4">Our Journey</h2>
           <div className="space-y-4">
             {milestones.map((milestone, idx) => (
@@ -142,7 +142,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Core Values */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4">Our Core Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {values.map((value, idx) => {
@@ -161,7 +161,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Leadership Team */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Users className="h-6 w-6 text-blue-600" />
             Leadership Team
@@ -179,7 +179,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Licenses & Certifications */}
-        <Card className="p-6 mb-6 bg-green-50 border-green-200">
+        <Card className="p-4 mb-6 bg-green-50 border-green-200">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
             <Shield className="h-6 w-6 text-green-600" />
             Licenses & Certifications
@@ -209,7 +209,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Contact */}
-        <Card className="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <Card className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <h3 className="font-semibold mb-2">Get in Touch</h3>
           <div className="space-y-2 text-sm opacity-95">
             <p>Email: support@bluepay.ng</p>

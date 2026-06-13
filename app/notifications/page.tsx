@@ -55,7 +55,7 @@ export default function NotificationsPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Withdrawal History</h1>
         <div className="w-6"></div>
@@ -63,25 +63,25 @@ export default function NotificationsPage() {
 
       <div className="p-4">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Recent Withdrawals</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Recent Withdrawals</h2>
           <p className="text-gray-600">Your successful withdrawal transactions</p>
         </div>
 
         {notifications.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="text-gray-400" size={32} />
+              <CheckCircle className="text-gray-400" size={20} />
             </div>
             <p className="text-gray-500 text-lg">No withdrawal history yet</p>
           </div>
         ) : (
           <div className="space-y-4">
             {notifications.map((notification) => (
-              <div key={notification.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div key={notification.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="text-green-600" size={24} />
+                      <CheckCircle className="text-green-600" size={20} />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-800 text-lg">Withdrawal Successful</h3>
@@ -140,7 +140,7 @@ export default function NotificationsPage() {
           </div>
         )}
 
-        <div className="mt-8 p-4 bg-blue-50 rounded-xl">
+        <div className="mt-4 p-4 bg-blue-50 rounded-xl">
           <h3 className="font-semibold text-blue-800 mb-2">Need Help?</h3>
           <p className="text-sm text-blue-700 mb-3">
             If you have any questions about your withdrawals, our support team is here to help.

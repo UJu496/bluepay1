@@ -920,18 +920,18 @@ export default function TestimoniesPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#4169E1" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Success Stories</h1>
         <button onClick={() => setShowForm(!showForm)}>
-          <Plus className="text-white" size={24} />
+          <Plus className="text-white" size={20} />
         </button>
       </div>
 
       <div className="p-4">
         {/* Add Story Form */}
         {showForm && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+          <div className="bg-white rounded-xl p-4 shadow-sm mb-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">Share Your Success Story</h3>
             <textarea
               value={newStory}
@@ -949,7 +949,7 @@ export default function TestimoniesPage() {
               </button>
               <button
                 onClick={() => setShowForm(false)}
-                className="px-6 py-3 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50"
+                className="px-5 py-3 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50"
               >
                 Cancel
               </button>
@@ -960,7 +960,7 @@ export default function TestimoniesPage() {
         {/* Testimonies List */}
         <div className="space-y-4">
           {testimonies.map((testimony) => (
-            <div key={testimony.id} className="bg-white rounded-2xl p-6 shadow-sm">
+            <div key={testimony.id} className="bg-white rounded-xl p-4 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                   <MessageSquare className="text-blue-500" size={20} />

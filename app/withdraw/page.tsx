@@ -133,13 +133,13 @@ export default function WithdrawPage() {
       {/* Header */}
       <div className="flex items-center justify-center p-4 pt-12 relative" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()} className="absolute left-4 text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Transfer To Bank</h1>
       </div>
 
-      <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Bank Details</h2>
+      <div className="p-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-6">Bank Details</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -217,13 +217,13 @@ export default function WithdrawPage() {
 
           {error && <p className="text-red-500 font-semibold">{error}</p>}
 
-          <div className="mt-6">
+          <div className="mt-3">
             <p className="text-lg font-bold text-gray-800">Available Balance: ₦{balance.toLocaleString()}</p>
           </div>
 
           <button
             type="submit"
-            className="w-full p-4 rounded-xl text-white font-bold text-lg mt-6"
+            className="w-full p-4 rounded-xl text-white font-bold text-lg mt-3"
             style={{ backgroundColor: "#0000FF" }}
           >
             Submit

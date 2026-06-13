@@ -185,11 +185,11 @@ export default function TransactionsPage() {
       <div style={{ backgroundColor: "#0000FF" }} className="text-white p-4 pt-12">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
           <h1 className="text-xl font-bold">All Transactions</h1>
           <button onClick={() => setShowAddModal(true)} className="p-2 hover:bg-white/10 rounded-full">
-            <Plus size={24} />
+            <Plus size={20} />
           </button>
         </div>
 
@@ -280,13 +280,13 @@ export default function TransactionsPage() {
       {/* Transactions List */}
       <div className="p-4">
         {filteredTransactions.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center">
+          <div className="bg-white rounded-xl p-5 text-center">
             <Wallet className="mx-auto mb-4 text-gray-400" size={48} />
             <h3 className="text-lg font-semibold text-gray-800 mb-2">No transactions found</h3>
             <p className="text-gray-600 mb-4">Start by adding your first transaction</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Add Transaction
             </button>
@@ -303,9 +303,9 @@ export default function TransactionsPage() {
                       }`}
                     >
                       {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={24} />
+                        <ArrowDownRight className="text-green-600" size={20} />
                       ) : (
-                        <ArrowUpRight className="text-red-600" size={24} />
+                        <ArrowUpRight className="text-red-600" size={20} />
                       )}
                     </div>
                     <div className="flex-1">
@@ -375,11 +375,11 @@ export default function TransactionsPage() {
       {/* Add Transaction Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Add Transaction</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -477,11 +477,11 @@ export default function TransactionsPage() {
       {/* Filter Modal */}
       {showFilterModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Filter Transactions</h2>
               <button onClick={() => setShowFilterModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 

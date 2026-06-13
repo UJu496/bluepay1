@@ -55,14 +55,14 @@ export default function WithdrawalConfirmationPage() {
       {/* Header */}
       <div className="flex items-center justify-center p-4 pt-12 relative" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()} className="absolute left-4 text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Confirm Withdrawal</h1>
       </div>
 
-      <div className="p-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Confirm Your Details</h2>
+      <div className="p-4">
+        <div className="bg-white rounded-xl p-4 shadow-lg">
+          <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">Confirm Your Details</h2>
 
           <div className="space-y-4">
             <div className="border-b border-gray-200 pb-4">
@@ -82,11 +82,11 @@ export default function WithdrawalConfirmationPage() {
 
             <div className="border-b border-gray-200 pb-4">
               <p className="text-gray-600 text-sm">Amount</p>
-              <p className="text-2xl font-bold text-blue-600">₦{withdrawalData.amount.toLocaleString()}</p>
+              <p className="text-xl font-bold text-blue-600">₦{withdrawalData.amount.toLocaleString()}</p>
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-4">
             <button
               onClick={handleConfirm}
               className="w-full p-4 rounded-xl text-white font-bold text-lg"

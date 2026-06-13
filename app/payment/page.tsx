@@ -87,7 +87,7 @@ export default function PaymentPage() {
       {/* Header */}
       <div className="flex items-center p-4 pt-12">
         <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Payment Details</h1>
       </div>
@@ -101,7 +101,7 @@ export default function PaymentPage() {
         )}
 
         {showOpayWarning && (
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-white rounded-lg p-4 w-full max-w-md">
             <div className="text-center mb-6">
               <div className="flex justify-center mb-4">
                 <Image src="/images/opay-logo.png" alt="OPay Logo" width={80} height={80} className="rounded-lg" />
@@ -136,7 +136,7 @@ export default function PaymentPage() {
         )}
 
         {showAccountDetails && (
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-white rounded-lg p-4 w-full max-w-md">
             <h2 className="text-xl font-bold text-center mb-6 text-gray-800">Account Details</h2>
 
             <div className="space-y-4 mb-6">
@@ -181,7 +181,7 @@ export default function PaymentPage() {
                     id="receipt-upload"
                   />
                   <label htmlFor="receipt-upload" className="cursor-pointer">
-                    <Upload className="mx-auto mb-2 text-gray-400" size={24} />
+                    <Upload className="mx-auto mb-2 text-gray-400" size={20} />
                     <p className="text-gray-600 text-sm">Click to upload receipt</p>
                     <p className="text-gray-400 text-xs mt-1">PNG, JPG or PDF</p>
                   </label>
@@ -219,7 +219,7 @@ export default function PaymentPage() {
         )}
 
         {showPaymentCheck && (
-          <div className="bg-white rounded-2xl p-8 w-full max-w-lg shadow-2xl">
+          <div className="bg-white rounded-xl p-5 w-full max-w-lg shadow-2xl">
             <div className="text-center mb-6">
               <div className="relative">
                 <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -228,7 +228,7 @@ export default function PaymentPage() {
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full animate-pulse"></div>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Verifying Payment</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Verifying Payment</h2>
 
               {/* User Details Display */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6 border border-blue-200">
@@ -288,19 +288,19 @@ export default function PaymentPage() {
         )}
 
         {showPaymentResult && (
-          <div className="bg-white rounded-2xl p-8 w-full max-w-lg shadow-2xl">
+          <div className="bg-white rounded-xl p-5 w-full max-w-lg shadow-2xl">
             <div className="text-center">
               {/* Animated Error Icon */}
               <div className="relative mb-6">
                 <div className="w-24 h-24 mx-auto bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <div className="text-4xl text-white animate-pulse">🚫</div>
+                  <div className="text-xl text-white animate-pulse">🚫</div>
                 </div>
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-100 px-3 py-1 rounded-full">
                   <span className="text-red-600 text-xs font-semibold">FAILED</span>
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-red-600 mb-3">Payment Not Confirmed</h2>
+              <h2 className="text-xl font-bold text-red-600 mb-3">Payment Not Confirmed</h2>
 
               {/* User Details in Error State */}
               <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">

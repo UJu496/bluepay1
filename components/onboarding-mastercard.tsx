@@ -11,8 +11,8 @@ export default function OnboardingMastercard({ onNext }: OnboardingMastercardPro
 
   return (
     <div className="text-center">
-      <div className="mb-8">
-        <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl overflow-hidden">
+      <div className="mb-4">
+        <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center mx-auto mb-6 shadow-2xl overflow-hidden">
           <img src="/bluepay-mastercard.jpeg" alt="BLUEPAY Mastercard" className="w-20 h-16 object-contain" />
         </div>
       </div>
@@ -20,7 +20,7 @@ export default function OnboardingMastercard({ onNext }: OnboardingMastercardPro
       <h1 className="text-xl font-bold text-white mb-3">BLUEPAY INT'L MASTERCARD Now Live!</h1>
       <h2 className="text-lg font-semibold text-white/90 mb-6">Order your BLUEPAY INT'L MASTERCARD today!</h2>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4 border border-white/20">
         <p className="text-white/90 text-base leading-relaxed mb-6">
           Get your premium BLUEPAY INT'L MASTERCARD with exclusive benefits!
         </p>

@@ -50,7 +50,7 @@ export default function FeaturesPage() {
       id: "bpc-codes",
       title: "BPC Code System",
       description: "Revolutionary secure transaction codes with CBN partnership",
-      icon: <Shield className="text-blue-500" size={24} />,
+      icon: <Shield className="text-blue-500" size={20} />,
       category: "Security",
       status: "not-explored",
       details:
@@ -61,7 +61,7 @@ export default function FeaturesPage() {
       id: "airtime-data",
       title: "Airtime & Data Purchase",
       description: "Buy airtime and data for all networks with instant delivery",
-      icon: <Smartphone className="text-green-500" size={24} />,
+      icon: <Smartphone className="text-green-500" size={20} />,
       category: "Transaction",
       status: "not-explored",
       details:
@@ -72,7 +72,7 @@ export default function FeaturesPage() {
       id: "withdrawal",
       title: "Bank Withdrawal",
       description: "Transfer money directly to your bank account instantly",
-      icon: <CreditCard className="text-purple-500" size={24} />,
+      icon: <CreditCard className="text-purple-500" size={20} />,
       category: "Banking",
       status: "not-explored",
       details:
@@ -83,7 +83,7 @@ export default function FeaturesPage() {
       id: "atm-card",
       title: "BLUEPAY ATM Card",
       description: "Order your personalized BLUEPAY ATM card for global access",
-      icon: <Wallet className="text-indigo-500" size={24} />,
+      icon: <Wallet className="text-indigo-500" size={20} />,
       category: "Banking",
       status: "not-explored",
       details: "Get your personalized BLUEPAY ATM card with global access, contactless payments, and premium benefits.",
@@ -93,7 +93,7 @@ export default function FeaturesPage() {
       id: "earn-rewards",
       title: "Daily Earning Tasks",
       description: "Complete tasks daily to earn money and rewards",
-      icon: <Star className="text-yellow-500" size={24} />,
+      icon: <Star className="text-yellow-500" size={20} />,
       category: "Rewards",
       status: "not-explored",
       details:
@@ -104,7 +104,7 @@ export default function FeaturesPage() {
       id: "referral",
       title: "Referral System",
       description: "Earn up to ₦50,000 per referral with our multi-level system",
-      icon: <Users className="text-orange-500" size={24} />,
+      icon: <Users className="text-orange-500" size={20} />,
       category: "Rewards",
       status: "not-explored",
       details:
@@ -115,7 +115,7 @@ export default function FeaturesPage() {
       id: "support",
       title: "24/7 Customer Support",
       description: "Get help anytime with our AI-powered support system",
-      icon: <MessageSquare className="text-cyan-500" size={24} />,
+      icon: <MessageSquare className="text-cyan-500" size={20} />,
       category: "Support",
       status: "not-explored",
       details:
@@ -126,7 +126,7 @@ export default function FeaturesPage() {
       id: "analytics",
       title: "Advanced Analytics",
       description: "Track your earnings and spending with detailed analytics",
-      icon: <BarChart3 className="text-pink-500" size={24} />,
+      icon: <BarChart3 className="text-pink-500" size={20} />,
       category: "Analytics",
       status: "not-explored",
       details:
@@ -143,7 +143,7 @@ export default function FeaturesPage() {
     {
       title: "CBN Partnership",
       description: "Officially partnered with Central Bank of Nigeria for secure financial services",
-      icon: <Building2 className="text-blue-600" size={32} />,
+      icon: <Building2 className="text-blue-600" size={20} />,
       stats: [
         { label: "Regulatory Compliance", value: "100%" },
         { label: "Security Rating", value: "AAA+" },
@@ -152,7 +152,7 @@ export default function FeaturesPage() {
     {
       title: "Global Reach",
       description: "Serving customers across Nigeria with plans for African expansion",
-      icon: <Globe className="text-green-600" size={32} />,
+      icon: <Globe className="text-green-600" size={20} />,
       stats: [
         { label: "Active Users", value: "500K+" },
         { label: "Transactions Daily", value: "50K+" },
@@ -161,7 +161,7 @@ export default function FeaturesPage() {
     {
       title: "Growth Metrics",
       description: "Consistent growth in user base and transaction volume",
-      icon: <TrendingUp className="text-purple-600" size={32} />,
+      icon: <TrendingUp className="text-purple-600" size={20} />,
       stats: [
         { label: "Monthly Growth", value: "25%" },
         { label: "User Satisfaction", value: "98%" },
@@ -170,7 +170,7 @@ export default function FeaturesPage() {
     {
       title: "Awards & Recognition",
       description: "Recognized as Nigeria's fastest-growing fintech platform",
-      icon: <Award className="text-yellow-600" size={32} />,
+      icon: <Award className="text-yellow-600" size={20} />,
       stats: [
         { label: "Industry Awards", value: "12" },
         { label: "Years in Business", value: "3+" },
@@ -233,7 +233,7 @@ export default function FeaturesPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12 bg-primary">
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-primary-foreground" size={24} />
+          <ArrowLeft className="text-primary-foreground" size={20} />
         </button>
         <h1 className="text-primary-foreground text-xl font-bold">BLUEPAY Features</h1>
         <div className="text-primary-foreground text-sm">
@@ -245,43 +245,43 @@ export default function FeaturesPage() {
         </div>
       </div>
 
-      <div className="p-4 space-y-8">
+      <div className="p-4 space-y-4">
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-primary to-accent rounded-3xl p-8 text-primary-foreground">
+        <div className="bg-gradient-to-br from-primary to-accent rounded-xl p-5 text-primary-foreground">
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold mb-3 text-balance">The Complete Financial Platform for Modern Nigeria</h2>
+            <h2 className="text-xl font-bold mb-3 text-balance">The Complete Financial Platform for Modern Nigeria</h2>
             <p className="text-primary-foreground/90 text-lg text-pretty">
               Discover powerful features designed to revolutionize how you manage money, earn rewards, and access
               financial services.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div className="text-center">
-              <div className="text-2xl font-bold">₦2.5B+</div>
+              <div className="text-xl font-bold">₦2.5B+</div>
               <div className="text-sm opacity-90">Transactions Processed</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">500K+</div>
+              <div className="text-xl font-bold">500K+</div>
               <div className="text-sm opacity-90">Active Users</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">99.9%</div>
+              <div className="text-xl font-bold">99.9%</div>
               <div className="text-sm opacity-90">Uptime</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">24/7</div>
+              <div className="text-xl font-bold">24/7</div>
               <div className="text-sm opacity-90">Support</div>
             </div>
           </div>
         </div>
 
         {/* Progress Summary */}
-        <div className="bg-card rounded-2xl p-6 border shadow-sm">
+        <div className="bg-card rounded-xl p-4 border shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-muted-foreground text-sm mb-1">Features Explored</p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="text-xl font-bold text-foreground">
                 {exploredCount}/{features.length}
               </p>
               <p className="text-muted-foreground text-sm mt-1">
@@ -289,7 +289,7 @@ export default function FeaturesPage() {
               </p>
             </div>
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-              <Eye className="text-primary" size={32} />
+              <Eye className="text-primary" size={20} />
             </div>
           </div>
           <div className="w-full bg-muted rounded-full h-3">
@@ -302,12 +302,12 @@ export default function FeaturesPage() {
 
         {/* Company Information */}
         <div>
-          <h3 className="text-2xl font-bold text-foreground mb-6">About BLUEPAY INT'L</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <h3 className="text-xl font-bold text-foreground mb-6">About BLUEPAY INT'L</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {companyInfo.map((info, index) => (
-              <div key={index} className="bg-card rounded-2xl p-6 border shadow-sm">
+              <div key={index} className="bg-card rounded-xl p-4 border shadow-sm">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
                     {info.icon}
                   </div>
                   <div className="flex-1">
@@ -332,13 +332,13 @@ export default function FeaturesPage() {
 
         {/* Categories */}
         <div>
-          <h3 className="text-2xl font-bold text-foreground mb-4">Explore Features</h3>
+          <h3 className="text-xl font-bold text-foreground mb-4">Explore Features</h3>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-5 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   selectedCategory === category
                     ? "bg-primary text-primary-foreground shadow-lg"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -351,14 +351,14 @@ export default function FeaturesPage() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20">
           {filteredFeatures.map((feature) => (
             <div
               key={feature.id}
-              className="bg-card rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow"
+              className="bg-card rounded-xl p-4 border shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0">
+                <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
                   {feature.icon}
                 </div>
 
@@ -385,7 +385,7 @@ export default function FeaturesPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-6">
+                  <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       {feature.status === "explored" && (
                         <div className="flex items-center gap-1 text-green-600">
@@ -397,7 +397,7 @@ export default function FeaturesPage() {
 
                     <button
                       onClick={() => handleExploreFeature(feature.id)}
-                      className={`px-6 py-3 rounded-full font-semibold text-sm transition-all ${
+                      className={`px-5 py-3 rounded-full font-semibold text-sm transition-all ${
                         feature.status === "explored"
                           ? "bg-green-100 text-green-700 hover:bg-green-200"
                           : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl"
@@ -413,7 +413,7 @@ export default function FeaturesPage() {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-card rounded-2xl p-6 border shadow-sm">
+        <div className="bg-card rounded-xl p-4 border shadow-sm">
           <h3 className="text-xl font-bold text-foreground mb-4">Get in Touch</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-center gap-3">

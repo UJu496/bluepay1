@@ -28,7 +28,7 @@ export default function OrderATMSuccessPage() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: "#0000FF" }}>
       <div className="max-w-sm w-full">
         {/* Success Animation */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <div className="relative inline-block">
             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-bounce">
               <CheckCircle className="text-green-500" size={48} />
@@ -38,9 +38,9 @@ export default function OrderATMSuccessPage() {
         </div>
 
         {/* Success Message */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Order Successful!</h1>
+            <h1 className="text-xl font-bold text-gray-800 mb-2">Order Successful!</h1>
             <p className="text-gray-600 text-sm leading-relaxed">
               Your BLUEPAY INT'L MASTERCARD has been ordered successfully! Our team will reach out via phone call or
               email.
@@ -104,7 +104,7 @@ export default function OrderATMSuccessPage() {
         </button>
 
         {/* Support Info */}
-        <div className="text-center mt-6">
+        <div className="text-center mt-3">
           <p className="text-white/80 text-xs">Need help? Contact our support team anytime</p>
         </div>
       </div>

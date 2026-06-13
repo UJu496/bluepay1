@@ -48,7 +48,7 @@ export default function WatchPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#4169E1" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Watch</h1>
         <div className="w-6"></div>
@@ -56,14 +56,14 @@ export default function WatchPage() {
 
       {/* Featured Video Player */}
       <div className="p-4">
-        <div className="relative bg-black rounded-2xl overflow-hidden mb-4">
+        <div className="relative bg-black rounded-xl overflow-hidden mb-4">
           <img src="/bluepay-tutorial-video.png" alt="Featured Video" className="w-full h-64 object-cover" />
           <div className="absolute inset-0 flex items-center justify-center">
             <button
               onClick={handlePlayPause}
               className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
-              {isPlaying ? <Pause className="text-white" size={24} /> : <Play className="text-white ml-1" size={24} />}
+              {isPlaying ? <Pause className="text-white" size={20} /> : <Play className="text-white ml-1" size={20} />}
             </button>
           </div>
 

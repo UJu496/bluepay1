@@ -45,17 +45,17 @@ export default function ReviewsPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#4169E1" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Write Review</h1>
         <div className="w-6"></div>
       </div>
 
       <div className="p-4">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="text-center mb-6">
             <MessageSquare className="mx-auto mb-4 text-blue-500" size={48} />
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Share Your Experience</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Share Your Experience</h2>
             <p className="text-gray-600">Help others by sharing your BLUEPAY experience</p>
           </div>
 
@@ -65,7 +65,7 @@ export default function ReviewsPage() {
             <div className="flex justify-center gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button key={star} onClick={() => setRating(star)} className="transition-colors">
-                  <Star size={32} className={star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"} />
+                  <Star size={20} className={star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"} />
                 </button>
               ))}
             </div>

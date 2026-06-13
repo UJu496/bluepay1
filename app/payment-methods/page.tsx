@@ -249,7 +249,7 @@ export default function PaymentMethodsPage() {
     <div className="min-h-screen bg-gray-50">
       {showAddCard && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Add New Card</h2>
             <div className="space-y-4">
               <div>
@@ -321,7 +321,7 @@ export default function PaymentMethodsPage() {
 
       {showAddBank && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Add Bank Account</h2>
             <div className="space-y-4">
               <div>
@@ -383,21 +383,21 @@ export default function PaymentMethodsPage() {
         </div>
       )}
 
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 pt-12">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 pt-12">
         <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => router.push("/settings")}
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold">Payment Methods</h1>
+          <h1 className="text-xl font-bold">Payment Methods</h1>
         </div>
         <p className="text-white/90 text-sm">Manage your cards and bank accounts</p>
       </div>
 
       <div className="p-4 space-y-4">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => (
@@ -406,7 +406,7 @@ export default function PaymentMethodsPage() {
                 className="flex flex-col items-center gap-2 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
               >
                 <div className={`w-12 h-12 rounded-full ${action.color} flex items-center justify-center`}>
-                  <action.icon className="text-white" size={24} />
+                  <action.icon className="text-white" size={20} />
                 </div>
                 <p className="text-sm font-semibold text-gray-800 text-center">{action.title}</p>
                 <p className="text-xs text-gray-600 text-center">{action.description}</p>
@@ -415,7 +415,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-800">Saved Cards</h2>
             <button
@@ -440,7 +440,7 @@ export default function PaymentMethodsPage() {
                   </div>
                 )}
                 <div className="flex items-center justify-between mb-4">
-                  <CreditCard size={32} />
+                  <CreditCard size={20} />
                   <span className="text-sm font-semibold">{card.type}</span>
                 </div>
                 <p className="text-lg font-mono mb-2">•••• •••• •••• {card.last4}</p>
@@ -458,7 +458,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-800">Bank Accounts</h2>
             <button
@@ -481,7 +481,7 @@ export default function PaymentMethodsPage() {
                 )}
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Building2 className="text-blue-600" size={24} />
+                    <Building2 className="text-blue-600" size={20} />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">{bank.name}</p>
@@ -502,7 +502,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Payment Features</h2>
           <div className="grid grid-cols-1 gap-3">
             {paymentFeatures.map((feature, index) => (
@@ -510,7 +510,7 @@ export default function PaymentMethodsPage() {
                 <div
                   className={`w-12 h-12 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center`}
                 >
-                  <feature.icon className="text-white" size={24} />
+                  <feature.icon className="text-white" size={20} />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">{feature.title}</p>
@@ -521,7 +521,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-800">Transaction Limits</h2>
             <button className="w-full py-3 bg-purple-500 text-white rounded-xl font-semibold hover:bg-purple-600 transition-colors">
@@ -553,7 +553,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white shadow-sm">
           <h3 className="text-lg font-bold mb-2">Payment Security</h3>
           <div className="space-y-2 text-sm">
             <p>All transactions are encrypted with bank-level security</p>

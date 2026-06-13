@@ -56,21 +56,21 @@ export default function SecurityPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 pt-12">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 pt-12">
         <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => router.push("/settings")}
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold">Security & Privacy</h1>
+          <h1 className="text-xl font-bold">Security & Privacy</h1>
         </div>
         <p className="text-white/90 text-sm">Protect your account and personal information</p>
       </div>
 
       <div className="p-4 space-y-4">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-lg font-bold text-gray-800">Security Score</h2>
@@ -78,7 +78,7 @@ export default function SecurityPage() {
             </div>
             <div className="text-center">
               <div className="w-20 h-20 rounded-full border-4 border-green-500 flex items-center justify-center">
-                <span className="text-2xl font-bold text-green-600">{securityScore}</span>
+                <span className="text-xl font-bold text-green-600">{securityScore}</span>
               </div>
               <p className="text-xs text-gray-600 mt-1">Excellent</p>
             </div>
@@ -104,7 +104,7 @@ export default function SecurityPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
               <Lock className="text-white" size={20} />
@@ -187,7 +187,7 @@ export default function SecurityPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
               <Bell className="text-white" size={20} />
@@ -240,7 +240,7 @@ export default function SecurityPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
               <Clock className="text-white" size={20} />
@@ -280,7 +280,7 @@ export default function SecurityPage() {
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
               <Smartphone className="text-white" size={20} />
@@ -312,7 +312,7 @@ export default function SecurityPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
               <FileText className="text-white" size={20} />
@@ -365,7 +365,7 @@ export default function SecurityPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white shadow-sm">
           <h3 className="text-lg font-bold mb-2">Security Tips</h3>
           <div className="space-y-2 text-sm">
             <p>Never share your password or BPC code with anyone</p>

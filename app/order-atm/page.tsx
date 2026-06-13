@@ -80,19 +80,19 @@ export default function OrderATMPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12">
         <button onClick={() => router.back()} className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">ORDER ATM</h1>
         <div className="w-6"></div>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-4">
         {/* Card Header */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <CreditCard className="text-blue-600" size={32} />
+              <CreditCard className="text-blue-600" size={20} />
             </div>
           </div>
           <h2 className="text-white text-xl font-bold text-center mb-2">BLUEPAY INT'L MASTERCARD</h2>
@@ -102,7 +102,7 @@ export default function OrderATMPage() {
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
+        <div className="bg-white rounded-xl p-4 shadow-lg">
           <div className="space-y-4">
             {/* Full Name */}
             <div>
@@ -182,7 +182,7 @@ export default function OrderATMPage() {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className={`w-full mt-6 py-4 rounded-xl font-bold text-white transition-all duration-300 ${
+            className={`w-full mt-3 py-4 rounded-xl font-bold text-white transition-all duration-300 ${
               isLoading ? "bg-gray-400 cursor-not-allowed" : "hover:shadow-lg transform hover:scale-105"
             }`}
             style={{ backgroundColor: isLoading ? undefined : "#0000FF" }}
@@ -199,7 +199,7 @@ export default function OrderATMPage() {
         </div>
 
         {/* Info Card */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mt-6 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mt-3 border border-white/20">
           <h3 className="text-white font-semibold mb-2">What happens next?</h3>
           <ul className="text-white/80 text-sm space-y-1">
             <li>• Review your details on the confirmation page</li>

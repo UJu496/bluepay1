@@ -165,7 +165,7 @@ export default function FAQPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h1>
+            <h1 className="text-xl font-bold text-gray-900">Frequently Asked Questions</h1>
             <p className="text-sm text-gray-600">Find answers to common questions</p>
           </div>
           <HelpCircle className="h-8 w-8 text-blue-600" />
@@ -188,15 +188,15 @@ export default function FAQPage() {
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">150+</div>
+            <div className="text-xl font-bold text-blue-600">150+</div>
             <div className="text-xs text-gray-600">Articles</div>
           </Card>
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">24/7</div>
+            <div className="text-xl font-bold text-green-600">24/7</div>
             <div className="text-xs text-gray-600">Support</div>
           </Card>
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">98%</div>
+            <div className="text-xl font-bold text-purple-600">98%</div>
             <div className="text-xs text-gray-600">Satisfaction</div>
           </Card>
         </div>
@@ -206,7 +206,7 @@ export default function FAQPage() {
           {filteredCategories.map((category) => {
             const Icon = category.icon
             return (
-              <Card key={category.category} className="p-6">
+              <Card key={category.category} className="p-4">
                 <div className="flex items-center gap-3 mb-4">
                   <Icon className="h-6 w-6 text-blue-600" />
                   <h2 className="text-lg font-semibold">{category.category}</h2>
@@ -240,7 +240,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Support */}
-        <Card className="p-6 mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <Card className="p-4 mt-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <h3 className="font-semibold mb-2">Still need help?</h3>
           <p className="text-sm opacity-90 mb-4">Our support team is available 24/7 to assist you</p>
           <div className="grid grid-cols-3 gap-3">

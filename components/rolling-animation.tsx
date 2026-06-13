@@ -27,7 +27,7 @@ export default function RollingAnimation({ onComplete, duration = 3000 }: Rollin
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-8 text-center max-w-sm w-full mx-4">
+      <div className="bg-white rounded-xl p-8 text-center max-w-sm w-full mx-4">
         {/* Rolling Circle Animation */}
         <div className="mb-6">
           <div className="relative w-20 h-20 mx-auto">

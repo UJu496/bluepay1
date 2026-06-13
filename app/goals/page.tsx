@@ -126,7 +126,7 @@ export default function GoalsPage() {
       sparkles: Sparkles,
     }
     const IconComponent = icons[iconName] || Target
-    return <IconComponent size={24} className="text-white" />
+    return <IconComponent size={20} className="text-white" />
   }
 
   const getProgressPercentage = (current: number, target: number) => {
@@ -254,11 +254,11 @@ export default function GoalsPage() {
       <div className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-4 pt-12">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
           <h1 className="text-xl font-bold">Financial Goals</h1>
           <button onClick={() => setShowAddModal(true)} className="p-2 hover:bg-white/10 rounded-full">
-            <Plus size={24} />
+            <Plus size={20} />
           </button>
         </div>
 
@@ -267,11 +267,11 @@ export default function GoalsPage() {
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-sm opacity-90 mb-1">Total Saved</p>
-              <p className="text-2xl font-bold">₦{totalCurrentAmount.toLocaleString()}</p>
+              <p className="text-xl font-bold">₦{totalCurrentAmount.toLocaleString()}</p>
             </div>
             <div className="text-right">
               <p className="text-sm opacity-90 mb-1">Total Target</p>
-              <p className="text-2xl font-bold">₦{totalTargetAmount.toLocaleString()}</p>
+              <p className="text-xl font-bold">₦{totalTargetAmount.toLocaleString()}</p>
             </div>
           </div>
           <div className="w-full bg-white/20 rounded-full h-3">
@@ -290,13 +290,13 @@ export default function GoalsPage() {
       {/* Goals List */}
       <div className="p-4">
         {goals.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center">
+          <div className="bg-white rounded-xl p-5 text-center">
             <Target className="mx-auto mb-4 text-gray-400" size={48} />
             <h3 className="text-lg font-semibold text-gray-800 mb-2">No goals set</h3>
             <p className="text-gray-600 mb-4">Start planning your financial future by setting goals</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
               Create Goal
             </button>
@@ -331,7 +331,7 @@ export default function GoalsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        {isCompleted && <CheckCircle className="text-green-600" size={24} />}
+                        {isCompleted && <CheckCircle className="text-green-600" size={20} />}
                         <button
                           onClick={() => setEditingGoal(goal)}
                           className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -424,7 +424,7 @@ export default function GoalsPage() {
 
         {/* Goal Insights */}
         {goals.length > 0 && (
-          <div className="mt-6 bg-white rounded-xl p-5 shadow-sm">
+          <div className="mt-3 bg-white rounded-xl p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <TrendingUp className="text-indigo-600" size={20} />
               Goal Insights
@@ -472,11 +472,11 @@ export default function GoalsPage() {
       {/* Add Goal Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md my-8">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md my-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Create Goal</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -574,11 +574,11 @@ export default function GoalsPage() {
       {/* Edit Goal Modal */}
       {editingGoal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md my-8">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md my-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Edit Goal</h2>
               <button onClick={() => setEditingGoal(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -657,11 +657,11 @@ export default function GoalsPage() {
       {/* Contribute Modal */}
       {showContributeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Add Contribution</h2>
               <button onClick={() => setShowContributeModal(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 

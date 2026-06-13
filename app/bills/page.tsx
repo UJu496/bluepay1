@@ -146,7 +146,7 @@ export default function BillsPage() {
       "dollar-sign": DollarSign,
     }
     const IconComponent = icons[iconName] || DollarSign
-    return <IconComponent size={24} className="text-white" />
+    return <IconComponent size={20} className="text-white" />
   }
 
   const getStatusColor = (status: string) => {
@@ -281,11 +281,11 @@ export default function BillsPage() {
       <div className="bg-purple-600 text-white p-4 pt-12">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
           <h1 className="text-xl font-bold">Bills & Reminders</h1>
           <button onClick={() => setShowAddModal(true)} className="p-2 hover:bg-white/10 rounded-full">
-            <Plus size={24} />
+            <Plus size={20} />
           </button>
         </div>
 
@@ -328,7 +328,7 @@ export default function BillsPage() {
       {/* Bills List */}
       <div className="p-4">
         {filteredBills.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center">
+          <div className="bg-white rounded-xl p-5 text-center">
             <Bell className="mx-auto mb-4 text-gray-400" size={48} />
             <h3 className="text-lg font-semibold text-gray-800 mb-2">No bills found</h3>
             <p className="text-gray-600 mb-4">
@@ -337,7 +337,7 @@ export default function BillsPage() {
             {filter === "all" && (
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
               >
                 Add Bill
               </button>
@@ -435,7 +435,7 @@ export default function BillsPage() {
         {bills.filter(
           (b) => b.status === "pending" && getDaysUntilDue(b.dueDate) <= 7 && getDaysUntilDue(b.dueDate) >= 0,
         ).length > 0 && (
-          <div className="mt-6 bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div className="mt-3 bg-orange-50 border border-orange-200 rounded-xl p-4">
             <h3 className="font-semibold text-orange-800 mb-3 flex items-center gap-2">
               <Bell className="text-orange-600" size={20} />
               Upcoming Bills
@@ -461,11 +461,11 @@ export default function BillsPage() {
       {/* Add Bill Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md my-8">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md my-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Add Bill</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -577,11 +577,11 @@ export default function BillsPage() {
       {/* Edit Bill Modal */}
       {editingBill && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md my-8">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md my-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Edit Bill</h2>
               <button onClick={() => setEditingBill(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 

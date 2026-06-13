@@ -64,19 +64,19 @@ export default function OrderATMConfirmPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12">
         <button onClick={() => router.back()} className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">CONFIRM DETAILS</h1>
         <div className="w-6"></div>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-4">
         {/* Header Card */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <CreditCard className="text-blue-600" size={32} />
+              <CreditCard className="text-blue-600" size={20} />
             </div>
           </div>
           <h2 className="text-white text-xl font-bold text-center mb-2">I CONFIRM DETAILS</h2>
@@ -85,11 +85,11 @@ export default function OrderATMConfirmPage() {
           </p>
         </div>
 
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl p-4 mb-6 text-white">
+        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-4 mb-6 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                <DollarSign className="text-white" size={24} />
+                <DollarSign className="text-white" size={20} />
               </div>
               <div>
                 <p className="text-white/90 text-sm font-medium">ATM Card Price</p>
@@ -104,7 +104,7 @@ export default function OrderATMConfirmPage() {
         </div>
 
         {/* Details Review */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
           <h3 className="text-gray-800 text-lg font-bold mb-4">Order Details</h3>
 
           <div className="space-y-4">
@@ -185,7 +185,7 @@ export default function OrderATMConfirmPage() {
         </button>
 
         {/* Terms */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mt-6 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mt-3 border border-white/20">
           <p className="text-white/80 text-xs text-center">
             By confirming, you agree to our terms and conditions. Your MASTERCARD will be processed and delivered within
             3-5 business days. ₦{ATM_CARD_PRICE.toLocaleString()} will be deducted from your account balance.

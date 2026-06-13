@@ -39,10 +39,10 @@ export default function WithdrawalSuccessPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: "#0000FF" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ backgroundColor: "#0000FF" }}>
       <div className="text-center max-w-md w-full">
         {/* Animated Success Icon */}
-        <div className="mb-8 flex justify-center">
+        <div className="mb-4 flex justify-center">
           <div className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
             <div className="w-28 h-28 rounded-full bg-white/30 flex items-center justify-center">
               <svg className="w-16 h-16" fill="none" stroke="white" viewBox="0 0 24 24">
@@ -53,21 +53,21 @@ export default function WithdrawalSuccessPage() {
         </div>
 
         {/* Success heading */}
-        <h1 className="text-4xl font-bold text-white mb-3">Success!</h1>
+        <h1 className="text-xl font-bold text-white mb-3">Success!</h1>
 
         {/* Status message */}
-        <p className="text-white/90 text-lg mb-8">
+        <p className="text-white/90 text-lg mb-4">
           Transfer initiated successfully!
         </p>
 
         {/* Amount Display Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 mb-8 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-4 border border-white/20">
           <p className="text-white/70 text-sm mb-2">Transfer Amount</p>
-          <p className="text-white text-5xl font-bold">₦{amount}</p>
+          <p className="text-white text-xl font-bold">₦{amount}</p>
         </div>
 
         {/* Dynamic amount description */}
-        <p className="text-white/80 text-base mb-12 leading-relaxed">
+        <p className="text-white/80 text-base mb-6 leading-relaxed">
           Your transfer of ₦{amount} has been processed successfully and will reflect in your account shortly.
         </p>
 
@@ -75,14 +75,14 @@ export default function WithdrawalSuccessPage() {
         <div className="space-y-4">
           <button
             onClick={() => router.push("/dashboard")}
-            className="w-full py-4 px-6 text-white font-bold text-lg rounded-full hover:shadow-xl transition-all duration-300 bg-white"
+            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:shadow-xl transition-all duration-300 bg-white"
             style={{ color: "#0000FF" }}
           >
             Go to Dashboard
           </button>
           <button
             onClick={() => router.push("/transactions")}
-            className="w-full py-4 px-6 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all duration-300 border-2 border-white"
+            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all duration-300 border-2 border-white"
           >
             View Transactions
           </button>

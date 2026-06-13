@@ -72,37 +72,37 @@ export default function GetStartedPage() {
   if (isLoading) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-4 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4 mx-auto"></div>
-          <p className="text-white text-xl">Creating your account...</p>
+          <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-white mb-3 mx-auto"></div>
+          <p className="text-white text-lg">Creating your account...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen px-6 py-8 flex flex-col" style={{ backgroundColor: "#0000FF" }}>
-      <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen px-5 py-4 flex flex-col" style={{ backgroundColor: "#0000FF" }}>
+      <div className="flex items-center justify-between mb-6">
         <Link href="/" className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={22} />
         </Link>
-        <span className="text-white text-lg">You Need Help?</span>
+        <span className="text-white text-sm">You Need Help?</span>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
         {/* Welcome Section */}
-        <div className="text-center mb-12 w-full max-w-md">
-          <h1 className="text-white text-5xl font-bold mb-6">Welcome!</h1>
-          <p className="text-white text-xl leading-relaxed">
+        <div className="text-center mb-4 w-full max-w-md">
+          <h1 className="text-white text-xl font-bold mb-4">Welcome!</h1>
+          <p className="text-white text-sm leading-relaxed">
             Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills in cheaper price.
           </p>
         </div>
 
         {/* Form Section */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
           {/* Full Name Input with White Border */}
           <div>
             <input
@@ -111,7 +111,7 @@ export default function GetStartedPage() {
               placeholder="Your Full Name"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="w-full px-6 py-4 rounded-2xl border-2 text-white placeholder-white/60 bg-transparent transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="w-full px-5 py-3 rounded-xl border-2 text-white placeholder-white/60 bg-transparent transition-all focus:outline-none focus:ring-2 focus:ring-white/30 text-sm"
               style={{ borderColor: "rgba(255, 255, 255, 0.8)" }}
               required
             />
@@ -119,21 +119,21 @@ export default function GetStartedPage() {
 
           {/* Email Input */}
           <div>
-            <label className="block text-white text-base mb-2">Your Email</label>
+            <label className="block text-white text-xs mb-1">Your Email</label>
             <input
               type="email"
               name="email"
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-6 py-4 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="w-full px-5 py-3 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 transition-all focus:outline-none focus:ring-2 focus:ring-white/30 text-sm"
               required
             />
           </div>
 
           {/* Password Input */}
           <div>
-            <label className="block text-white text-base mb-2">Password</label>
+            <label className="block text-white text-xs mb-1">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -141,21 +141,21 @@ export default function GetStartedPage() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-6 py-4 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 pr-12 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+                className="w-full px-5 py-3 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 pr-10 transition-all focus:outline-none focus:ring-2 focus:ring-white/30 text-sm"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
           {/* Terms & Conditions */}
-          <p className="text-white text-sm leading-relaxed pt-2">
+          <p className="text-white text-xs leading-relaxed pt-1">
             Any further actions indicates that you agree with our{" "}
             <Link href="/terms" className="underline hover:text-white/80">
               terms & conditions
@@ -165,9 +165,9 @@ export default function GetStartedPage() {
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
-              <p className="text-white font-semibold">{errorMessage}</p>
-              <p className="text-white/80 text-sm mt-2">Redirecting to login...</p>
+            <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 text-center">
+              <p className="text-white font-semibold text-xs">{errorMessage}</p>
+              <p className="text-white/80 text-xs mt-1">Redirecting to login...</p>
             </div>
           )}
 
@@ -175,7 +175,7 @@ export default function GetStartedPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 rounded-full bg-white font-bold text-lg disabled:opacity-50 transition-all hover:shadow-lg"
+            className="w-full py-3 rounded-full bg-white font-bold text-base disabled:opacity-50 transition-all hover:shadow-lg"
             style={{ color: "#0000FF" }}
           >
             {isLoading ? "Creating..." : "Create account"}
@@ -183,8 +183,8 @@ export default function GetStartedPage() {
         </form>
 
         {/* Sign In Link */}
-        <div className="mt-8 text-center">
-          <span className="text-white text-lg">
+        <div className="mt-3 text-center">
+          <span className="text-white text-sm">
             Already have an account?{" "}
             <Link href="/login" className="underline hover:text-white/80">
               Sign in

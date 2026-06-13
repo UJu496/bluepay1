@@ -14,20 +14,20 @@ export default function HomePage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-8"
+      className="min-h-screen flex flex-col items-center justify-center px-5 py-4"
       style={{ backgroundColor: "#0000FF" }}
     >
       {/* Header */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-4">
         <div className="text-white relative">
           <div className="relative inline-block">
-            <div className="mb-6"></div>
+            <div className="mb-4"></div>
 
             <div className="flex items-center">
               {"BLUEPAY".split("").map((letter, index) => (
                 <span
                   key={index}
-                  className="text-4xl font-bold animate-pulse"
+                  className="text-xl font-bold animate-pulse"
                   style={{
                     animationDelay: `${index * 0.1}s`,
                     animationDuration: "2s",
@@ -38,14 +38,14 @@ export default function HomePage() {
                 </span>
               ))}
               <span
-                className="text-3xl font-light ml-2 animate-pulse"
+                className="text-xl font-light ml-2 animate-pulse"
                 style={{ animationDelay: "0.7s", animationDuration: "2s", animationIterationCount: "infinite" }}
               >
                 2026
               </span>
               {isVerified && (
                 <div className="ml-2 animate-bounce">
-                  <CheckCircle className="text-green-400 bg-white rounded-full" size={24} />
+                  <CheckCircle className="text-green-400 bg-white rounded-full" size={20} />
                 </div>
               )}
             </div>
@@ -63,8 +63,8 @@ export default function HomePage() {
       </div>
 
       {/* Card */}
-      <div className="bg-white rounded-lg px-12 py-4 mb-12 shadow-lg w-full max-w-sm">
-        <div className="text-xl font-bold text-center tracking-wide flex justify-center items-center overflow-hidden">
+      <div className="bg-white rounded-lg px-10 py-3 mb-4 shadow-lg w-full max-w-sm">
+        <div className="text-lg font-bold text-center tracking-wide flex justify-center items-center overflow-hidden">
           <div
             className="whitespace-nowrap animate-pulse"
             style={{
@@ -74,14 +74,14 @@ export default function HomePage() {
           >
             BLUEPAY2026
           </div>
-          {isVerified && <CheckCircle className="text-green-500 ml-2" size={20} />}
+          {isVerified && <CheckCircle className="text-green-500 ml-2" size={18} />}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="text-center max-w-sm mx-auto mb-12">
+      <div className="text-center max-w-sm mx-auto mb-4">
         <h3
-          className="text-white text-4xl font-bold leading-tight mb-8"
+          className="text-white text-xl font-bold leading-tight mb-5"
           style={{
             fontFamily: "Brush Script MT, cursive",
             textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
@@ -91,7 +91,7 @@ export default function HomePage() {
           Get Your Account Ready And Instantly.
         </h3>
 
-        <p className="text-white text-base leading-relaxed mb-12">
+        <p className="text-white text-sm leading-relaxed mb-4">
           Get your account ready and instantly start buying, selling airtime and data online and start paying all your
           bills in cheaper price.
         </p>
@@ -100,7 +100,7 @@ export default function HomePage() {
       {/* Get Started Button - Updated to redirect to onboarding flow */}
       <Link href="/onboarding">
         <button
-          className="bg-white px-16 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg"
+          className="bg-white px-14 py-3 rounded-full text-base font-semibold hover:bg-gray-50 transition-colors shadow-lg"
           style={{ color: "#0000FF" }}
         >
           Get Started

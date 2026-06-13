@@ -35,7 +35,7 @@ export default function TransactionSuccessPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.push("/dashboard")}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Transaction Successful</h1>
         <div className="w-6"></div>
@@ -43,14 +43,14 @@ export default function TransactionSuccessPage() {
 
       <div className="p-4">
         {/* Success Icon */}
-        <div className="text-center mb-8 mt-8">
+        <div className="text-center mb-4 mt-4">
           <CheckCircle className="mx-auto mb-4 text-green-500" size={80} />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Transaction Successful!</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Transaction Successful!</h2>
           <p className="text-gray-600">Your {transaction.type} purchase has been completed successfully</p>
         </div>
 
         {/* Transaction Details Card */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             {transaction.type === "airtime" ? <Phone size={20} /> : <Wifi size={20} />}
             Transaction Details
@@ -135,7 +135,7 @@ export default function TransactionSuccessPage() {
         </div>
 
         {/* Support Info */}
-        <div className="mt-6 p-4 bg-blue-50 rounded-xl text-center">
+        <div className="mt-3 p-4 bg-blue-50 rounded-xl text-center">
           <p className="text-sm text-blue-700">
             Need help? Contact our support team at <span className="font-semibold">bluepay032@gmail.com</span>
           </p>
