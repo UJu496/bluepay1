@@ -92,7 +92,7 @@ export default function DataPage() {
       {/* Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl text-center">
+          <div className="bg-white p-5 rounded-xl text-center">
             <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-800 font-semibold">Processing data purchase...</p>
           </div>
@@ -102,7 +102,7 @@ export default function DataPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Buy Data</h1>
         <div className="w-6"></div>
@@ -254,7 +254,7 @@ export default function DataPage() {
         </button>
 
         {/* Info Card */}
-        <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+        <div className="mt-3 p-4 bg-blue-50 rounded-xl">
           <h3 className="font-semibold mb-2" style={{ color: "#0000FF" }}>
             Purchase Information
           </h3>

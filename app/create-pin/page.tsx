@@ -78,7 +78,7 @@ export default function CreatePinPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0000FF" }}>
       {showSuccess && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 text-center">
+          <div className="bg-white rounded-lg p-5 text-center">
             <div className="flex justify-center items-center">
               <div className="relative w-16 h-16">
                 <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 border-r-blue-600 animate-spin"></div>
@@ -95,7 +95,7 @@ export default function CreatePinPage() {
 
       {showResetModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+          <div className="bg-white rounded-lg p-4 max-w-sm w-full text-center">
             <h3 className="text-lg font-semibold mb-4">Reset Password</h3>
             <p className="text-gray-600 mb-6">
               Are you sure you want to reset your password? This will clear your current PIN and redirect you to create
@@ -122,23 +122,23 @@ export default function CreatePinPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12">
         <button onClick={() => router.back()} className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
         <h1 className="text-white text-xl font-semibold">Create PIN</h1>
         <div className="text-white">
-          <User size={24} />
+          <User size={20} />
         </div>
       </div>
 
       {/* Photo Upload Section */}
-      <div className="px-6 mb-8">
+      <div className="px-5 mb-4">
         <div className="flex justify-center">
           <div className="relative">
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
               {profilePhoto ? (
                 <img src={profilePhoto || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <Camera size={32} className="text-white" />
+                <Camera size={20} className="text-white" />
               )}
             </div>
             <label className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
@@ -151,14 +151,14 @@ export default function CreatePinPage() {
       </div>
 
       {/* PIN Entry Section */}
-      <div className="flex-1 px-6 flex flex-col justify-center">
-        <div className="text-center mb-8">
-          <h2 className="text-white text-2xl font-bold mb-2">Choose Your Security Method</h2>
+      <div className="flex-1 px-5 flex flex-col justify-center">
+        <div className="text-center mb-4">
+          <h2 className="text-white text-xl font-bold mb-2">Choose Your Security Method</h2>
           <p className="text-white/80">Create a 4-digit PIN or use fingerprint authentication</p>
         </div>
 
         {/* PIN Indicators */}
-        <div className="flex justify-center gap-6 mb-20">
+        <div className="flex justify-center gap-4 mb-20">
           {pin.map((digit, index) => (
             <div
               key={index}
@@ -170,22 +170,22 @@ export default function CreatePinPage() {
         </div>
 
         {/* Numeric Keypad */}
-        <div className="grid grid-cols-3 gap-8 max-w-xs mx-auto mb-8">
+        <div className="grid grid-cols-3 gap-4 max-w-xs mx-auto mb-4">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
             <button
               key={number}
               onClick={() => handleNumberClick(number.toString())}
-              className="w-16 h-16 flex items-center justify-center text-white text-2xl font-semibold hover:bg-white/10 rounded-full transition-colors"
+              className="w-16 h-16 flex items-center justify-center text-white text-xl font-semibold hover:bg-white/10 rounded-full transition-colors"
             >
               {number}
             </button>
           ))}
         </div>
 
-        <div className="flex justify-center items-center gap-8 max-w-xs mx-auto mb-8">
+        <div className="flex justify-center items-center gap-4 max-w-xs mx-auto mb-4">
           <button
             onClick={() => handleNumberClick("0")}
-            className="w-16 h-16 flex items-center justify-center text-white text-2xl font-semibold hover:bg-white/10 rounded-full transition-colors"
+            className="w-16 h-16 flex items-center justify-center text-white text-xl font-semibold hover:bg-white/10 rounded-full transition-colors"
           >
             0
           </button>
@@ -193,13 +193,13 @@ export default function CreatePinPage() {
             onClick={handleFingerprint}
             className="w-16 h-16 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
           >
-            <Fingerprint size={24} style={{ color: "#0000FF" }} />
+            <Fingerprint size={20} style={{ color: "#0000FF" }} />
           </button>
           <button
             onClick={handleBackspace}
             className="w-16 h-16 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
           >
-            <X size={24} style={{ color: "#0000FF" }} />
+            <X size={20} style={{ color: "#0000FF" }} />
           </button>
         </div>
 

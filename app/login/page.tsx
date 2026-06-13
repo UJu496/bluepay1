@@ -68,16 +68,16 @@ export default function LoginPage() {
   if (showWelcome) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-4 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <div className="text-center">
-          <div className="bg-white/10 rounded-full p-8 mb-6">
-            <div className="text-6xl">👋</div>
+          <div className="bg-white/10 rounded-full p-4 mb-4">
+            <div className="text-xl">👋</div>
           </div>
-          <h2 className="text-white text-3xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-white text-xl">{welcomeUser}</p>
-          <p className="text-white/80 text-lg mt-2">Taking you to your dashboard...</p>
+          <h2 className="text-white text-xl font-bold mb-2">Welcome Back!</h2>
+          <p className="text-white text-lg">{welcomeUser}</p>
+          <p className="text-white/80 text-base mt-1">Taking you to your dashboard...</p>
         </div>
       </div>
     )
@@ -86,36 +86,36 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-4 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mb-4 mx-auto"></div>
-          <p className="text-white text-xl">Signing you in...</p>
+          <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-white mb-3 mx-auto"></div>
+          <p className="text-white text-lg">Signing you in...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen px-6 py-8 flex flex-col" style={{ backgroundColor: "#0000FF" }}>
-      <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen px-5 py-4 flex flex-col" style={{ backgroundColor: "#0000FF" }}>
+      <div className="flex items-center justify-between mb-6">
         <Link href="/get-started" className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={22} />
         </Link>
-        <span className="text-white text-lg">You Need Help?</span>
+        <span className="text-white text-sm">You Need Help?</span>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-8">
-          <h1 className="text-white text-5xl font-bold mb-4">BLUEPAY</h1>
-          <h2 className="text-white text-3xl font-bold mb-6">Sign In</h2>
-          <p className="text-white text-lg leading-relaxed mb-8 max-w-md">
+        <div className="text-center mb-6">
+          <h1 className="text-white text-xl font-bold mb-2">BLUEPAY</h1>
+          <h2 className="text-white text-xl font-bold mb-3">Sign In</h2>
+          <p className="text-white text-sm leading-relaxed mb-6 max-w-md">
             Welcome back! Sign in to access your account and continue managing your transactions.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
           <div>
             <input
               type="email"
@@ -123,7 +123,7 @@ export default function LoginPage() {
               placeholder="Your Email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-4 rounded-xl border-2 text-white placeholder-white/70 bg-transparent"
+              className="w-full px-4 py-3 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
               style={{ borderColor: "#0000FF" }}
               required
             />
@@ -136,43 +136,43 @@ export default function LoginPage() {
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full px-4 py-4 pr-12 rounded-xl border-2 text-white placeholder-white/70 bg-transparent"
+              className="w-full px-4 py-3 pr-10 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
               style={{ borderColor: "#0000FF" }}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
           {errorMessage && (
-            <div className="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
-              <p className="text-white font-semibold">{errorMessage}</p>
+            <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 text-center">
+              <p className="text-white font-semibold text-sm">{errorMessage}</p>
             </div>
           )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 rounded-full bg-white font-semibold text-lg disabled:opacity-50"
+            className="w-full py-3 rounded-full bg-white font-semibold text-base disabled:opacity-50"
             style={{ color: "#0000FF" }}
           >
             {isLoading ? "Signing In..." : "Login"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <Link href="/forgot-password" className="text-white underline text-lg">
+        <div className="mt-4 text-center">
+          <Link href="/forgot-password" className="text-white underline text-sm">
             Forgot Password?
           </Link>
         </div>
 
-        <div className="mt-4 text-center">
-          <span className="text-white text-lg">
+        <div className="mt-3 text-center">
+          <span className="text-white text-sm">
             Don't have an account?{" "}
             <Link href="/get-started" className="underline">
               Create account

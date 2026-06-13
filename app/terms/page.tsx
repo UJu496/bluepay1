@@ -17,7 +17,7 @@ export default function TermsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">Terms & Privacy Policy</h1>
+            <h1 className="text-xl font-bold text-gray-900">Terms & Privacy Policy</h1>
             <p className="text-sm text-gray-600">Last updated: January 2025</p>
           </div>
           <FileText className="h-8 w-8 text-blue-600" />
@@ -38,7 +38,7 @@ export default function TermsPage() {
         </Card>
 
         {/* Terms of Service */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <FileText className="h-6 w-6 text-blue-600" />
             Terms of Service
@@ -137,7 +137,7 @@ export default function TermsPage() {
         </Card>
 
         {/* Privacy Policy */}
-        <Card className="p-6 mb-6">
+        <Card className="p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Shield className="h-6 w-6 text-blue-600" />
             Privacy Policy
@@ -244,7 +244,7 @@ export default function TermsPage() {
         </Card>
 
         {/* Compliance */}
-        <Card className="p-6 mb-6 bg-green-50 border-green-200">
+        <Card className="p-4 mb-6 bg-green-50 border-green-200">
           <h3 className="font-semibold mb-3 flex items-center gap-2">
             <Shield className="h-5 w-5 text-green-600" />
             Regulatory Compliance
@@ -262,7 +262,7 @@ export default function TermsPage() {
         </Card>
 
         {/* Contact */}
-        <Card className="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <Card className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <h3 className="font-semibold mb-2">Questions About Our Terms or Privacy?</h3>
           <p className="text-sm opacity-95 mb-3">Our legal team is here to help clarify any concerns you may have.</p>
           <div className="space-y-1 text-sm">

@@ -65,7 +65,7 @@ export default function SpendingBreakdownPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Spending Breakdown</h1>
         <div className="w-6"></div>
@@ -94,12 +94,12 @@ export default function SpendingBreakdownPage() {
         </div>
 
         {/* Total Spending Card */}
-        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white mb-6 shadow-lg">
+        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-4 text-white mb-6 shadow-lg">
           <div className="flex items-center gap-3 mb-2">
-            <TrendingDown size={24} />
+            <TrendingDown size={20} />
             <h2 className="text-lg font-semibold">Total Spending</h2>
           </div>
-          <p className="text-4xl font-bold">₦{totalSpending.toLocaleString()}</p>
+          <p className="text-xl font-bold">₦{totalSpending.toLocaleString()}</p>
           <p className="text-sm opacity-90 mt-2">
             {selectedPeriod === "week"
               ? "Last 7 days"
@@ -112,7 +112,7 @@ export default function SpendingBreakdownPage() {
         {/* Spending by Category */}
         <div className="space-y-4">
           {spendingData.length === 0 ? (
-            <div className="bg-white rounded-xl p-8 text-center">
+            <div className="bg-white rounded-xl p-5 text-center">
               <TrendingDown className="text-gray-300 mx-auto mb-3" size={48} />
               <p className="text-gray-500">No spending data for this period</p>
               <p className="text-sm text-gray-400 mt-1">Start making transactions to see your spending breakdown</p>

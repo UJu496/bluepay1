@@ -196,11 +196,11 @@ export default function BudgetsPage() {
       <div className="bg-blue-600 text-white p-4 pt-12">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
           <h1 className="text-xl font-bold">Budget Tracker</h1>
           <button onClick={() => setShowAddModal(true)} className="p-2 hover:bg-white/10 rounded-full">
-            <Plus size={24} />
+            <Plus size={20} />
           </button>
         </div>
 
@@ -209,11 +209,11 @@ export default function BudgetsPage() {
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-sm opacity-90 mb-1">Total Budget</p>
-              <p className="text-2xl font-bold">₦{totalBudget.toLocaleString()}</p>
+              <p className="text-xl font-bold">₦{totalBudget.toLocaleString()}</p>
             </div>
             <div className="text-right">
               <p className="text-sm opacity-90 mb-1">Total Spent</p>
-              <p className="text-2xl font-bold">₦{totalSpent.toLocaleString()}</p>
+              <p className="text-xl font-bold">₦{totalSpent.toLocaleString()}</p>
             </div>
           </div>
           <div className="w-full bg-white/20 rounded-full h-3">
@@ -232,13 +232,13 @@ export default function BudgetsPage() {
       {/* Budget Categories */}
       <div className="p-4">
         {budgets.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center">
+          <div className="bg-white rounded-xl p-5 text-center">
             <Target className="mx-auto mb-4 text-gray-400" size={48} />
             <h3 className="text-lg font-semibold text-gray-800 mb-2">No budgets set</h3>
             <p className="text-gray-600 mb-4">Start tracking your spending by creating budgets</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Create Budget
             </button>
@@ -250,7 +250,7 @@ export default function BudgetsPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className={`w-12 h-12 rounded-full ${budget.color} flex items-center justify-center`}>
-                      <PieChart className="text-white" size={24} />
+                      <PieChart className="text-white" size={20} />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">{budget.category}</h3>
@@ -307,7 +307,7 @@ export default function BudgetsPage() {
 
         {/* Budget Insights */}
         {budgets.length > 0 && (
-          <div className="mt-6 bg-white rounded-xl p-5 shadow-sm">
+          <div className="mt-3 bg-white rounded-xl p-5 shadow-sm">
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <TrendingUp className="text-blue-600" size={20} />
               Budget Insights
@@ -359,11 +359,11 @@ export default function BudgetsPage() {
       {/* Add Budget Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Create Budget</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -434,11 +434,11 @@ export default function BudgetsPage() {
       {/* Edit Budget Modal */}
       {editingBudget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-4 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-800">Edit Budget</h2>
               <button onClick={() => setEditingBudget(null)} className="p-2 hover:bg-gray-100 rounded-full">
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 

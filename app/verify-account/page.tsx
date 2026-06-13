@@ -49,7 +49,7 @@ export default function VerifyAccountPage() {
       {/* Loading Overlay */}
       {isVerifying && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl text-center">
+          <div className="bg-white p-5 rounded-xl text-center">
             <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-800 font-semibold">Verifying your account...</p>
             <p className="text-sm text-gray-600 mt-2">Please wait while we process your information</p>
@@ -60,7 +60,7 @@ export default function VerifyAccountPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#4169E1" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Verify Account</h1>
         <div className="w-6"></div>
@@ -68,7 +68,7 @@ export default function VerifyAccountPage() {
 
       <div className="p-4">
         {/* Progress Steps */}
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-4">
           {[1, 2, 3].map((stepNum) => (
             <div key={stepNum} className="flex items-center">
               <div
@@ -83,12 +83,12 @@ export default function VerifyAccountPage() {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           {step === 1 && (
             <div>
               <div className="text-center mb-6">
                 <User className="mx-auto mb-4 text-blue-500" size={48} />
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Personal Information</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Personal Information</h2>
                 <p className="text-gray-600">Please provide your basic information</p>
               </div>
 
@@ -129,7 +129,7 @@ export default function VerifyAccountPage() {
 
               <button
                 onClick={handleNextStep}
-                className="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold mt-6 hover:bg-blue-600"
+                className="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold mt-3 hover:bg-blue-600"
               >
                 Continue
               </button>
@@ -140,7 +140,7 @@ export default function VerifyAccountPage() {
             <div>
               <div className="text-center mb-6">
                 <MapPin className="mx-auto mb-4 text-blue-500" size={48} />
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Address & ID Information</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Address & ID Information</h2>
                 <p className="text-gray-600">Provide your address and identification details</p>
               </div>
 
@@ -184,7 +184,7 @@ export default function VerifyAccountPage() {
 
               <button
                 onClick={handleNextStep}
-                className="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold mt-6 hover:bg-blue-600"
+                className="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold mt-3 hover:bg-blue-600"
               >
                 Continue
               </button>
@@ -195,7 +195,7 @@ export default function VerifyAccountPage() {
             <div>
               <div className="text-center mb-6">
                 <CheckCircle className="mx-auto mb-4 text-green-500" size={48} />
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Review & Submit</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Review & Submit</h2>
                 <p className="text-gray-600">Please review your information before submitting</p>
               </div>
 

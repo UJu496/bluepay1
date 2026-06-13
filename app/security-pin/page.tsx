@@ -59,7 +59,7 @@ export default function SecurityPinPage() {
       {/* Loading Overlay */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl text-center">
+          <div className="bg-white p-5 rounded-xl text-center">
             <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-800 font-semibold">Creating your security PIN...</p>
             <p className="text-sm text-gray-600 mt-2">Please wait while we secure your account</p>
@@ -70,17 +70,17 @@ export default function SecurityPinPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#4169E1" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Security PIN</h1>
         <div className="w-6"></div>
       </div>
 
       <div className="p-4">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <div className="text-center mb-8">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="text-center mb-4">
             <Shield className="mx-auto mb-4 text-blue-500" size={64} />
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Security PIN</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Create Security PIN</h2>
             <p className="text-gray-600">Set up a secure PIN to protect your transactions</p>
           </div>
 
@@ -93,7 +93,7 @@ export default function SecurityPinPage() {
                     type={showPin ? "text" : "password"}
                     value={pin}
                     onChange={(e) => handlePinInput(e.target.value)}
-                    className="w-full p-4 border border-gray-300 rounded-xl text-center text-2xl font-mono tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full p-4 border border-gray-300 rounded-xl text-center text-xl font-mono tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter 4-6 digit PIN"
                     maxLength={6}
                   />
@@ -156,7 +156,7 @@ export default function SecurityPinPage() {
                   type={showPin ? "text" : "password"}
                   value={confirmPin}
                   onChange={(e) => handlePinInput(e.target.value, true)}
-                  className="w-full p-4 border border-gray-300 rounded-xl text-center text-2xl font-mono tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full p-4 border border-gray-300 rounded-xl text-center text-xl font-mono tracking-widest focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Re-enter your PIN"
                   maxLength={6}
                 />

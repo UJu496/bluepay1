@@ -39,7 +39,7 @@ export default function OnboardingWelcome({ onNext }: OnboardingWelcomeProps) {
   return (
     <div className="text-center">
       {/* Slicing Button Animation */}
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="relative inline-block">
           <div
             className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl transition-all duration-500 overflow-hidden ${
@@ -72,7 +72,7 @@ export default function OnboardingWelcome({ onNext }: OnboardingWelcomeProps) {
       <h1 className="text-3xl font-bold text-white mb-3">Welcome to BLUEPAY INT'L</h1>
       <h2 className="text-xl font-semibold text-white/90 mb-6">Your Digital Payment Solution</h2>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4 border border-white/20">
         <p className="text-white/90 text-base leading-relaxed">
           Operate or transact on Telegram without closing the app. Purchase airtime, data, or BPC CODE, and withdraw
           funds seamlessly.

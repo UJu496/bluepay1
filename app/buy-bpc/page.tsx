@@ -64,7 +64,7 @@ export default function BuyBPCPage() {
       {/* Header */}
       <div className="flex items-center p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Buy BPC Code</h1>
       </div>

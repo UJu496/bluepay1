@@ -40,23 +40,23 @@ export default function OnboardingPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-8 relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center px-5 py-4 relative overflow-hidden"
       style={{ backgroundColor: "#0000FF" }}
     >
       {/* Skip Button */}
       <button
         onClick={handleSkip}
-        className="absolute top-6 right-6 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full font-semibold hover:bg-white/30 transition-all duration-300 z-10"
+        className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full font-semibold text-xs hover:bg-white/30 transition-all duration-300 z-10"
       >
         SKIP
       </button>
 
       {/* Progress Indicator */}
-      <div className="absolute top-6 left-6 flex gap-2">
+      <div className="absolute top-4 left-4 flex gap-1.5">
         {onboardingSteps.map((_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
               index <= currentStep ? "bg-white" : "bg-white/30"
             }`}
           />
@@ -72,7 +72,7 @@ export default function OnboardingPage() {
         <CurrentComponent onNext={handleNext} />
 
         {/* Step Counter */}
-        <p className="text-white/60 text-xs mt-6 text-center">
+        <p className="text-white/60 text-xs mt-4 text-center">
           {currentStep + 1} of {onboardingSteps.length}
         </p>
       </div>

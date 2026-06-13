@@ -83,6 +83,18 @@ export default function DashboardPage() {
   const [monthlySavings] = useState(165000)
   const [recentTransactions, setRecentTransactions] = useState<any[]>([])
   const [spendingByCategory, setSpendingByCategory] = useState<any[]>([])
+  const [greeting, setGreeting] = useState("")
+
+  const getTimeBasedGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) {
+      return "Good Morning"
+    } else if (hour < 18) {
+      return "Good Afternoon"
+    } else {
+      return "Good Evening"
+    }
+  }
 
   const nigerianNames = [
     "Adebayo Johnson",
@@ -185,6 +197,8 @@ export default function DashboardPage() {
   ]
 
   useEffect(() => {
+    setGreeting(getTimeBasedGreeting())
+
     const userData = localStorage.getItem("userData")
     if (userData) {
       const parsedData = JSON.parse(userData)
@@ -454,10 +468,10 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-100">
       {showBPCWarning && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-4 w-full max-w-sm shadow-2xl">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm shadow-2xl">
             <div className="text-center mb-4">
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
-                <CreditCard className="text-blue-600" size={24} />
+                <CreditCard className="text-blue-600" size={20} />
               </div>
               <h2 className="text-lg font-bold text-black mb-2">⚠️ Important Security Notice</h2>
               <div className="text-left space-y-2">
@@ -507,7 +521,7 @@ export default function DashboardPage() {
 
       {isLoadingBPC && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl text-center">
+          <div className="bg-white p-5 rounded-xl text-center">
             <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-800 font-semibold">Loading Buy BPC...</p>
           </div>
@@ -516,11 +530,11 @@ export default function DashboardPage() {
 
       {showCreditAlert && (
         <div className="fixed top-20 left-4 right-4 z-50 animate-bounce">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 border-4 border-green-500">
+          <div className="bg-white rounded-xl shadow-2xl p-4 border-4 border-green-500">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
-                  <DollarSign className="text-white" size={24} />
+                  <DollarSign className="text-white" size={20} />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-800">Credit Alert!</h3>
@@ -535,7 +549,7 @@ export default function DashboardPage() {
               </button>
             </div>
             <div className="bg-green-50 rounded-xl p-4 text-center">
-              <p className="text-4xl font-bold mb-2" style={{ color: "#000000" }}>
+              <p className="text-xl font-bold mb-2" style={{ color: "#000000" }}>
                 ₦200,000.00
               </p>
               <p className="text-sm text-green-600 font-semibold">Transaction Successful</p>
@@ -549,7 +563,7 @@ export default function DashboardPage() {
         <div className="fixed bottom-24 right-4 z-50 animate-bounce-slow">
           <button
             onClick={handleJoinGroup}
-            className="relative w-20 h-20 rounded-3xl shadow-2xl transform transition-transform hover:scale-110"
+            className="relative w-20 h-20 rounded-xl shadow-2xl transform transition-transform hover:scale-110"
             style={{
               background: "linear-gradient(135deg, #54a9eb 0%, #2e7ab5 100%)",
               boxShadow: "0 8px 20px rgba(46, 122, 181, 0.4), 0 4px 10px rgba(0, 0, 0, 0.2)",
@@ -561,7 +575,7 @@ export default function DashboardPage() {
             </div>
             {/* White paper plane icon */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <Send className="text-white transform rotate-45" size={36} strokeWidth={2.5} />
+              <Send className="text-white transform rotate-45" size={30} strokeWidth={2.5} />
             </div>
           </button>
         </div>
@@ -569,11 +583,11 @@ export default function DashboardPage() {
 
       {showCalendar && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm">
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">Live Calendar</h2>
               <div className="bg-blue-50 rounded-xl p-4">
-                <div className="text-3xl font-bold text-blue-600 mb-2">{formatDateTime(currentDateTime).time}</div>
+                <div className="text-xl font-bold text-blue-600 mb-2">{formatDateTime(currentDateTime).time}</div>
                 <div className="text-sm text-gray-600">{formatDateTime(currentDateTime).date}</div>
               </div>
             </div>
@@ -608,7 +622,7 @@ export default function DashboardPage() {
 
       {showSocial && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm">
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">Connect With Us</h2>
               <p className="text-gray-600 text-sm">Join our community on social media</p>
@@ -622,7 +636,7 @@ export default function DashboardPage() {
                 }}
                 className="w-full flex items-center gap-4 p-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
               >
-                <MessageCircle size={24} />
+                <MessageCircle size={20} />
                 <div className="text-left">
                   <div className="font-semibold">Join Telegram</div>
                   <div className="text-sm opacity-90">Get instant updates</div>
@@ -636,7 +650,7 @@ export default function DashboardPage() {
                 }}
                 className="w-full flex items-center gap-4 p-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
               >
-                <Globe size={24} />
+                <Globe size={20} />
                 <div className="text-left">
                   <div className="font-semibold">Follow Facebook</div>
                   <div className="text-sm opacity-90">Latest news & updates</div>
@@ -645,12 +659,12 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => {
-                  window.open("https://chat.whatsapp.com/DHJ21hwdm4GKTaAEyZ5jfr?mode=ac_t", "_blank")
+                  window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
                   setShowSocial(false)
                 }}
                 className="w-full flex items-center gap-4 p-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"
               >
-                <Phone size={24} />
+                <Phone size={20} />
                 <div className="text-left">
                   <div className="font-semibold">Join WhatsApp</div>
                   <div className="text-sm opacity-90">Community support</div>
@@ -660,7 +674,7 @@ export default function DashboardPage() {
 
             <button
               onClick={() => setShowSocial(false)}
-              className="w-full mt-6 py-3 bg-gray-500 text-white rounded-xl font-semibold hover:bg-gray-600 transition-colors"
+              className="w-full mt-3 py-3 bg-gray-500 text-white rounded-xl font-semibold hover:bg-gray-600 transition-colors"
             >
               Close
             </button>
@@ -670,7 +684,7 @@ export default function DashboardPage() {
 
       {showDataUsage && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm">
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">Data Analytics</h2>
               <p className="text-gray-600 text-sm">Your BLUEPAY usage statistics</p>
@@ -678,27 +692,27 @@ export default function DashboardPage() {
 
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-green-400 to-blue-500 rounded-xl p-4 text-white">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1">
                   <span className="text-sm opacity-90">Total Transactions</span>
                   <BarChart3 size={20} />
                 </div>
-                <div className="text-2xl font-bold">247</div>
+                <div className="text-xl font-bold">247</div>
               </div>
 
               <div className="bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl p-4 text-white">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1">
                   <span className="text-sm opacity-90">Monthly Earnings</span>
                   <DollarSign size={20} />
                 </div>
-                <div className="text-2xl font-bold">₦{(balance * 0.15).toLocaleString()}</div>
+                <div className="text-xl font-bold">₦{(balance * 0.15).toLocaleString()}</div>
               </div>
 
               <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-xl p-4 text-white">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-1">
                   <span className="text-sm opacity-90">Tasks Completed</span>
                   <Star size={20} />
                 </div>
-                <div className="text-2xl font-bold">89</div>
+                <div className="text-xl font-bold">89</div>
               </div>
 
               <div className="bg-gray-100 rounded-xl p-4">
@@ -733,7 +747,7 @@ export default function DashboardPage() {
 
             <button
               onClick={() => setShowDataUsage(false)}
-              className="w-full mt-6 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+              className="w-full mt-3 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
             >
               Close Analytics
             </button>
@@ -743,11 +757,11 @@ export default function DashboardPage() {
 
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={handleMenuClick}>
-          <Menu className="text-white" size={24} />
+          <Menu className="text-white" size={20} />
         </button>
-        <h1 className="text-white text-xl font-bold">BLUEPAY</h1>
+        <h1 className="text-white text-xl font-bold">BLUEPAY2026</h1>
         <button onClick={handleBellClick} className="relative">
-          <Bell className="text-white" size={24} />
+          <Bell className="text-white" size={20} />
           {hasWithdrawalNotification && (
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -756,57 +770,30 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="text-white px-4 py-2 overflow-hidden" style={{ backgroundColor: "#0000FF" }}>
-        <div className="flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full mr-2 animate-bounce"></div>
-          <p className="text-sm font-medium text-center text-red-500 animate-slide-notification">
-            🎉 {currentNotification.name} just withdrew ₦{Number(currentNotification.amount).toLocaleString()}
-          </p>
-          <div className="w-2 h-2 bg-white rounded-full ml-2 animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-        </div>
+      {/* Greeting Section with Word-by-Word Spelling Animation */}
+      <div className="text-white px-3 py-3 text-center" style={{ backgroundColor: "#0000FF" }}>
+        <p className="text-lg font-bold">
+          {greeting}{" "}
+          <TypewriterText text={userName} delay={80} loop={false} />
+        </p>
       </div>
 
-      <div className="flex items-center justify-between p-4 bg-gray-100">
-        <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center overflow-hidden">
-          {userProfilePhoto ? (
-            <img src={userProfilePhoto || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
-          ) : (
-            <User className="text-white" size={20} />
-          )}
-        </div>
-        <div className="flex-1 ml-4">
-          <p className="text-gray-800 font-semibold">{displayedName}</p>
-        </div>
-        <button
-          onClick={handleBellClick}
-          className="relative w-12 h-12 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: "#0000FF" }}
-        >
-          <Bell className="text-white" size={24} />
-          {hasWithdrawalNotification && (
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            </div>
-          )}
-        </button>
-      </div>
-
-      {/* Start of updates */}
-      <div className="mx-4 mb-6 p-6 rounded-2xl text-white" style={{ backgroundColor: "#0000FF" }}>
-        <div className="flex items-center justify-between mb-4">
+      {/* Profile and Menu Section - Dashboard Card with proper spacing */}
+      <div className="mx-3 mb-4 p-4 rounded-xl text-white mt-4" style={{ backgroundColor: "#0000FF" }}>
+        <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-white/80 text-sm mb-1">Available Balance</p>
-            <p className="text-3xl font-bold">₦{balance.toLocaleString()}</p>
+            <p className="text-white/80 text-xs mb-1">Available Balance</p>
+            <p className="text-xl font-bold">₦{balance.toLocaleString()}</p>
           </div>
           <button
             onClick={handleWithdraw}
-            className="bg-white text-blue-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+            className="bg-white text-blue-600 px-5 py-1 rounded-full font-semibold text-sm hover:bg-gray-100 transition-colors"
           >
             Withdraw
           </button>
         </div>
-        <div className="mt-6">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mt-3">
+          <div className="flex items-center justify-between mb-1">
             <p className="text-white/80 text-sm">Daily spend target</p>
             <p className="text-white font-semibold">₦200,000</p>
           </div>
@@ -816,75 +803,75 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 px-4 mb-8">
+      <div className="grid grid-cols-4 gap-3 px-3 mb-4">
         <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
-          <div className="w-16 h-16 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
-            <CreditCard className="text-yellow-600" size={24} />
+          <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-1">
+            <CreditCard className="text-yellow-600" size={20} />
           </div>
-          <p className="text-sm text-gray-700">Buy BPC</p>
+          <p className="text-xs text-gray-700">Buy BPC</p>
         </button>
         <button onClick={handleOrderATM} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-2">
-            <CreditCard className="text-purple-600" size={24} />
+          <div className="w-14 h-14 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-1">
+            <CreditCard className="text-purple-600" size={20} />
           </div>
-          <p className="text-sm text-gray-700">Order Atm</p>
+          <p className="text-xs text-gray-700">Order Atm</p>
         </button>
         <button onClick={handleWatch} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
-            <Clock className="text-blue-600" size={24} />
+          <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-1">
+            <Clock className="text-blue-600" size={20} />
           </div>
-          <p className="text-sm text-gray-700">Watch</p>
+          <p className="text-xs text-gray-700">Watch</p>
         </button>
         <button onClick={handleAirtime} className="text-center">
-          <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-2">
-            <Phone className="text-green-600" size={24} />
+          <div className="w-14 h-14 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-1">
+            <Phone className="text-green-600" size={20} />
           </div>
-          <p className="text-sm text-gray-700">Airtime</p>
+          <p className="text-xs text-gray-700">Airtime</p>
         </button>
       </div>
 
-      <div className="px-4 mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">More Services</h2>
+      <div className="px-3 mb-4">
+        <h2 className="text-base font-semibold text-gray-800 mb-3">More Services</h2>
         <div className="grid grid-cols-4 gap-4">
           <button onClick={handleData} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
-              <BarChart className="text-gray-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
+              <BarChart className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Data</p>
           </button>
           <button onClick={handleSupport} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
-              <Headphones className="text-gray-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
+              <Headphones className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Support</p>
           </button>
           <button onClick={handleGroup} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
-              <Globe className="text-blue-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
+              <Globe className="text-blue-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Group</p>
           </button>
           <button onClick={handleEarn} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
-              <DollarSign className="text-yellow-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
+              <DollarSign className="text-yellow-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Earn</p>
           </button>
           <button onClick={handleProfile} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
-              <User className="text-gray-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
+              <User className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Profile</p>
           </button>
           <button onClick={handleTestimonies} className="text-center">
-            <div className="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-2">
-              <Star className="text-green-600" size={24} />
+            <div className="w-14 h-14 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-2">
+              <Star className="text-green-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Stories</p>
           </button>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-3">
           <button
             onClick={handleLogout}
             className="w-full py-3 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors"
@@ -895,7 +882,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Compact Banner Carousel - PalmPay Style */}
-      <div className="mx-4 mb-8 overflow-hidden rounded-2xl bg-white shadow-lg">
+      <div className="mx-4 mb-4 overflow-hidden rounded-xl bg-white shadow-lg">
         <div className="relative h-28">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative w-full h-full">
@@ -1045,7 +1032,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mx-4 mb-20 p-6 rounded-2xl text-white overflow-hidden" style={{ backgroundColor: "#0000FF" }}>
+      <div className="mx-4 mb-20 p-4 rounded-xl text-white overflow-hidden" style={{ backgroundColor: "#0000FF" }}>
         <h3 className="text-xl font-bold mb-4">Important Information</h3>
         <div className="bg-white/10 rounded-xl p-4">
           <h4 className="text-lg font-semibold mb-3">How to Buy BPC Code</h4>
@@ -1106,7 +1093,7 @@ export default function DashboardPage() {
         {/* Income, Expenses, Savings Cards */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-white rounded-xl p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <TrendingUp className="text-green-500" size={20} />
               <ArrowUpRight className="text-green-500" size={16} />
             </div>
@@ -1116,7 +1103,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-white rounded-xl p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <TrendingDown className="text-red-500" size={20} />
               <ArrowDownRight className="text-red-500" size={16} />
             </div>
@@ -1126,7 +1113,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-white rounded-xl p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <PiggyBank className="text-blue-500" size={20} />
               <Star className="text-yellow-500" size={16} />
             </div>
@@ -1232,14 +1219,14 @@ export default function DashboardPage() {
         {/* Quick Financial Stats */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white">
-            <Wallet className="mb-2" size={24} />
+            <Wallet className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">Total Balance</p>
-            <p className="text-2xl font-bold">₦{balance.toLocaleString()}</p>
+            <p className="text-xl font-bold">₦{balance.toLocaleString()}</p>
           </div>
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 text-white">
-            <Zap className="mb-2" size={24} />
+            <Zap className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">This Month</p>
-            <p className="text-2xl font-bold">₦{monthlyExpenses.toLocaleString()}</p>
+            <p className="text-xl font-bold">₦{monthlyExpenses.toLocaleString()}</p>
           </div>
         </div>
       </div>
@@ -1247,11 +1234,11 @@ export default function DashboardPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
         <div className="flex items-center justify-around">
           <button onClick={handleCalendar} className="text-center">
-            <Calendar className="text-blue-500 mx-auto mb-1" size={24} />
+            <Calendar className="text-blue-500 mx-auto mb-1" size={20} />
             <p className="text-xs text-blue-500 font-medium">Calendar</p>
           </button>
           <button onClick={handleSocial} className="text-center">
-            <MessageCircle className="text-green-500 mx-auto mb-1" size={24} />
+            <MessageCircle className="text-green-500 mx-auto mb-1" size={20} />
             <p className="text-xs text-green-500 font-medium">Social</p>
           </button>
           <button
@@ -1259,10 +1246,10 @@ export default function DashboardPage() {
             className="w-14 h-14 rounded-full flex items-center justify-center"
             style={{ backgroundColor: "#0000FF" }}
           >
-            <Plus className="text-white" size={28} />
+            <Plus className="text-white" size={20} />
           </button>
           <button onClick={handleDataUsage} className="text-center">
-            <BarChart3 className="text-purple-500 mx-auto mb-1" size={24} />
+            <BarChart3 className="text-purple-500 mx-auto mb-1" size={20} />
             <p className="text-xs text-purple-500 font-medium">Data</p>
           </button>
           <button onClick={handleProfile} className="text-center">

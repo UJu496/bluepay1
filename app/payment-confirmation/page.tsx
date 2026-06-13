@@ -40,13 +40,13 @@ export default function PaymentConfirmationPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0000FF" }}>
         <div className="text-center">
-          <div className="relative mb-8">
+          <div className="relative mb-4">
             {/* Outer rotating ring */}
             <div className="w-24 h-24 border-4 border-white/30 rounded-full animate-spin mx-auto"></div>
             {/* Inner pulsing circle */}
             <div className="absolute top-2 left-2 w-20 h-20 bg-white/20 rounded-full animate-pulse"></div>
             {/* Center dot */}
-            <div className="absolute top-8 left-8 w-8 h-8 bg-white rounded-full animate-bounce"></div>
+            <div className="absolute top-5 left-8 w-8 h-8 bg-white rounded-full animate-bounce"></div>
           </div>
 
           {/* Animated dots */}
@@ -68,14 +68,14 @@ export default function PaymentConfirmationPage() {
       {/* Header */}
       <div className="flex items-center p-4 pt-12">
         <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Confirm Payment Details</h1>
       </div>
 
-      <div className="p-6 mt-8">
+      <div className="p-4 mt-4">
         {/* Confirmation Card */}
-        <div className="bg-white rounded-lg p-6 mb-8 shadow-lg">
+        <div className="bg-white rounded-lg p-4 mb-4 shadow-lg">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6 overflow-hidden">
             <div className="flex items-center">
               <span className="text-yellow-600 mr-2">⚠️</span>
@@ -90,10 +90,10 @@ export default function PaymentConfirmationPage() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Confirm Your Details</h2>
+          <h2 className="text-xl font-bold text-center mb-6 text-gray-800">Confirm Your Details</h2>
 
           {/* User Details */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-4 mb-4">
             <div className="border-b border-gray-200 pb-3">
               <label className="block text-sm font-medium text-gray-600 mb-1">FULL NAME</label>
               <p className="text-lg font-semibold text-gray-800">{userName}</p>
@@ -106,7 +106,7 @@ export default function PaymentConfirmationPage() {
 
             <div className="border-b border-gray-200 pb-3">
               <label className="block text-sm font-medium text-gray-600 mb-1">AMOUNT</label>
-              <p className="text-2xl font-bold" style={{ color: "#0000FF" }}>
+              <p className="text-xl font-bold" style={{ color: "#0000FF" }}>
                 {amount}
               </p>
             </div>

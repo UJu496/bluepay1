@@ -155,16 +155,16 @@ export default function SettingsPage() {
     <div className="min-h-screen" style={{ backgroundColor: "#0000FF" }}>
       {showNotificationModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm animate-bounce">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm animate-bounce">
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="text-white" size={32} />
+                <DollarSign className="text-white" size={20} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Credit Alert!</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Credit Alert!</h2>
               <p className="text-gray-600 mb-4">You have received a credit notification</p>
               <div className="bg-green-50 rounded-xl p-4 mb-4">
                 <p className="text-sm text-gray-600 mb-2">From: BLUEPAY INT'L</p>
-                <p className="text-3xl font-bold text-green-600">₦200,000.00</p>
+                <p className="text-xl font-bold text-green-600">₦200,000.00</p>
                 <p className="text-sm text-gray-600 mt-2">Transaction successful</p>
               </div>
               <button
@@ -179,19 +179,19 @@ export default function SettingsPage() {
       )}
 
       {/* Header */}
-      <div className="text-white p-6 pt-12">
+      <div className="text-white p-4 pt-12">
         <div className="flex items-center gap-4 mb-4">
           <button onClick={handleBack} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="text-2xl font-bold">Settings & More</h1>
+          <h1 className="text-xl font-bold">Settings & More</h1>
         </div>
         <p className="text-white/90 text-sm">Customize your BLUEPAY experience</p>
       </div>
 
       <div className="p-4 space-y-4">
         {/* Theme Customization Section */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
               <Palette className="text-white" size={20} />
@@ -241,7 +241,7 @@ export default function SettingsPage() {
         </div>
 
         {/* General Settings */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
               <SettingsIcon className="text-white" size={20} />
@@ -297,7 +297,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Notifications */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
               <Bell className="text-white" size={20} />
@@ -366,7 +366,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Help & Support */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
               <HelpCircle className="text-white" size={20} />
@@ -422,7 +422,7 @@ export default function SettingsPage() {
         </div>
 
         {/* App Information */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 text-white shadow-sm">
+        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white shadow-sm">
           <h3 className="text-lg font-bold mb-2">BLUEPAY INT'L</h3>
           <p className="text-sm text-white/90 mb-4">Version 2.0.1 (Build 2025)</p>
           <div className="space-y-2 text-sm">
@@ -436,7 +436,7 @@ export default function SettingsPage() {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-3 p-4 bg-red-500 text-white rounded-2xl font-semibold hover:bg-red-600 transition-colors shadow-sm"
+          className="w-full flex items-center justify-center gap-3 p-4 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition-colors shadow-sm"
         >
           <LogOut size={20} />
           <span>Logout from BLUEPAY</span>

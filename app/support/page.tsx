@@ -106,7 +106,7 @@ export default function SupportPage() {
   }
 
   const handleWhatsAppSupport = () => {
-    window.open("https://wa.me/2349167089066?text=Hello, I need help with BLUEPAY", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
   }
 
   const handleCallSupport = () => {
@@ -114,7 +114,7 @@ export default function SupportPage() {
   }
 
   const handleJoinCommunity = () => {
-    window.open("https://t.me/bluepay2", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
   }
 
   return (
@@ -122,7 +122,7 @@ export default function SupportPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()}>
-          <ArrowLeft className="text-white" size={24} />
+          <ArrowLeft className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">Support</h1>
         <div className="w-6"></div>
@@ -136,7 +136,7 @@ export default function SupportPage() {
             style={{ background: "linear-gradient(to right, #0000FF, #0000FF)" }}
           >
             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-              <Bot className="text-white" size={24} />
+              <Bot className="text-white" size={20} />
             </div>
             <div className="flex-1 text-left">
               <h3 className="font-semibold">AI Assistant</h3>
@@ -214,7 +214,7 @@ export default function SupportPage() {
         )}
 
         {/* Contact Options */}
-        <div className="mb-8">
+        <div className="mb-4">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Contact Us</h2>
           <div className="space-y-4">
             {/* Email Support */}
@@ -226,7 +226,7 @@ export default function SupportPage() {
                 className="w-12 h-12 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: "#0000FF20" }}
               >
-                <Mail style={{ color: "#0000FF" }} size={24} />
+                <Mail style={{ color: "#0000FF" }} size={20} />
               </div>
               <div className="flex-1 text-left">
                 <h3 className="font-semibold text-gray-800">Email Support</h3>
@@ -241,7 +241,7 @@ export default function SupportPage() {
               className="w-full p-4 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                <MessageCircle className="text-green-600" size={24} />
+                <MessageCircle className="text-green-600" size={20} />
               </div>
               <div className="flex-1 text-left">
                 <h3 className="font-semibold text-gray-800">WhatsApp Support</h3>
@@ -256,7 +256,7 @@ export default function SupportPage() {
               className="w-full p-4 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <Phone className="text-red-600" size={24} />
+                <Phone className="text-red-600" size={20} />
               </div>
               <div className="flex-1 text-left">
                 <h3 className="font-semibold text-gray-800">Phone Support</h3>
@@ -268,7 +268,7 @@ export default function SupportPage() {
         </div>
 
         {/* Support Hours */}
-        <div className="mb-8 p-4 rounded-xl" style={{ backgroundColor: "#0000FF20" }}>
+        <div className="mb-4 p-4 rounded-xl" style={{ backgroundColor: "#0000FF20" }}>
           <div className="flex items-center gap-3 mb-3">
             <Clock style={{ color: "#0000FF" }} size={20} />
             <h3 className="font-semibold" style={{ color: "#0000FF" }}>
@@ -292,25 +292,25 @@ export default function SupportPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
+        <div className="mb-4">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-4">
             <button className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-shadow">
-              <FileText style={{ color: "#0000FF" }} className="mx-auto mb-2" size={24} />
+              <FileText style={{ color: "#0000FF" }} className="mx-auto mb-2" size={20} />
               <p className="text-sm font-semibold text-gray-800">Report Issue</p>
             </button>
             <button
               onClick={handleJoinCommunity}
               className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-shadow"
             >
-              <Users style={{ color: "#0000FF" }} className="mx-auto mb-2" size={24} />
+              <Users style={{ color: "#0000FF" }} className="mx-auto mb-2" size={20} />
               <p className="text-sm font-semibold text-gray-800">Join Community</p>
             </button>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="mb-8">
+        <div className="mb-4">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
           <div className="space-y-3">
             {faqs.map((faq, index) => (

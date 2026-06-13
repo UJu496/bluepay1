@@ -39,39 +39,54 @@ export default function WithdrawalSuccessPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ backgroundColor: "#0000FF" }}>
       <div className="text-center max-w-md w-full">
-        {/* Header text */}
-        <p className="text-gray-600 text-lg mb-8">Transfer initiated successfully!</p>
-
-        {/* Large blue checkmark icon */}
-        <div className="w-24 h-24 mx-auto mb-8 relative">
-          <div
-            className="w-24 h-24 rounded-full border-4 flex items-center justify-center"
-            style={{ borderColor: "#0000FF" }}
-          >
-            <svg className="w-12 h-12" fill="none" stroke="#0000FF" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
+        {/* Animated Success Icon */}
+        <div className="mb-4 flex justify-center">
+          <div className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
+            <div className="w-28 h-28 rounded-full bg-white/30 flex items-center justify-center">
+              <svg className="w-16 h-16" fill="none" stroke="white" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
           </div>
         </div>
 
         {/* Success heading */}
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Transfer Successfully</h1>
+        <h1 className="text-xl font-bold text-white mb-3">Success!</h1>
 
-        {/* Dynamic amount description */}
-        <p className="text-gray-600 text-base mb-12 leading-relaxed">
-          Your transfer of ₦{amount} has been processed successfully.
+        {/* Status message */}
+        <p className="text-white/90 text-lg mb-4">
+          Transfer initiated successfully!
         </p>
 
-        {/* Ok button */}
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="w-full py-4 px-6 text-white font-semibold text-lg rounded-xl hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "#0000FF" }}
-        >
-          Ok, I got it
-        </button>
+        {/* Amount Display Card */}
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-4 border border-white/20">
+          <p className="text-white/70 text-sm mb-2">Transfer Amount</p>
+          <p className="text-white text-xl font-bold">₦{amount}</p>
+        </div>
+
+        {/* Dynamic amount description */}
+        <p className="text-white/80 text-base mb-6 leading-relaxed">
+          Your transfer of ₦{amount} has been processed successfully and will reflect in your account shortly.
+        </p>
+
+        {/* Action Buttons */}
+        <div className="space-y-4">
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:shadow-xl transition-all duration-300 bg-white"
+            style={{ color: "#0000FF" }}
+          >
+            Go to Dashboard
+          </button>
+          <button
+            onClick={() => router.push("/transactions")}
+            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all duration-300 border-2 border-white"
+          >
+            View Transactions
+          </button>
+        </div>
       </div>
     </div>
   )

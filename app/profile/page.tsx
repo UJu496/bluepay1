@@ -64,14 +64,14 @@ export default function ProfilePage() {
   if (showSuccess) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-5 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <div className="text-center">
-          <div className="bg-green-500 rounded-full p-6 mb-6 mx-auto w-24 h-24 flex items-center justify-center">
+          <div className="bg-green-500 rounded-full p-4 mb-6 mx-auto w-24 h-24 flex items-center justify-center">
             <CheckCircle size={48} className="text-white" />
           </div>
-          <h2 className="text-white text-3xl font-bold mb-4">Profile Upgraded!</h2>
+          <h2 className="text-white text-xl font-bold mb-4">Profile Upgraded!</h2>
           <p className="text-white text-xl mb-2">Congratulations!</p>
           <p className="text-white text-lg">You've earned ₦3,000 reward!</p>
           <p className="text-white/80 text-sm mt-4">Returning to dashboard...</p>
@@ -83,7 +83,7 @@ export default function ProfilePage() {
   if (isUpgrading) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-5 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <div className="text-center">
@@ -98,7 +98,7 @@ export default function ProfilePage() {
   if (!userData) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-5 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0000FF" }}
       >
         <p className="text-white text-xl">Loading profile...</p>
@@ -109,10 +109,10 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#f5f5f5" }}>
       {/* Header */}
-      <div className="px-6 py-8" style={{ backgroundColor: "#0000FF" }}>
+      <div className="px-5 py-5" style={{ backgroundColor: "#0000FF" }}>
         <div className="flex items-center justify-between mb-6">
           <Link href="/dashboard" className="text-white">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-white text-xl font-bold">Profile</h1>
           <div></div>
@@ -120,15 +120,15 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Content */}
-      <div className="px-6 py-8">
+      <div className="px-5 py-5">
         {/* Profile Info Card */}
-        <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
+        <div className="bg-white rounded-xl p-4 mb-6 shadow-sm">
           <div className="flex items-center mb-6">
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center mr-4"
               style={{ backgroundColor: isUpgraded ? "#FFD700" : "#0000FF" }}
             >
-              <User size={32} className="text-white" />
+              <User size={20} className="text-white" />
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-800">{userData.fullName}</h2>
@@ -163,13 +163,13 @@ export default function ProfilePage() {
 
         {/* Upgrade Section */}
         {!isUpgraded && (
-          <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
+          <div className="bg-white rounded-xl p-4 mb-6 shadow-sm">
             <div className="text-center mb-6">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ backgroundColor: "#FFD700" }}
               >
-                <Star size={32} className="text-white" />
+                <Star size={20} className="text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Upgrade to Premium</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
@@ -207,9 +207,9 @@ export default function ProfilePage() {
 
         {/* Premium Benefits (if upgraded) */}
         {isUpgraded && (
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-2xl p-6 mb-6 text-white">
+          <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-xl p-4 mb-6 text-white">
             <div className="text-center">
-              <Star size={32} className="mx-auto mb-3" />
+              <Star size={20} className="mx-auto mb-3" />
               <h3 className="text-xl font-bold mb-2">Premium Member</h3>
               <p className="text-sm opacity-90">You're enjoying all premium benefits and earned your ₦3,000 bonus!</p>
               {userData.upgradeDate && (

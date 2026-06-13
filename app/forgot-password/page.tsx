@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
   if (isLoading) {
     return (
       <div
-        className="min-h-screen px-6 py-8 flex flex-col items-center justify-center"
+        className="min-h-screen px-5 py-5 flex flex-col items-center justify-center"
         style={{ backgroundColor: "#4169E1" }}
       >
         <div className="text-center">
@@ -91,21 +91,21 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-8 flex flex-col" style={{ backgroundColor: "#4169E1" }}>
-      <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen px-5 py-5 flex flex-col" style={{ backgroundColor: "#4169E1" }}>
+      <div className="flex items-center justify-between mb-4">
         <Link href="/login" className="text-white">
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </Link>
         <span className="text-white text-lg">You Need Help?</span>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-8">
-          <h1 className="text-white text-5xl font-bold mb-4">BLUEPAY</h1>
-          <h2 className="text-white text-3xl font-bold mb-6">
+        <div className="text-center mb-4">
+          <h1 className="text-white text-xl font-bold mb-4">BLUEPAY</h1>
+          <h2 className="text-white text-xl font-bold mb-6">
             {step === "email" ? "Forgot Password" : "Reset Password"}
           </h2>
-          <p className="text-white text-lg leading-relaxed mb-8 max-w-md">
+          <p className="text-white text-lg leading-relaxed mb-4 max-w-md">
             {step === "email"
               ? "Enter your email address to reset your password. We'll verify your account and let you create a new password."
               : "Enter your new password below. Make sure it's secure and easy to remember."}
@@ -113,7 +113,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {step === "email" ? (
-          <form onSubmit={handleEmailSubmit} className="w-full max-w-md space-y-6">
+          <form onSubmit={handleEmailSubmit} className="w-full max-w-md space-y-4">
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70" size={20} />
               <input
@@ -149,7 +149,7 @@ export default function ForgotPasswordPage() {
             </button>
           </form>
         ) : (
-          <form onSubmit={handlePasswordReset} className="w-full max-w-md space-y-6">
+          <form onSubmit={handlePasswordReset} className="w-full max-w-md space-y-4">
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70" size={20} />
               <input
@@ -213,7 +213,7 @@ export default function ForgotPasswordPage() {
           </form>
         )}
 
-        <div className="mt-8 text-center">
+        <div className="mt-4 text-center">
           <span className="text-white text-lg">
             Remember your password?{" "}
             <Link href="/login" className="underline">

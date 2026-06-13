@@ -206,11 +206,11 @@ export default function ReportsPage() {
       <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-4 pt-12">
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} />
           </button>
           <h1 className="text-xl font-bold">Reports & Analytics</h1>
           <button onClick={exportReport} className="p-2 hover:bg-white/10 rounded-full">
-            <Download size={24} />
+            <Download size={20} />
           </button>
         </div>
 
@@ -272,13 +272,13 @@ export default function ReportsPage() {
               className={`w-16 h-16 rounded-full flex items-center justify-center ${netSavings >= 0 ? "bg-green-100" : "bg-red-100"}`}
             >
               {netSavings >= 0 ? (
-                <TrendingUp className="text-green-600" size={32} />
+                <TrendingUp className="text-green-600" size={20} />
               ) : (
-                <TrendingDown className="text-red-600" size={32} />
+                <TrendingDown className="text-red-600" size={20} />
               )}
             </div>
             <div>
-              <p className="text-3xl font-bold text-gray-800">₦{Math.abs(netSavings).toLocaleString()}</p>
+              <p className="text-xl font-bold text-gray-800">₦{Math.abs(netSavings).toLocaleString()}</p>
               <p className="text-sm text-gray-600">{netSavings >= 0 ? "Saved this period" : "Overspent this period"}</p>
             </div>
           </div>
@@ -334,7 +334,7 @@ export default function ReportsPage() {
             Expense Breakdown
           </h3>
           {expenseByCategory.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No expenses in this period</p>
+            <p className="text-center text-gray-500 py-5">No expenses in this period</p>
           ) : (
             <div className="space-y-3">
               {expenseByCategory.map((cat, index) => (
@@ -368,7 +368,7 @@ export default function ReportsPage() {
             Income Breakdown
           </h3>
           {incomeByCategory.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No income in this period</p>
+            <p className="text-center text-gray-500 py-5">No income in this period</p>
           ) : (
             <div className="space-y-3">
               {incomeByCategory.map((cat, index) => (
@@ -403,14 +403,14 @@ export default function ReportsPage() {
           </h3>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-4xl font-bold">
+              <p className="text-xl font-bold">
                 {totalIncome > 0 ? Math.min(100, Math.round((netSavings / totalIncome) * 100 + 50)) : 50}
               </p>
               <p className="text-sm opacity-90">out of 100</p>
             </div>
             <div className="w-24 h-24 rounded-full border-4 border-white/30 flex items-center justify-center">
               <div className="text-center">
-                <p className="text-2xl font-bold">
+                <p className="text-xl font-bold">
                   {totalIncome > 0
                     ? Math.min(100, Math.round((netSavings / totalIncome) * 100 + 50)) >= 70
                       ? "😊"
