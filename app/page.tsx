@@ -62,19 +62,32 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Card */}
-      <div className="bg-white rounded-lg px-10 py-3 mb-4 shadow-lg w-full max-w-sm">
-        <div className="text-lg font-bold text-center tracking-wide flex justify-center items-center overflow-hidden">
-          <div
-            className="whitespace-nowrap animate-pulse"
-            style={{
-              color: "#0000FF",
-              animation: "slideRtlContinuous 3s linear infinite",
-            }}
-          >
-            BLUEPAY2026
-          </div>
-          {isVerified && <CheckCircle className="text-green-500 ml-2" size={18} />}
+      {/* Word-by-word spelling animation */}
+      <div className="mb-6 text-center">
+        <div className="text-white">
+          {["BLUEPAY", "2026"].map((word, wordIndex) => (
+            <div key={wordIndex} className="inline">
+              {word.split("").map((letter, letterIndex) => (
+                <span
+                  key={letterIndex}
+                  className="text-sm font-bold animate-pulse"
+                  style={{
+                    animationDelay: `${(wordIndex * 7 + letterIndex) * 0.08}s`,
+                    animationDuration: "1.5s",
+                    animationIterationCount: "infinite",
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
+              {wordIndex === 0 && <span className="mx-1"></span>}
+            </div>
+          ))}
+          {isVerified && (
+            <div className="inline ml-2 animate-bounce">
+              <CheckCircle className="text-green-400 bg-white rounded-full inline" size={16} />
+            </div>
+          )}
         </div>
       </div>
 

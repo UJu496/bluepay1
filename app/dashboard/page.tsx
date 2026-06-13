@@ -83,6 +83,18 @@ export default function DashboardPage() {
   const [monthlySavings] = useState(165000)
   const [recentTransactions, setRecentTransactions] = useState<any[]>([])
   const [spendingByCategory, setSpendingByCategory] = useState<any[]>([])
+  const [greeting, setGreeting] = useState("")
+
+  const getTimeBasedGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) {
+      return "Good Morning"
+    } else if (hour < 18) {
+      return "Good Afternoon"
+    } else {
+      return "Good Evening"
+    }
+  }
 
   const nigerianNames = [
     "Adebayo Johnson",
@@ -185,6 +197,8 @@ export default function DashboardPage() {
   ]
 
   useEffect(() => {
+    setGreeting(getTimeBasedGreeting())
+
     const userData = localStorage.getItem("userData")
     if (userData) {
       const parsedData = JSON.parse(userData)
@@ -756,15 +770,16 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="text-white px-3 py-1 overflow-hidden" style={{ backgroundColor: "#0000FF" }}>
-        <div className="text-base font-bold text-center">
-          <TypewriterText text="BLUEPAY 2026 - ₦" delay={50} loop={true} />
-          <span className="animate-pulse">999,999,999.99</span>
-        </div>
+      {/* Greeting Section with Word-by-Word Spelling Animation */}
+      <div className="text-white px-3 py-3 text-center" style={{ backgroundColor: "#0000FF" }}>
+        <p className="text-sm mb-1">{greeting}</p>
+        <p className="text-lg font-bold">
+          <TypewriterText text={userName} delay={80} loop={false} />
+        </p>
       </div>
 
-      {/* Profile and Menu Section */}
-      <div className="mx-3 mb-4 p-4 rounded-xl text-white" style={{ backgroundColor: "#0000FF" }}>
+      {/* Profile and Menu Section - Dashboard Card with proper spacing */}
+      <div className="mx-3 mb-4 p-4 rounded-xl text-white mt-4" style={{ backgroundColor: "#0000FF" }}>
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-white/80 text-xs mb-1">Available Balance</p>
