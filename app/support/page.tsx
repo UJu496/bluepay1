@@ -106,7 +106,7 @@ export default function SupportPage() {
   }
 
   const handleWhatsAppSupport = () => {
-    window.open("https://wa.me/2349167089066?text=Hello, I need help with BLUEPAY", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
   }
 
   const handleCallSupport = () => {
@@ -114,7 +114,7 @@ export default function SupportPage() {
   }
 
   const handleJoinCommunity = () => {
-    window.open("https://t.me/bluepay2", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
   }
 
   return (

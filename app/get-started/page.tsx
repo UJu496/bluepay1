@@ -93,16 +93,17 @@ export default function GetStartedPage() {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-8">
-          <h1 className="text-white text-5xl font-bold mb-4">BLUEPAY</h1>
-          <h2 className="text-white text-3xl font-bold mb-6">Welcome!</h2>
-          <p className="text-white text-lg leading-relaxed mb-8 max-w-md">
-            Get your account ready and instantly start buying, selling airtime and data online and start paying all your
-            bills in cheaper price.
+        {/* Welcome Section */}
+        <div className="text-center mb-12 w-full max-w-md">
+          <h1 className="text-white text-5xl font-bold mb-6">Welcome!</h1>
+          <p className="text-white text-xl leading-relaxed">
+            Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills in cheaper price.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+        {/* Form Section */}
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
+          {/* Full Name Input with White Border */}
           <div>
             <input
               type="text"
@@ -110,49 +111,59 @@ export default function GetStartedPage() {
               placeholder="Your Full Name"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="w-full px-4 py-4 rounded-xl border-2 text-white placeholder-white/70 bg-transparent"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full px-6 py-4 rounded-2xl border-2 text-white placeholder-white/60 bg-transparent transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+              style={{ borderColor: "rgba(255, 255, 255, 0.8)" }}
               required
             />
           </div>
 
+          {/* Email Input */}
           <div>
+            <label className="block text-white text-base mb-2">Your Email</label>
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-4 rounded-xl border-2 text-white placeholder-white/70 bg-transparent"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full px-6 py-4 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
               required
             />
           </div>
 
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="w-full px-4 py-4 pr-12 rounded-xl border-2 text-white placeholder-white/70 bg-transparent"
-              style={{ borderColor: "#0000FF" }}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+          {/* Password Input */}
+          <div>
+            <label className="block text-white text-base mb-2">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="w-full px-6 py-4 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 pr-12 transition-all focus:outline-none focus:ring-2 focus:ring-white/30"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
-          <p className="text-white text-sm leading-relaxed">
-            Any further actions indicates that you agree with our terms & conditions!
+          {/* Terms & Conditions */}
+          <p className="text-white text-sm leading-relaxed pt-2">
+            Any further actions indicates that you agree with our{" "}
+            <Link href="/terms" className="underline hover:text-white/80">
+              terms & conditions
+            </Link>
+            !
           </p>
 
+          {/* Error Message */}
           {errorMessage && (
             <div className="bg-red-500/20 border border-red-500 rounded-lg p-4 text-center">
               <p className="text-white font-semibold">{errorMessage}</p>
@@ -160,20 +171,22 @@ export default function GetStartedPage() {
             </div>
           )}
 
+          {/* Create Account Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 rounded-full bg-white font-semibold text-lg disabled:opacity-50"
+            className="w-full py-4 rounded-full bg-white font-bold text-lg disabled:opacity-50 transition-all hover:shadow-lg"
             style={{ color: "#0000FF" }}
           >
             {isLoading ? "Creating..." : "Create account"}
           </button>
         </form>
 
+        {/* Sign In Link */}
         <div className="mt-8 text-center">
           <span className="text-white text-lg">
             Already have an account?{" "}
-            <Link href="/login" className="underline">
+            <Link href="/login" className="underline hover:text-white/80">
               Sign in
             </Link>
           </span>
