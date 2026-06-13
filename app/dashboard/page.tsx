@@ -659,7 +659,7 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => {
-                  window.open("https://chat.whatsapp.com/DHJ21hwdm4GKTaAEyZ5jfr?mode=ac_t", "_blank")
+                  window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
                   setShowSocial(false)
                 }}
                 className="w-full flex items-center gap-4 p-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"
@@ -759,7 +759,7 @@ export default function DashboardPage() {
         <button onClick={handleMenuClick}>
           <Menu className="text-white" size={20} />
         </button>
-        <h1 className="text-white text-xl font-bold">BLUEPAY</h1>
+        <h1 className="text-white text-xl font-bold">BLUEPAY2026</h1>
         <button onClick={handleBellClick} className="relative">
           <Bell className="text-white" size={20} />
           {hasWithdrawalNotification && (
@@ -772,8 +772,8 @@ export default function DashboardPage() {
 
       {/* Greeting Section with Word-by-Word Spelling Animation */}
       <div className="text-white px-3 py-3 text-center" style={{ backgroundColor: "#0000FF" }}>
-        <p className="text-sm mb-1">{greeting}</p>
         <p className="text-lg font-bold">
+          {greeting}{" "}
           <TypewriterText text={userName} delay={80} loop={false} />
         </p>
       </div>
