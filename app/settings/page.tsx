@@ -163,7 +163,7 @@ export default function SettingsPage() {
               <h2 className="text-xl font-bold text-gray-800 mb-2">Credit Alert!</h2>
               <p className="text-gray-600 mb-4">You have received a credit notification</p>
               <div className="bg-green-50 rounded-xl p-4 mb-4">
-                <p className="text-sm text-gray-600 mb-2">From: BLUEPAY INT'L</p>
+                <p className="text-sm text-gray-600 mb-2">From: BLUEPAY2026</p>
                 <p className="text-xl font-bold text-green-600">₦200,000.00</p>
                 <p className="text-sm text-gray-600 mt-2">Transaction successful</p>
               </div>
@@ -423,7 +423,7 @@ export default function SettingsPage() {
 
         {/* App Information */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white shadow-sm">
-          <h3 className="text-lg font-bold mb-2">BLUEPAY INT'L</h3>
+          <h3 className="text-lg font-bold mb-2">BLUEPAY2026</h3>
           <p className="text-sm text-white/90 mb-4">Version 2.0.1 (Build 2025)</p>
           <div className="space-y-2 text-sm">
             <p>Licensed by CBN Nigeria</p>

@@ -58,6 +58,36 @@ const TypewriterText = ({
   return <span className={underlined ? "underline decoration-2 underline-offset-2" : ""}>{displayedText}</span>
 }
 
+const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: number }) => {
+  const [displayedWords, setDisplayedWords] = useState<string[]>([])
+  const [wordIndex, setWordIndex] = useState(0)
+  const words = text.split(" ")
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => {
+        const nextIndex = (prev + 1) % (words.length + 1)
+        if (nextIndex === 0) {
+          setDisplayedWords([])
+        } else {
+          setDisplayedWords(words.slice(0, nextIndex))
+        }
+        return nextIndex
+      })
+    }, delay)
+
+    return () => clearInterval(interval)
+  }, [words, delay])
+
+  return (
+    <span className="inline-block animate-pulse" style={{
+      animation: "slideIn 0.5s ease-out"
+    }}>
+      {displayedWords.join(" ")}
+    </span>
+  )
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
@@ -162,7 +192,7 @@ export default function DashboardPage() {
     {
       name: "Maxwell Prince Chukwu",
       location: "Lagos, Nigeria",
-      text: "BLUEPAY INT'L has completely transformed how I handle my financial transactions. The BPC code system is revolutionary and the CBN partnership gives me complete confidence in the platform's security.",
+      text: "BLUEPAY2026 has completely transformed how I handle my financial transactions. The BPC code system is revolutionary and the CBN partnership gives me complete confidence in the platform's security.",
       rating: 5,
       amount: "₦2,500,000",
     },
@@ -482,8 +512,8 @@ export default function DashboardPage() {
                 <div className="bg-red-50 border-l-4 border-red-500 p-2 rounded">
                   <p className="text-black text-xs font-bold mb-1">🚨 NOTE! CRITICAL WARNING:</p>
                   <p className="text-black text-xs leading-relaxed">
-                    <span className="font-semibold">DO NOT BUY BPC CODE OUTSIDE BLUEPAY INT'L!</span> Only authentic BPC
-                    codes generated directly from BLUEPAY INT'L app can be used for transactions within this platform.
+                    <span className="font-semibold">DO NOT BUY BPC CODE OUTSIDE BLUEPAY2026!</span> Only authentic BPC
+                    codes generated directly from BLUEPAY2026 app can be used for transactions within this platform.
                   </p>
                 </div>
 
@@ -505,7 +535,7 @@ export default function DashboardPage() {
                 </div>
 
                 <p className="text-black text-xs italic text-center mt-1">
-                  🔒 Your security is our priority. Stay safe with BLUEPAY INT'L!
+                  🔒 Your security is our priority. Stay safe with BLUEPAY2026!
                 </p>
               </div>
             </div>
@@ -770,11 +800,11 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* Greeting Section with Word-by-Word Spelling Animation */}
-      <div className="text-white px-3 py-3 text-center" style={{ backgroundColor: "#0000FF" }}>
-        <p className="text-lg font-bold">
-          {greeting}{" "}
-          <TypewriterText text={userName} delay={80} loop={false} />
+      {/* Greeting Section with Continuous Word-by-Word Animation */}
+      <div className="text-white px-3 py-2 text-center" style={{ backgroundColor: "#0000FF" }}>
+        <p className="text-sm font-semibold">
+          {greeting},{" "}
+          <WordByWordAnimation text={userName} delay={2000} />
         </p>
       </div>
 
