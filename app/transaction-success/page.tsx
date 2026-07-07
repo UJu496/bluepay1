@@ -46,187 +46,182 @@ export default function TransactionSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header - Compact 60-64px */}
-      <div className="flex items-center justify-between px-4 h-16" style={{ backgroundColor: "#0000FF" }}>
+    <div className="h-screen overflow-hidden flex flex-col bg-gray-50">
+      {/* Header - 56px */}
+      <div className="flex items-center justify-between px-4 h-14" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.push("/dashboard")} className="text-white">
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-white text-base font-bold">Transaction Details</h1>
+        <h1 className="text-white text-sm font-bold">Transaction Details</h1>
         <div className="w-5"></div>
       </div>
 
-      <div className="px-4 py-3 max-w-md mx-auto">
-        {/* Recipient Avatar */}
-        <div className="flex justify-center mb-3">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: "#0000FF" }}>
-            {getRecipientInitial()}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-3 py-2 max-w-md mx-auto w-full">
+        {/* Success Icon - 48px */}
+        <div className="flex justify-center mb-2">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+            <CheckCircle size={24} />
           </div>
         </div>
 
-        {/* Recipient Info and Amount */}
-        <div className="text-center mb-4">
-          <h2 className="text-base font-bold text-gray-900 mb-1">
+        {/* Recipient Info and Amount - Ultra Compact */}
+        <div className="text-center mb-2">
+          <h2 className="text-sm font-bold text-gray-900 mb-0.5">
             Transfer to {transaction.recipientName || "Recipient"}
           </h2>
-          <p className="text-2xl font-bold text-gray-900 mb-2">{formatAmount(transaction.amount)}</p>
-          <p className="text-teal-600 font-semibold text-sm">Successful</p>
+          <p className="text-xl font-bold text-gray-900 mb-0.5">{formatAmount(transaction.amount)}</p>
+          <p className="text-teal-600 font-semibold text-xs">Successful</p>
         </div>
 
-        {/* Progress Timeline - Compact */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
+        {/* Progress Timeline - Ultra Compact */}
+        <div className="mb-2">
+          <div className="flex items-center justify-between">
             {/* Payment Successful */}
             <div className="flex flex-col items-center flex-1">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={14} />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Payment<br />successful</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Payment</p>
             </div>
 
             {/* Line 1 */}
-            <div className="flex-1 h-0.5 mx-1.5" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-0.5" style={{ backgroundColor: "#0000FF" }}></div>
 
             {/* Processing */}
             <div className="flex flex-col items-center flex-1">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={14} />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Processing<br />by bank</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Processing</p>
             </div>
 
             {/* Line 2 */}
-            <div className="flex-1 h-0.5 mx-1.5" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-0.5" style={{ backgroundColor: "#0000FF" }}></div>
 
             {/* Received */}
             <div className="flex flex-col items-center flex-1">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={14} />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Received<br />by bank</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Received</p>
             </div>
           </div>
         </div>
 
-        {/* Info message */}
-        <div className="bg-gray-100 rounded-lg p-2 mb-3 text-center">
-          <p className="text-xs text-gray-700">
-            The recipient account is expected to be credited within 5 minutes.
+        {/* Info message - Ultra Compact */}
+        <div className="bg-gray-100 rounded p-2 mb-2 text-center">
+          <p className="text-xs text-gray-700 leading-tight">
+            Transfer processed. Account will be credited within 5 minutes.
           </p>
         </div>
 
-        {/* Transaction Receipt - Clean Banking Layout */}
-        <div className="bg-white rounded-lg p-3 mb-3">
-          <h3 className="text-xs font-bold text-gray-900 mb-2">Transaction Receipt</h3>
+        {/* Transaction Receipt - 2-Column Grid */}
+        <div className="bg-white rounded p-2.5 mb-2">
+          <h3 className="text-xs font-bold text-gray-900 mb-1.5">Receipt</h3>
           
-          {/* Receipt Rows */}
-          <div className="space-y-2">
-            {/* Name */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Name</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.recipientName || "---"}</span>
+          {/* 2-Column Grid Layout */}
+          <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+            {/* Name and Bank Row */}
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Name</p>
+              <p className="text-xs font-semibold text-gray-900">{transaction.recipientName || "---"}</p>
+            </div>
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Bank</p>
+              <p className="text-xs font-semibold text-gray-900">{transaction.bankName || "---"}</p>
             </div>
 
-            {/* Bank */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Bank</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.bankName || "---"}</span>
+            {/* Account and Amount Row */}
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Account</p>
+              <p className="text-xs font-semibold text-gray-900">{transaction.accountNumber || "---"}</p>
+            </div>
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Amount</p>
+              <p className="text-xs font-semibold text-gray-900">{formatAmount(transaction.amount)}</p>
             </div>
 
-            {/* Account Number */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Account Number</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.accountNumber || "---"}</span>
+            {/* Transaction ID - Full Width */}
+            <div className="col-span-2 border-b border-gray-100 pb-1 flex items-center justify-between">
+              <div className="flex-1">
+                <p className="text-xs text-gray-600 leading-tight">Transaction ID</p>
+                <p className="text-xs font-semibold text-gray-900 break-all">{transaction.id || `TXN${Date.now()}`}</p>
+              </div>
+              <button
+                onClick={() => handleCopy(transaction.id || `TXN${Date.now()}`, "Transaction ID")}
+                className="ml-1 flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                aria-label="Copy Transaction ID"
+              >
+                {copiedField === "Transaction ID" ? (
+                  <Check size={12} className="text-green-600" />
+                ) : (
+                  <Copy size={12} className="text-gray-400" />
+                )}
+              </button>
             </div>
 
-            {/* Amount */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Amount</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{formatAmount(transaction.amount)}</span>
-            </div>
-
-            {/* Transaction ID with Copy */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
-              <span className="text-xs text-gray-600">Transaction ID</span>
-              <div className="flex items-center gap-1">
-                <span className="text-xs font-semibold text-gray-900 text-right">{transaction.id || `TXN${Date.now()}`}</span>
+            {/* Session ID - Full Width */}
+            {transaction.sessionId && (
+              <div className="col-span-2 border-b border-gray-100 pb-1 flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 leading-tight">Session ID</p>
+                  <p className="text-xs font-semibold text-gray-900 break-all">{transaction.sessionId}</p>
+                </div>
                 <button
-                  onClick={() => handleCopy(transaction.id || `TXN${Date.now()}`, "Transaction ID")}
-                  className="p-1 hover:bg-gray-100 rounded transition-colors"
-                  aria-label="Copy Transaction ID"
+                  onClick={() => handleCopy(transaction.sessionId, "Session ID")}
+                  className="ml-1 flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Session ID"
                 >
-                  {copiedField === "Transaction ID" ? (
-                    <Check size={14} className="text-green-600" />
+                  {copiedField === "Session ID" ? (
+                    <Check size={12} className="text-green-600" />
                   ) : (
-                    <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
+                    <Copy size={12} className="text-gray-400" />
                   )}
                 </button>
               </div>
-            </div>
-
-            {/* Session ID with Copy - If available */}
-            {transaction.sessionId && (
-              <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
-                <span className="text-xs text-gray-600">Session ID</span>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-semibold text-gray-900 text-right">{transaction.sessionId}</span>
-                  <button
-                    onClick={() => handleCopy(transaction.sessionId, "Session ID")}
-                    className="p-1 hover:bg-gray-100 rounded transition-colors"
-                    aria-label="Copy Session ID"
-                  >
-                    {copiedField === "Session ID" ? (
-                      <Check size={14} className="text-green-600" />
-                    ) : (
-                      <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
-                    )}
-                  </button>
-                </div>
-              </div>
             )}
 
-            {/* Date */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Date</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{new Date(transaction.timestamp).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+            {/* Date and Time Row */}
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Date</p>
+              <p className="text-xs font-semibold text-gray-900">{new Date(transaction.timestamp).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</p>
+            </div>
+            <div className="border-b border-gray-100 pb-1">
+              <p className="text-xs text-gray-600 leading-tight">Time</p>
+              <p className="text-xs font-semibold text-gray-900">{new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</p>
             </div>
 
-            {/* Time */}
-            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
-              <span className="text-xs text-gray-600">Time</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
-            </div>
-
-            {/* Status */}
-            <div className="flex items-center justify-between py-1.5">
-              <span className="text-xs text-gray-600">Status</span>
-              <span className="text-xs font-semibold text-teal-600">Successful</span>
+            {/* Status - Full Width */}
+            <div className="col-span-2">
+              <p className="text-xs text-gray-600 leading-tight">Status</p>
+              <p className="text-xs font-semibold text-teal-600">Successful</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Action Buttons - Side by Side, Compact */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              const subject = "Report Issue - Transfer"
-              const body = `Transaction ID: ${transaction.id}\n\nPlease describe your issue...`
-              window.location.href = `mailto:support@bluepay.ng?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-            }}
-            className="flex-1 h-12 rounded-2xl font-bold text-sm transition-colors"
-            style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
-          >
-            Report Issues
-          </button>
+      {/* Action Buttons - Fixed at Bottom */}
+      <div className="flex gap-2 px-3 py-2 bg-gray-50">
+        <button
+          onClick={() => {
+            const subject = "Report Issue - Transfer"
+            const body = `Transaction ID: ${transaction.id}\n\nPlease describe your issue...`
+            window.location.href = `mailto:support@bluepay.ng?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          }}
+          className="flex-1 h-10 rounded-2xl font-bold text-xs transition-colors"
+          style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
+        >
+          Report Issues
+        </button>
 
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex-1 h-12 rounded-2xl text-white font-bold text-sm"
-            style={{ backgroundColor: "#0000FF" }}
-          >
-            Back to Dashboard
-          </button>
-        </div>
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="flex-1 h-10 rounded-2xl text-white font-bold text-xs"
+          style={{ backgroundColor: "#0000FF" }}
+        >
+          Back to Dashboard
+        </button>
       </div>
 
       {/* Toast Container */}
