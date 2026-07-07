@@ -182,39 +182,39 @@ export default function TransactionsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 pb-20">
-      <div style={{ backgroundColor: "#0000FF" }} className="text-white p-4 pt-12">
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={20} />
+      <div style={{ backgroundColor: "#0000FF" }} className="text-white p-3 pt-8">
+        <div className="flex items-center justify-between mb-3">
+          <button onClick={() => router.push("/dashboard")} className="p-1.5 hover:bg-white/10 rounded-full">
+            <ArrowLeft size={18} />
           </button>
-          <h1 className="text-xl font-bold">All Transactions</h1>
-          <button onClick={() => setShowAddModal(true)} className="p-2 hover:bg-white/10 rounded-full">
-            <Plus size={20} />
+          <h1 className="text-base font-bold">Transactions</h1>
+          <button onClick={() => setShowAddModal(true)} className="p-1.5 hover:bg-white/10 rounded-full">
+            <Plus size={18} />
           </button>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingUp size={16} />
+        <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <TrendingUp size={14} />
               <p className="text-xs opacity-90">Income</p>
             </div>
-            <p className="text-lg font-bold">₦{totals.income.toLocaleString()}</p>
+            <p className="text-sm font-bold">₦{totals.income.toLocaleString()}</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingDown size={16} />
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <TrendingDown size={14} />
               <p className="text-xs opacity-90">Expenses</p>
             </div>
-            <p className="text-lg font-bold">₦{totals.expenses.toLocaleString()}</p>
+            <p className="text-sm font-bold">₦{totals.expenses.toLocaleString()}</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Wallet size={16} />
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <Wallet size={14} />
               <p className="text-xs opacity-90">Net</p>
             </div>
-            <p className={`text-lg font-bold ${totals.net >= 0 ? "text-green-300" : "text-red-300"}`}>
+            <p className={`text-sm font-bold ${totals.net >= 0 ? "text-green-300" : "text-red-300"}`}>
               ₦{totals.net.toLocaleString()}
             </p>
           </div>
@@ -222,37 +222,38 @@ export default function TransactionsPage() {
       </div>
 
       {/* Search and Filter Bar */}
-      <div className="bg-white p-4 shadow-sm">
-        <div className="flex gap-2 mb-3">
+      <div className="bg-white p-3 shadow-sm">
+        <div className="flex gap-2 mb-2">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input
               type="text"
-              placeholder="Search transactions..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
             onClick={() => setShowFilterModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            className="px-3 py-1.5 bg-blue-600 text-white rounded-lg flex items-center gap-1.5 hover:bg-blue-700 text-sm"
           >
-            <Filter size={20} />
+            <Filter size={16} />
           </button>
           <button
             onClick={exportTransactions}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center gap-2 hover:bg-green-700"
+            className="px-3 py-1.5 text-white rounded-lg flex items-center gap-1.5 hover:opacity-90 text-sm"
+            style={{ backgroundColor: "#0000FF" }}
           >
-            <Download size={20} />
+            <Download size={16} />
           </button>
         </div>
 
         {/* Quick Filters */}
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex gap-1.5 overflow-x-auto">
           <button
             onClick={() => setSelectedFilter("all")}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
               selectedFilter === "all" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
             }`}
           >
@@ -260,106 +261,78 @@ export default function TransactionsPage() {
           </button>
           <button
             onClick={() => setSelectedFilter("income")}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-              selectedFilter === "income" ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700"
+            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
+              selectedFilter === "income" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
             }`}
           >
             Income
           </button>
           <button
             onClick={() => setSelectedFilter("expense")}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap ${
-              selectedFilter === "expense" ? "bg-red-600 text-white" : "bg-gray-200 text-gray-700"
+            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
+              selectedFilter === "expense" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
             }`}
           >
-            Expenses
+            Expense
           </button>
         </div>
       </div>
 
       {/* Transactions List */}
-      <div className="p-4">
+      <div className="p-3">
         {filteredTransactions.length === 0 ? (
-          <div className="bg-white rounded-xl p-5 text-center">
-            <Wallet className="mx-auto mb-4 text-gray-400" size={48} />
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">No transactions found</h3>
-            <p className="text-gray-600 mb-4">Start by adding your first transaction</p>
+          <div className="bg-white rounded-lg p-4 text-center">
+            <Wallet className="mx-auto mb-2 text-gray-400" size={36} />
+            <h3 className="text-sm font-semibold text-gray-800 mb-1">No transactions found</h3>
+            <p className="text-xs text-gray-600 mb-3">Start by adding your first transaction</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-1.5 text-sm text-white rounded-lg hover:opacity-90"
+              style={{ backgroundColor: "#0000FF" }}
             >
               Add Transaction
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="bg-white rounded-xl p-4 shadow-sm">
+              <div key={transaction.id} className="bg-white rounded-lg p-2.5 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-center gap-2 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                        transaction.type === "income" ? "bg-green-100" : "bg-red-100"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        transaction.type === "income" ? "bg-blue-100" : "bg-red-100"
                       }`}
                     >
                       {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={20} />
+                        <ArrowDownRight className="text-blue-600" size={16} />
                       ) : (
-                        <ArrowUpRight className="text-red-600" size={20} />
+                        <ArrowUpRight className="text-red-600" size={16} />
                       )}
                     </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{transaction.description}</p>
-                      <div className="flex flex-col gap-1 mt-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs text-gray-500">{transaction.category}</span>
-                          {transaction.userName && (
-                            <>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-600 font-medium">{transaction.userName}</span>
-                            </>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {transaction.phoneNumber && (
-                            <span className="text-xs text-blue-600 font-medium">{transaction.phoneNumber}</span>
-                          )}
-                          {transaction.accountNumber && (
-                            <>
-                              <span className="text-xs text-blue-600 font-medium">{transaction.accountNumber}</span>
-                              {transaction.bankName && (
-                                <>
-                                  <span className="text-xs text-gray-400">•</span>
-                                  <span className="text-xs text-gray-500">{transaction.bankName}</span>
-                                </>
-                              )}
-                            </>
-                          )}
-                          {transaction.network && (
-                            <>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">{transaction.network}</span>
-                            </>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-500">{transaction.date}</span>
-                          <span className="text-xs text-gray-400">•</span>
-                          <span className="text-xs text-gray-500">
-                            {new Date(transaction.timestamp).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: true,
-                            })}
-                          </span>
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm truncate">{transaction.description}</p>
+                      <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                        <span className="text-xs text-gray-500">{transaction.category}</span>
+                        {transaction.userName && (
+                          <span className="text-xs text-gray-600 font-medium truncate">{transaction.userName}</span>
+                        )}
+                        {transaction.phoneNumber && (
+                          <span className="text-xs text-blue-600 font-medium">{transaction.phoneNumber}</span>
+                        )}
+                        {transaction.accountNumber && (
+                          <span className="text-xs text-blue-600 font-medium">{transaction.accountNumber}</span>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        {transaction.date} {new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0 ml-2">
                     <p
-                      className={`text-lg font-bold ${
-                        transaction.type === "income" ? "text-green-600" : "text-red-600"
+                      className={`text-sm font-bold ${
+                        transaction.type === "income" ? "text-blue-600" : "text-red-600"
                       }`}
                     >
                       {transaction.type === "income" ? "+" : "-"}₦{transaction.amount.toLocaleString()}
@@ -391,8 +364,9 @@ export default function TransactionsPage() {
                   <button
                     onClick={() => setNewTransaction({ ...newTransaction, type: "income", category: "" })}
                     className={`py-3 rounded-lg font-semibold ${
-                      newTransaction.type === "income" ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700"
+                      newTransaction.type === "income" ? "text-white" : "bg-gray-200 text-gray-700"
                     }`}
+                    style={newTransaction.type === "income" ? { backgroundColor: "#0000FF" } : {}}
                   >
                     Income
                   </button>

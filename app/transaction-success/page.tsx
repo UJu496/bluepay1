@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { CheckCircle, ArrowLeft, Phone, Wifi } from "lucide-react"
+import { CheckCircle, ArrowLeft, Phone, Wifi, Copy, Mail } from "lucide-react"
 
 export default function TransactionSuccessPage() {
   const router = useRouter()
   const [transaction, setTransaction] = useState<any>(null)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     const transactionData = localStorage.getItem("lastTransaction")
@@ -17,7 +18,7 @@ export default function TransactionSuccessPage() {
 
   if (!transaction) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">Loading transaction details...</p>
         </div>
@@ -30,114 +31,168 @@ export default function TransactionSuccessPage() {
     return `₦${amount}`
   }
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const getRecipientInitial = () => {
+    return transaction.recipientName?.charAt(0).toUpperCase() || "M"
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
+      <div className="flex items-center justify-between p-4 pt-8" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.push("/dashboard")}>
           <ArrowLeft className="text-white" size={20} />
         </button>
-        <h1 className="text-white text-xl font-bold">Transaction Successful</h1>
+        <h1 className="text-white text-lg font-bold">Transaction Details</h1>
         <div className="w-6"></div>
       </div>
 
-      <div className="p-4">
-        {/* Success Icon */}
-        <div className="text-center mb-4 mt-4">
-          <CheckCircle className="mx-auto mb-4 text-green-500" size={80} />
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Transaction Successful!</h2>
-          <p className="text-gray-600">Your {transaction.type} purchase has been completed successfully</p>
+      <div className="px-4 py-6 max-w-md mx-auto">
+        {/* Recipient Avatar */}
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold" style={{ backgroundColor: "#0000FF" }}>
+            {getRecipientInitial()}
+          </div>
         </div>
 
-        {/* Transaction Details Card */}
-        <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            {transaction.type === "airtime" ? <Phone size={20} /> : <Wifi size={20} />}
-            Transaction Details
-          </h3>
+        {/* Recipient Info and Amount */}
+        <div className="text-center mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">
+            Transfer to {transaction.recipientName || "Recipient"}
+          </h2>
+          <p className="text-3xl font-bold text-gray-900 mb-3">{formatAmount(transaction.amount)}</p>
+          <p className="text-teal-600 font-semibold">Successful</p>
+        </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Type</span>
-              <span className="font-semibold text-gray-800 capitalize">{transaction.type}</span>
+        {/* Progress Timeline */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            {/* Payment Successful */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Payment<br />successful</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date(transaction.timestamp).toLocaleDateString()} {new Date(transaction.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
 
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Phone Number</span>
-              <span className="font-semibold text-gray-800">{transaction.phoneNumber}</span>
+            {/* Line 1 */}
+            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+
+            {/* Processing */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Processing<br />by bank</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date(transaction.timestamp).toLocaleDateString()} {new Date(transaction.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
 
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Network</span>
-              <span className="font-semibold text-gray-800">{transaction.network}</span>
-            </div>
+            {/* Line 2 */}
+            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
 
-            {transaction.type === "data" && (
-              <>
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Data Plan</span>
-                  <span className="font-semibold text-gray-800">{transaction.plan}</span>
-                </div>
-
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Validity</span>
-                  <span className="font-semibold text-gray-800">{transaction.validity}</span>
-                </div>
-              </>
-            )}
-
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">Amount</span>
-              <span className="font-bold text-green-600 text-lg">{formatAmount(transaction.amount)}</span>
-            </div>
-
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-600">Date & Time</span>
-              <span className="font-semibold text-gray-800">{new Date(transaction.timestamp).toLocaleString()}</span>
+            {/* Received */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Received<br />by bank</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date(transaction.timestamp).toLocaleDateString()} {new Date(transaction.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
           </div>
         </div>
 
-        {/* Success Message */}
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <CheckCircle className="text-green-500 mt-0.5" size={20} />
+        {/* Info message */}
+        <div className="bg-gray-100 rounded-lg p-3 mb-6 text-center">
+          <p className="text-sm text-gray-700">
+            The recipient account is expected to be credited within 5 minutes, subject to notification by the bank.
+          </p>
+        </div>
+
+        {/* Transaction Details Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Transaction Details</h3>
+
+          {/* Recipient Details */}
+          <div className="bg-white rounded-lg p-3 mb-3">
+            <p className="text-xs text-gray-600 mb-1">Recipient Details</p>
+            <p className="text-sm font-semibold text-gray-900">{transaction.recipientName || "Recipient"}</p>
+            <p className="text-sm text-gray-600">{transaction.accountNumber || "Account"} | {transaction.bankName || "Bank"}</p>
+          </div>
+
+          {/* Transaction No */}
+          <div className="bg-white rounded-lg p-3 mb-3 flex justify-between items-center">
             <div>
-              <h4 className="font-semibold text-green-800 mb-1">
-                {transaction.type === "airtime" ? "Airtime Delivered" : "Data Activated"}
-              </h4>
-              <p className="text-sm text-green-700">
-                {transaction.type === "airtime"
-                  ? `${transaction.amount} airtime has been credited to ${transaction.phoneNumber}`
-                  : `${transaction.plan} data plan has been activated on ${transaction.phoneNumber}`}
-              </p>
+              <p className="text-xs text-gray-600 mb-1">Transaction No.</p>
+              <p className="text-sm font-semibold text-gray-900 break-all">{transaction.id || `TXN${Date.now()}`}</p>
             </div>
+            <button
+              onClick={() => copyToClipboard(transaction.id || `TXN${Date.now()}`)}
+              className="ml-2 p-2 hover:bg-gray-100 rounded"
+            >
+              <Copy size={16} className="text-gray-600" />
+            </button>
+          </div>
+
+          {/* Payment Method */}
+          <div className="bg-white rounded-lg p-3 mb-3">
+            <p className="text-xs text-gray-600 mb-1">Payment Method</p>
+            <p className="text-sm font-semibold text-gray-900">{transaction.paymentMethod || "OWealth"}</p>
+          </div>
+
+          {/* Transaction Date */}
+          <div className="bg-white rounded-lg p-3 mb-3">
+            <p className="text-xs text-gray-600 mb-1">Transaction Date</p>
+            <p className="text-sm font-semibold text-gray-900">{new Date(transaction.timestamp).toLocaleString()}</p>
+          </div>
+
+          {/* Session ID */}
+          <div className="bg-white rounded-lg p-3 flex justify-between items-center">
+            <div>
+              <p className="text-xs text-gray-600 mb-1">Session ID</p>
+              <p className="text-sm font-semibold text-gray-900 break-all">{transaction.sessionId || `SID${Date.now()}`}</p>
+            </div>
+            <button
+              onClick={() => copyToClipboard(transaction.sessionId || `SID${Date.now()}`)}
+              className="ml-2 p-2 hover:bg-gray-100 rounded"
+            >
+              <Copy size={16} className="text-gray-600" />
+            </button>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="space-y-3">
           <button
+            onClick={() => {
+              const subject = "Report Issue - Transaction"
+              const body = `Transaction ID: ${transaction.id}\n\nPlease describe your issue...`
+              window.location.href = `mailto:bluepay032@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+            }}
+            className="w-full py-3 rounded-full font-bold text-base transition-colors"
+            style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
+          >
+            Report Issue
+          </button>
+
+          <button
             onClick={() => router.push("/dashboard")}
-            className="w-full py-4 rounded-xl text-white font-bold text-lg"
+            className="w-full py-3 rounded-full text-white font-bold text-base"
             style={{ backgroundColor: "#0000FF" }}
           >
             Back to Dashboard
           </button>
-
-          <button
-            onClick={() => router.push(`/${transaction.type}`)}
-            className="w-full py-4 rounded-xl border-2 font-bold text-lg hover:bg-blue-50"
-            style={{ borderColor: "#0000FF", color: "#0000FF" }}
-          >
-            Make Another Purchase
-          </button>
         </div>
 
         {/* Support Info */}
-        <div className="mt-3 p-4 bg-blue-50 rounded-xl text-center">
-          <p className="text-sm text-blue-700">
-            Need help? Contact our support team at <span className="font-semibold">bluepay032@gmail.com</span>
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
+          <p className="text-xs text-gray-700">
+            Need help? <a href="mailto:bluepay032@gmail.com" className="font-semibold" style={{ color: "#0000FF" }}>Contact Support</a>
           </p>
         </div>
       </div>

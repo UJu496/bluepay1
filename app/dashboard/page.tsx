@@ -692,7 +692,8 @@ export default function DashboardPage() {
                   window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
                   setShowSocial(false)
                 }}
-                className="w-full flex items-center gap-4 p-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"
+                className="w-full flex items-center gap-4 p-4 text-white rounded-xl hover:opacity-90 transition-colors"
+                style={{ backgroundColor: "#0000FF" }}
               >
                 <Phone size={20} />
                 <div className="text-left">

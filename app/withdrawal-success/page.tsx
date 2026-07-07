@@ -2,25 +2,28 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { CheckCircle, ArrowLeft } from "lucide-react"
 
 export default function WithdrawalSuccessPage() {
   const router = useRouter()
   const [amount, setAmount] = useState("")
+  const [withdrawalData, setWithdrawalData] = useState<any>(null)
 
   useEffect(() => {
     const data = localStorage.getItem("withdrawalData")
     if (data) {
-      const withdrawalData = JSON.parse(data)
-      setAmount(withdrawalData.amount.toLocaleString())
+      const parsedData = JSON.parse(data)
+      setAmount(parsedData.amount.toLocaleString())
+      setWithdrawalData(parsedData)
 
       const userData = JSON.parse(localStorage.getItem("userData") || "{}")
       const withdrawalTransaction = {
         id: `TXN${Date.now()}`,
-        amount: withdrawalData.amount,
+        amount: parsedData.amount,
         userName: userData.fullName || "User",
-        bank: withdrawalData.selectedBank,
-        accountName: withdrawalData.accountName,
-        accountNumber: withdrawalData.accountNumber,
+        bank: parsedData.selectedBank,
+        accountName: parsedData.accountName,
+        accountNumber: parsedData.accountNumber,
         date: new Date().toLocaleDateString(),
         time: new Date().toLocaleTimeString(),
         status: "Successful",
@@ -39,50 +42,114 @@ export default function WithdrawalSuccessPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ backgroundColor: "#0000FF" }}>
-      <div className="text-center max-w-md w-full">
-        {/* Animated Success Icon */}
-        <div className="mb-4 flex justify-center">
-          <div className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
-            <div className="w-28 h-28 rounded-full bg-white/30 flex items-center justify-center">
-              <svg className="w-16 h-16" fill="none" stroke="white" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 pt-8" style={{ backgroundColor: "#0000FF" }}>
+        <button onClick={() => router.push("/dashboard")}>
+          <ArrowLeft className="text-white" size={20} />
+        </button>
+        <h1 className="text-white text-lg font-bold">Transaction Details</h1>
+        <div className="w-6"></div>
+      </div>
+
+      <div className="px-4 py-6 max-w-md mx-auto">
+        {/* Success Icon */}
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+            <CheckCircle size={32} />
+          </div>
+        </div>
+
+        {/* Status and Amount */}
+        <div className="text-center mb-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">Transfer to {withdrawalData?.selectedBank}</h2>
+          <p className="text-3xl font-bold text-gray-900 mb-3">₦{amount}</p>
+          <p className="text-teal-600 font-semibold">Successful</p>
+        </div>
+
+        {/* Progress Timeline */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            {/* Payment Successful */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Withdrawal<br />initiated</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+            </div>
+
+            {/* Line 1 */}
+            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+
+            {/* Processing */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Processing<br />by bank</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+            </div>
+
+            {/* Line 2 */}
+            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+
+            {/* Completed */}
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={20} />
+              </div>
+              <p className="text-xs font-semibold text-gray-900 text-center">Completed<br />in account</p>
+              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </div>
 
-        {/* Success heading */}
-        <h1 className="text-xl font-bold text-white mb-3">Success!</h1>
-
-        {/* Status message */}
-        <p className="text-white/90 text-lg mb-4">
-          Transfer initiated successfully!
-        </p>
-
-        {/* Amount Display Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-4 border border-white/20">
-          <p className="text-white/70 text-sm mb-2">Transfer Amount</p>
-          <p className="text-white text-xl font-bold">₦{amount}</p>
+        {/* Info message */}
+        <div className="bg-gray-100 rounded-lg p-3 mb-6 text-center">
+          <p className="text-sm text-gray-700">
+            Your withdrawal has been processed successfully and will be reflected in your account shortly, subject to your bank&apos;s processing time.
+          </p>
         </div>
 
-        {/* Dynamic amount description */}
-        <p className="text-white/80 text-base mb-6 leading-relaxed">
-          Your transfer of ₦{amount} has been processed successfully and will reflect in your account shortly.
-        </p>
+        {/* Transaction Details Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Withdrawal Details</h3>
+
+          {/* Bank Details */}
+          <div className="bg-white rounded-lg p-3 mb-3">
+            <p className="text-xs text-gray-600 mb-1">Bank Details</p>
+            <p className="text-sm font-semibold text-gray-900">{withdrawalData?.accountName}</p>
+            <p className="text-sm text-gray-600">{withdrawalData?.selectedBank} | {withdrawalData?.accountNumber}</p>
+          </div>
+
+          {/* Amount */}
+          <div className="bg-white rounded-lg p-3 mb-3">
+            <p className="text-xs text-gray-600 mb-1">Amount</p>
+            <p className="text-sm font-semibold text-gray-900">₦{amount}</p>
+          </div>
+
+          {/* Date & Time */}
+          <div className="bg-white rounded-lg p-3">
+            <p className="text-xs text-gray-600 mb-1">Date & Time</p>
+            <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleString()}</p>
+          </div>
+        </div>
 
         {/* Action Buttons */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <button
             onClick={() => router.push("/dashboard")}
-            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:shadow-xl transition-all duration-300 bg-white"
-            style={{ color: "#0000FF" }}
+            className="w-full py-3 rounded-full text-white font-bold text-base"
+            style={{ backgroundColor: "#0000FF" }}
           >
-            Go to Dashboard
+            Back to Dashboard
           </button>
+
           <button
             onClick={() => router.push("/transactions")}
-            className="w-full py-4 px-5 text-white font-bold text-lg rounded-full hover:bg-white/10 transition-all duration-300 border-2 border-white"
+            className="w-full py-3 rounded-full font-bold text-base border-2"
+            style={{ borderColor: "#0000FF", color: "#0000FF", backgroundColor: "#fff" }}
           >
             View Transactions
           </button>
