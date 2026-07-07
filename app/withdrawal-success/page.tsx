@@ -125,57 +125,91 @@ export default function WithdrawalSuccessPage() {
           </p>
         </div>
 
-        {/* Withdrawal Details - Optimized spacing */}
-        <div className="mb-3">
-          <h3 className="text-xs font-bold text-gray-900 mb-2">Withdrawal Details</h3>
-
-          {/* Bank Details */}
-          <div className="bg-white rounded-lg p-3 mb-2">
-            <p className="text-xs text-gray-600 mb-0.5">Bank Details</p>
-            <p className="text-sm font-semibold text-gray-900">{withdrawalData?.accountName}</p>
-            <p className="text-xs text-gray-600">{withdrawalData?.selectedBank} | {withdrawalData?.accountNumber}</p>
-          </div>
-
-          {/* Amount */}
-          <div className="bg-white rounded-lg p-3 mb-2">
-            <p className="text-xs text-gray-600 mb-0.5">Amount</p>
-            <p className="text-sm font-semibold text-gray-900">₦{amount}</p>
-          </div>
-
-          {/* Transaction ID - With Copy Icon */}
-          <div className="bg-white rounded-lg p-3 mb-2 flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-600 mb-0.5">Transaction ID</p>
-              <p className="text-xs font-semibold text-gray-900 break-all">{transactionId}</p>
+        {/* Transaction Receipt - Clean Banking Layout */}
+        <div className="bg-white rounded-lg p-3 mb-3">
+          <h3 className="text-xs font-bold text-gray-900 mb-2">Transaction Receipt</h3>
+          
+          {/* Receipt Rows */}
+          <div className="space-y-2">
+            {/* Name */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Name</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{withdrawalData?.accountName}</span>
             </div>
-            <button
-              onClick={() => handleCopy(transactionId, "Transaction ID")}
-              className="ml-2 flex-shrink-0 p-1.5 hover:bg-gray-100 rounded"
-            >
-              {copiedField === "Transaction ID" ? (
-                <Check size={16} className="text-green-600" />
-              ) : (
-                <Copy size={16} className="text-gray-600" />
-              )}
-            </button>
-          </div>
 
-          {/* Session ID - With Copy Icon */}
-          <div className="bg-white rounded-lg p-3 flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-600 mb-0.5">Session ID</p>
-              <p className="text-xs font-semibold text-gray-900 break-all">{sessionId}</p>
+            {/* Bank */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Bank</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{withdrawalData?.selectedBank}</span>
             </div>
-            <button
-              onClick={() => handleCopy(sessionId, "Session ID")}
-              className="ml-2 flex-shrink-0 p-1.5 hover:bg-gray-100 rounded"
-            >
-              {copiedField === "Session ID" ? (
-                <Check size={16} className="text-green-600" />
-              ) : (
-                <Copy size={16} className="text-gray-600" />
-              )}
-            </button>
+
+            {/* Account Number */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Account Number</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{withdrawalData?.accountNumber}</span>
+            </div>
+
+            {/* Amount */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Amount</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">₦{amount}</span>
+            </div>
+
+            {/* Transaction ID with Copy */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
+              <span className="text-xs text-gray-600">Transaction ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900 text-right">{transactionId}</span>
+                <button
+                  onClick={() => handleCopy(transactionId, "Transaction ID")}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Transaction ID"
+                >
+                  {copiedField === "Transaction ID" ? (
+                    <Check size={14} className="text-green-600" />
+                  ) : (
+                    <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Session ID with Copy */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
+              <span className="text-xs text-gray-600">Session ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900 text-right">{sessionId}</span>
+                <button
+                  onClick={() => handleCopy(sessionId, "Session ID")}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Session ID"
+                >
+                  {copiedField === "Session ID" ? (
+                    <Check size={14} className="text-green-600" />
+                  ) : (
+                    <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Date */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Date</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+            </div>
+
+            {/* Time */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Time</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
+            </div>
+
+            {/* Status */}
+            <div className="flex items-center justify-between py-1.5">
+              <span className="text-xs text-gray-600">Status</span>
+              <span className="text-xs font-semibold text-teal-600">Successful</span>
+            </div>
           </div>
         </div>
 

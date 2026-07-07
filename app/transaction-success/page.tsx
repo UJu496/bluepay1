@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { CheckCircle, ArrowLeft, Phone, Wifi, Copy, Mail } from "lucide-react"
+import { CheckCircle, ArrowLeft, Copy, Check } from "lucide-react"
+import { ToastContainer, useToast } from "@/components/toast"
 
 export default function TransactionSuccessPage() {
   const router = useRouter()
   const [transaction, setTransaction] = useState<any>(null)
-  const [copied, setCopied] = useState(false)
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const { toasts, showToast } = useToast()
 
   useEffect(() => {
     const transactionData = localStorage.getItem("lastTransaction")
@@ -31,10 +33,12 @@ export default function TransactionSuccessPage() {
     return `₦${amount}`
   }
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field)
+      showToast(`${field} copied successfully.`)
+      setTimeout(() => setCopiedField(null), 2000)
+    })
   }
 
   const getRecipientInitial = () => {
@@ -43,13 +47,13 @@ export default function TransactionSuccessPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-8" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.push("/dashboard")}>
-          <ArrowLeft className="text-white" size={20} />
+      {/* Header - Compact 60-64px */}
+      <div className="flex items-center justify-between px-4 h-16" style={{ backgroundColor: "#0000FF" }}>
+        <button onClick={() => router.push("/dashboard")} className="text-white">
+          <ArrowLeft size={20} />
         </button>
-        <h1 className="text-white text-lg font-bold">Transaction Details</h1>
-        <div className="w-6"></div>
+        <h1 className="text-white text-base font-bold">Transaction Details</h1>
+        <div className="w-5"></div>
       </div>
 
       <div className="px-4 py-3 max-w-md mx-auto">
@@ -111,66 +115,122 @@ export default function TransactionSuccessPage() {
           </p>
         </div>
 
-        {/* Main Content - Left and Right Layout */}
-        <div className="flex gap-3 mb-3">
-          {/* Left Side - Recipient Details */}
-          <div className="flex-1">
-            <p className="text-xs text-gray-600 mb-2 font-semibold">Recipient Details</p>
-            <div className="bg-white rounded-lg p-2.5 mb-2">
-              <p className="text-xs text-gray-600 mb-0.5">Name</p>
-              <p className="text-sm font-semibold text-gray-900 break-words">{transaction.recipientName || "Recipient"}</p>
+        {/* Transaction Receipt - Clean Banking Layout */}
+        <div className="bg-white rounded-lg p-3 mb-3">
+          <h3 className="text-xs font-bold text-gray-900 mb-2">Transaction Receipt</h3>
+          
+          {/* Receipt Rows */}
+          <div className="space-y-2">
+            {/* Name */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Name</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.recipientName || "---"}</span>
             </div>
-            <div className="bg-white rounded-lg p-2.5 mb-2">
-              <p className="text-xs text-gray-600 mb-0.5">Account Number</p>
-              <p className="text-sm font-semibold text-gray-900">{transaction.accountNumber || "---"}</p>
-            </div>
-            <div className="bg-white rounded-lg p-2.5">
-              <p className="text-xs text-gray-600 mb-0.5">Amount</p>
-              <p className="text-sm font-semibold text-gray-900">{formatAmount(transaction.amount)}</p>
-            </div>
-          </div>
 
-          {/* Right Side - Transaction Details */}
-          <div className="flex-1">
-            <p className="text-xs text-gray-600 mb-2 font-semibold">Transaction Details</p>
-            <div className="bg-white rounded-lg p-2.5 mb-2">
-              <p className="text-xs text-gray-600 mb-0.5">Bank</p>
-              <p className="text-sm font-semibold text-gray-900">{transaction.bankName || "---"}</p>
+            {/* Bank */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Bank</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.bankName || "---"}</span>
             </div>
-            <div className="bg-white rounded-lg p-2.5 mb-2">
-              <p className="text-xs text-gray-600 mb-0.5">Transaction No.</p>
-              <p className="text-xs font-semibold text-gray-900 break-all">{transaction.id || `TXN${Date.now()}`}</p>
+
+            {/* Account Number */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Account Number</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{transaction.accountNumber || "---"}</span>
             </div>
-            <div className="bg-white rounded-lg p-2.5">
-              <p className="text-xs text-gray-600 mb-0.5">Date</p>
-              <p className="text-xs font-semibold text-gray-900">{new Date(transaction.timestamp).toLocaleDateString()}</p>
+
+            {/* Amount */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Amount</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{formatAmount(transaction.amount)}</span>
+            </div>
+
+            {/* Transaction ID with Copy */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
+              <span className="text-xs text-gray-600">Transaction ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900 text-right">{transaction.id || `TXN${Date.now()}`}</span>
+                <button
+                  onClick={() => handleCopy(transaction.id || `TXN${Date.now()}`, "Transaction ID")}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Transaction ID"
+                >
+                  {copiedField === "Transaction ID" ? (
+                    <Check size={14} className="text-green-600" />
+                  ) : (
+                    <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Session ID with Copy - If available */}
+            {transaction.sessionId && (
+              <div className="flex items-center justify-between py-1.5 border-b border-gray-100 group">
+                <span className="text-xs text-gray-600">Session ID</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-xs font-semibold text-gray-900 text-right">{transaction.sessionId}</span>
+                  <button
+                    onClick={() => handleCopy(transaction.sessionId, "Session ID")}
+                    className="p-1 hover:bg-gray-100 rounded transition-colors"
+                    aria-label="Copy Session ID"
+                  >
+                    {copiedField === "Session ID" ? (
+                      <Check size={14} className="text-green-600" />
+                    ) : (
+                      <Copy size={14} className="text-gray-400 group-hover:text-gray-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Date */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Date</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{new Date(transaction.timestamp).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+            </div>
+
+            {/* Time */}
+            <div className="flex items-center justify-between py-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Time</span>
+              <span className="text-xs font-semibold text-gray-900 text-right">{new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
+            </div>
+
+            {/* Status */}
+            <div className="flex items-center justify-between py-1.5">
+              <span className="text-xs text-gray-600">Status</span>
+              <span className="text-xs font-semibold text-teal-600">Successful</span>
             </div>
           </div>
         </div>
 
-        {/* Action Buttons - Side by Side */}
+        {/* Action Buttons - Side by Side, Compact */}
         <div className="flex gap-2">
           <button
+            onClick={() => {
+              const subject = "Report Issue - Transfer"
+              const body = `Transaction ID: ${transaction.id}\n\nPlease describe your issue...`
+              window.location.href = `mailto:support@bluepay.ng?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+            }}
+            className="flex-1 h-12 rounded-2xl font-bold text-sm transition-colors"
+            style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
+          >
+            Report Issues
+          </button>
+
+          <button
             onClick={() => router.push("/dashboard")}
-            className="flex-1 py-2 rounded-full text-white font-bold text-xs"
+            className="flex-1 h-12 rounded-2xl text-white font-bold text-sm"
             style={{ backgroundColor: "#0000FF" }}
           >
             Back to Dashboard
           </button>
-
-          <button
-            onClick={() => {
-              const subject = "Report Issue - Transaction"
-              const body = `Transaction ID: ${transaction.id}\n\nPlease describe your issue...`
-              window.location.href = `mailto:bluepay032@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-            }}
-            className="flex-1 py-2 rounded-full font-bold text-xs transition-colors"
-            style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
-          >
-            Report Issue
-          </button>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} />
     </div>
   )
 }
