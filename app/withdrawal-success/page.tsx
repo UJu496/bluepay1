@@ -2,12 +2,17 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { CheckCircle, ArrowLeft } from "lucide-react"
+import { CheckCircle, ArrowLeft, Copy, Check } from "lucide-react"
+import { ToastContainer, useToast } from "@/components/toast"
 
 export default function WithdrawalSuccessPage() {
   const router = useRouter()
   const [amount, setAmount] = useState("")
   const [withdrawalData, setWithdrawalData] = useState<any>(null)
+  const [transactionId, setTransactionId] = useState("")
+  const [sessionId, setSessionId] = useState("")
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const { toasts, showToast } = useToast()
 
   useEffect(() => {
     const data = localStorage.getItem("withdrawalData")
@@ -16,9 +21,14 @@ export default function WithdrawalSuccessPage() {
       setAmount(parsedData.amount.toLocaleString())
       setWithdrawalData(parsedData)
 
+      const transId = `TXN${Date.now()}`
+      const sessId = `SID${Date.now()}`
+      setTransactionId(transId)
+      setSessionId(sessId)
+
       const userData = JSON.parse(localStorage.getItem("userData") || "{}")
       const withdrawalTransaction = {
-        id: `TXN${Date.now()}`,
+        id: transId,
         amount: parsedData.amount,
         userName: userData.fullName || "User",
         bank: parsedData.selectedBank,
@@ -35,126 +45,166 @@ export default function WithdrawalSuccessPage() {
       localStorage.setItem("withdrawalHistory", JSON.stringify(existingHistory))
 
       localStorage.setItem("withdrawalSuccess", "true")
-
-      // Clean up withdrawal data
       localStorage.removeItem("withdrawalData")
     }
   }, [])
 
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field)
+      showToast(`${field} copied successfully.`)
+      setTimeout(() => setCopiedField(null), 2000)
+    })
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-8" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.push("/dashboard")}>
-          <ArrowLeft className="text-white" size={20} />
+      {/* Header - Compact 60-64px */}
+      <div className="flex items-center justify-between px-4 h-16" style={{ backgroundColor: "#0000FF" }}>
+        <button onClick={() => router.push("/dashboard")} className="text-white">
+          <ArrowLeft size={20} />
         </button>
-        <h1 className="text-white text-lg font-bold">Transaction Details</h1>
-        <div className="w-6"></div>
+        <h1 className="text-white text-base font-bold">Transaction Details</h1>
+        <div className="w-5"></div>
       </div>
 
-      <div className="px-4 py-6 max-w-md mx-auto">
-        {/* Success Icon */}
-        <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
-            <CheckCircle size={32} />
+      <div className="px-4 py-3 max-w-md mx-auto">
+        {/* Success Icon - Reduced by 30% */}
+        <div className="flex justify-center mb-3">
+          <div className="w-11 h-11 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+            <CheckCircle size={22} />
           </div>
         </div>
 
-        {/* Status and Amount */}
-        <div className="text-center mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Transfer to {withdrawalData?.selectedBank}</h2>
-          <p className="text-3xl font-bold text-gray-900 mb-3">₦{amount}</p>
-          <p className="text-teal-600 font-semibold">Successful</p>
+        {/* Status and Amount - Compact */}
+        <div className="text-center mb-3">
+          <h2 className="text-base font-bold text-gray-900 mb-1">Transfer to {withdrawalData?.selectedBank}</h2>
+          <p className="text-2xl font-bold text-gray-900 mb-1">₦{amount}</p>
+          <p className="text-teal-600 font-semibold text-sm">Successful</p>
         </div>
 
-        {/* Progress Timeline */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            {/* Payment Successful */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+        {/* Progress Timeline - Compact */}
+        <div className="mb-3">
+          <div className="flex items-center justify-between mb-2">
+            {/* Withdrawal Initiated */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={14} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Withdrawal<br />initiated</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Withdrawal<br />initiated</p>
             </div>
 
             {/* Line 1 */}
-            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-1" style={{ backgroundColor: "#0000FF" }}></div>
 
-            {/* Processing */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+            {/* Processing by Bank */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={14} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Processing<br />by bank</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Processing<br />by bank</p>
             </div>
 
             {/* Line 2 */}
-            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-1" style={{ backgroundColor: "#0000FF" }}></div>
 
-            {/* Completed */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+            {/* Completed in Account */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white mb-1" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={14} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Completed<br />in account</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-tight">Completed<br />in account</p>
             </div>
           </div>
         </div>
 
-        {/* Info message */}
-        <div className="bg-gray-100 rounded-lg p-3 mb-6 text-center">
-          <p className="text-sm text-gray-700">
-            Your withdrawal has been processed successfully and will be reflected in your account shortly, subject to your bank&apos;s processing time.
+        {/* Info Message - Reduced font and line height */}
+        <div className="bg-gray-100 rounded-lg p-3 mb-3 text-center">
+          <p className="text-xs text-gray-700 leading-snug">
+            Your withdrawal has been processed successfully and will be reflected in your account shortly.
           </p>
         </div>
 
-        {/* Transaction Details Section */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-3">Withdrawal Details</h3>
+        {/* Withdrawal Details - Optimized spacing */}
+        <div className="mb-3">
+          <h3 className="text-xs font-bold text-gray-900 mb-2">Withdrawal Details</h3>
 
           {/* Bank Details */}
-          <div className="bg-white rounded-lg p-3 mb-3">
-            <p className="text-xs text-gray-600 mb-1">Bank Details</p>
+          <div className="bg-white rounded-lg p-3 mb-2">
+            <p className="text-xs text-gray-600 mb-0.5">Bank Details</p>
             <p className="text-sm font-semibold text-gray-900">{withdrawalData?.accountName}</p>
-            <p className="text-sm text-gray-600">{withdrawalData?.selectedBank} | {withdrawalData?.accountNumber}</p>
+            <p className="text-xs text-gray-600">{withdrawalData?.selectedBank} | {withdrawalData?.accountNumber}</p>
           </div>
 
           {/* Amount */}
-          <div className="bg-white rounded-lg p-3 mb-3">
-            <p className="text-xs text-gray-600 mb-1">Amount</p>
+          <div className="bg-white rounded-lg p-3 mb-2">
+            <p className="text-xs text-gray-600 mb-0.5">Amount</p>
             <p className="text-sm font-semibold text-gray-900">₦{amount}</p>
           </div>
 
-          {/* Date & Time */}
-          <div className="bg-white rounded-lg p-3">
-            <p className="text-xs text-gray-600 mb-1">Date & Time</p>
-            <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleString()}</p>
+          {/* Transaction ID - With Copy Icon */}
+          <div className="bg-white rounded-lg p-3 mb-2 flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-600 mb-0.5">Transaction ID</p>
+              <p className="text-xs font-semibold text-gray-900 break-all">{transactionId}</p>
+            </div>
+            <button
+              onClick={() => handleCopy(transactionId, "Transaction ID")}
+              className="ml-2 flex-shrink-0 p-1.5 hover:bg-gray-100 rounded"
+            >
+              {copiedField === "Transaction ID" ? (
+                <Check size={16} className="text-green-600" />
+              ) : (
+                <Copy size={16} className="text-gray-600" />
+              )}
+            </button>
+          </div>
+
+          {/* Session ID - With Copy Icon */}
+          <div className="bg-white rounded-lg p-3 flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-600 mb-0.5">Session ID</p>
+              <p className="text-xs font-semibold text-gray-900 break-all">{sessionId}</p>
+            </div>
+            <button
+              onClick={() => handleCopy(sessionId, "Session ID")}
+              className="ml-2 flex-shrink-0 p-1.5 hover:bg-gray-100 rounded"
+            >
+              {copiedField === "Session ID" ? (
+                <Check size={16} className="text-green-600" />
+              ) : (
+                <Copy size={16} className="text-gray-600" />
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-3">
+        {/* Action Buttons - Side by Side, Compact */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              const subject = "Report Issue - Withdrawal"
+              const body = `Transaction ID: ${transactionId}\n\nPlease describe your issue...`
+              window.location.href = `mailto:support@bluepay.ng?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+            }}
+            className="flex-1 h-12 rounded-2xl font-bold text-sm transition-colors"
+            style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
+          >
+            Report Issues
+          </button>
+
           <button
             onClick={() => router.push("/dashboard")}
-            className="w-full py-3 rounded-full text-white font-bold text-base"
+            className="flex-1 h-12 rounded-2xl text-white font-bold text-sm"
             style={{ backgroundColor: "#0000FF" }}
           >
             Back to Dashboard
           </button>
-
-          <button
-            onClick={() => router.push("/transactions")}
-            className="w-full py-3 rounded-full font-bold text-base border-2"
-            style={{ borderColor: "#0000FF", color: "#0000FF", backgroundColor: "#fff" }}
-          >
-            View Transactions
-          </button>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} />
     </div>
   )
 }
