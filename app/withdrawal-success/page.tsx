@@ -130,37 +130,41 @@ export default function WithdrawalSuccessPage() {
         <div className="bg-white rounded p-2.5 mb-2">
           <h3 className="text-xs font-bold text-gray-900 mb-1.5">Receipt</h3>
           
-          {/* 2-Column Grid Layout */}
-          <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          {/* 2-Column Grid Layout - Strict alignment */}
+          <div className="space-y-1.5">
             {/* Name and Bank Row */}
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Name</p>
-              <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</p>
-            </div>
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Bank</p>
-              <p className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</p>
+            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
+              <div className="flex-1">
+                <p className="text-xs text-gray-600 leading-tight">Name</p>
+                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</p>
+              </div>
+              <div className="flex-1 text-right">
+                <p className="text-xs text-gray-600 leading-tight">Bank</p>
+                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</p>
+              </div>
             </div>
 
             {/* Account and Amount Row */}
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Account</p>
-              <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</p>
-            </div>
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Amount</p>
-              <p className="text-xs font-semibold text-gray-900">₦{amount}</p>
+            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
+              <div className="flex-1">
+                <p className="text-xs text-gray-600 leading-tight">Account</p>
+                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</p>
+              </div>
+              <div className="flex-1 text-right">
+                <p className="text-xs text-gray-600 leading-tight">Amount</p>
+                <p className="text-xs font-semibold text-gray-900">₦{amount}</p>
+              </div>
             </div>
 
             {/* Transaction ID - Full Width */}
-            <div className="col-span-2 border-b border-gray-100 pb-1 flex items-center justify-between">
+            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
               <div className="flex-1">
                 <p className="text-xs text-gray-600 leading-tight">Transaction ID</p>
-                <p className="text-xs font-semibold text-gray-900 break-all">{transactionId}</p>
+                <p className="text-xs font-semibold text-gray-900 break-all pr-2">{transactionId}</p>
               </div>
               <button
                 onClick={() => handleCopy(transactionId, "Transaction ID")}
-                className="ml-1 flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
                 aria-label="Copy Transaction ID"
               >
                 {copiedField === "Transaction ID" ? (
@@ -172,14 +176,14 @@ export default function WithdrawalSuccessPage() {
             </div>
 
             {/* Session ID - Full Width */}
-            <div className="col-span-2 border-b border-gray-100 pb-1 flex items-center justify-between">
+            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
               <div className="flex-1">
                 <p className="text-xs text-gray-600 leading-tight">Session ID</p>
-                <p className="text-xs font-semibold text-gray-900 break-all">{sessionId}</p>
+                <p className="text-xs font-semibold text-gray-900 break-all pr-2">{sessionId}</p>
               </div>
               <button
                 onClick={() => handleCopy(sessionId, "Session ID")}
-                className="ml-1 flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
                 aria-label="Copy Session ID"
               >
                 {copiedField === "Session ID" ? (
@@ -191,19 +195,23 @@ export default function WithdrawalSuccessPage() {
             </div>
 
             {/* Date and Time Row */}
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Date</p>
-              <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</p>
-            </div>
-            <div className="border-b border-gray-100 pb-1">
-              <p className="text-xs text-gray-600 leading-tight">Time</p>
-              <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</p>
+            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
+              <div className="flex-1">
+                <p className="text-xs text-gray-600 leading-tight">Date</p>
+                <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</p>
+              </div>
+              <div className="flex-1 text-right">
+                <p className="text-xs text-gray-600 leading-tight">Time</p>
+                <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</p>
+              </div>
             </div>
 
             {/* Status - Full Width */}
-            <div className="col-span-2">
-              <p className="text-xs text-gray-600 leading-tight">Status</p>
-              <p className="text-xs font-semibold text-teal-600">Successful</p>
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <p className="text-xs text-gray-600 leading-tight">Status</p>
+                <p className="text-xs font-semibold text-teal-600">Successful</p>
+              </div>
             </div>
           </div>
         </div>
