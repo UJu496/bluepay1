@@ -79,7 +79,7 @@ export default function WithdrawalSuccessPage() {
 
         {/* Status and Amount - Ultra Compact */}
         <div className="text-center mb-2">
-          <h2 className="text-sm font-bold text-gray-900 mb-0.5">Transfer to {withdrawalData?.selectedBank}</h2>
+          <h2 className="text-sm font-bold text-gray-900 mb-0.5">Transfer to {withdrawalData?.accountName}</h2>
           <p className="text-xl font-bold text-gray-900 mb-0.5">₦{amount}</p>
           <p className="text-teal-600 font-semibold text-xs">Successful</p>
         </div>
@@ -126,92 +126,90 @@ export default function WithdrawalSuccessPage() {
           </p>
         </div>
 
-        {/* Transaction Receipt - 2-Column Grid */}
+        {/* Transaction Receipt - Full-Width Flex Rows */}
         <div className="bg-white rounded p-2.5 mb-2">
           <h3 className="text-xs font-bold text-gray-900 mb-1.5">Receipt</h3>
           
-          {/* 2-Column Grid Layout - Strict alignment */}
+          {/* Receipt Rows - Each row full-width with flex layout */}
           <div className="space-y-1.5">
-            {/* Name and Bank Row */}
-            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Name</p>
-                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</p>
-              </div>
-              <div className="flex-1 text-right">
-                <p className="text-xs text-gray-600 leading-tight">Bank</p>
-                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</p>
+            {/* Name Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Name</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</span>
+            </div>
+
+            {/* Bank Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Bank</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</span>
+            </div>
+
+            {/* Account Number Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Account Number</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</span>
+            </div>
+
+            {/* Amount Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Amount</span>
+              <span className="text-xs font-semibold text-gray-900">₦{amount}</span>
+            </div>
+
+            {/* Transaction ID Row with Copy */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Transaction ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900">{transactionId}</span>
+                <button
+                  onClick={() => handleCopy(transactionId, "Transaction ID")}
+                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Transaction ID"
+                >
+                  {copiedField === "Transaction ID" ? (
+                    <Check size={12} className="text-green-600" />
+                  ) : (
+                    <Copy size={12} className="text-gray-400" />
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Account and Amount Row */}
-            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Account</p>
-                <p className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</p>
-              </div>
-              <div className="flex-1 text-right">
-                <p className="text-xs text-gray-600 leading-tight">Amount</p>
-                <p className="text-xs font-semibold text-gray-900">₦{amount}</p>
-              </div>
-            </div>
-
-            {/* Transaction ID - Full Width */}
-            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Transaction ID</p>
-                <p className="text-xs font-semibold text-gray-900 break-all pr-2">{transactionId}</p>
-              </div>
-              <button
-                onClick={() => handleCopy(transactionId, "Transaction ID")}
-                className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
-                aria-label="Copy Transaction ID"
-              >
-                {copiedField === "Transaction ID" ? (
-                  <Check size={12} className="text-green-600" />
-                ) : (
-                  <Copy size={12} className="text-gray-400" />
-                )}
-              </button>
-            </div>
-
-            {/* Session ID - Full Width */}
-            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Session ID</p>
-                <p className="text-xs font-semibold text-gray-900 break-all pr-2">{sessionId}</p>
-              </div>
-              <button
-                onClick={() => handleCopy(sessionId, "Session ID")}
-                className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
-                aria-label="Copy Session ID"
-              >
-                {copiedField === "Session ID" ? (
-                  <Check size={12} className="text-green-600" />
-                ) : (
-                  <Copy size={12} className="text-gray-400" />
-                )}
-              </button>
-            </div>
-
-            {/* Date and Time Row */}
-            <div className="flex items-start justify-between pb-1.5 border-b border-gray-100">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Date</p>
-                <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</p>
-              </div>
-              <div className="flex-1 text-right">
-                <p className="text-xs text-gray-600 leading-tight">Time</p>
-                <p className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</p>
+            {/* Session ID Row with Copy */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Session ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900">{sessionId}</span>
+                <button
+                  onClick={() => handleCopy(sessionId, "Session ID")}
+                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Session ID"
+                >
+                  {copiedField === "Session ID" ? (
+                    <Check size={12} className="text-green-600" />
+                  ) : (
+                    <Copy size={12} className="text-gray-400" />
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Status - Full Width */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <p className="text-xs text-gray-600 leading-tight">Status</p>
-                <p className="text-xs font-semibold text-teal-600">Successful</p>
-              </div>
+            {/* Date Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Date</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</span>
+            </div>
+
+            {/* Time Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Time</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
+            </div>
+
+            {/* Status Row */}
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">Status</span>
+              <span className="text-xs font-semibold text-teal-600">Successful</span>
             </div>
           </div>
         </div>
