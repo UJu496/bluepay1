@@ -2,12 +2,17 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { CheckCircle, ArrowLeft } from "lucide-react"
+import { CheckCircle, ArrowLeft, Copy, Check } from "lucide-react"
+import { ToastContainer, useToast } from "@/components/toast"
 
 export default function WithdrawalSuccessPage() {
   const router = useRouter()
   const [amount, setAmount] = useState("")
   const [withdrawalData, setWithdrawalData] = useState<any>(null)
+  const [transactionId, setTransactionId] = useState("")
+  const [sessionId, setSessionId] = useState("")
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const { toasts, showToast } = useToast()
 
   useEffect(() => {
     const data = localStorage.getItem("withdrawalData")
@@ -16,9 +21,14 @@ export default function WithdrawalSuccessPage() {
       setAmount(parsedData.amount.toLocaleString())
       setWithdrawalData(parsedData)
 
+      const transId = `TXN${Date.now()}`
+      const sessId = `SID${Date.now()}`
+      setTransactionId(transId)
+      setSessionId(sessId)
+
       const userData = JSON.parse(localStorage.getItem("userData") || "{}")
       const withdrawalTransaction = {
-        id: `TXN${Date.now()}`,
+        id: transId,
         amount: parsedData.amount,
         userName: userData.fullName || "User",
         bank: parsedData.selectedBank,
@@ -35,126 +45,201 @@ export default function WithdrawalSuccessPage() {
       localStorage.setItem("withdrawalHistory", JSON.stringify(existingHistory))
 
       localStorage.setItem("withdrawalSuccess", "true")
-
-      // Clean up withdrawal data
       localStorage.removeItem("withdrawalData")
     }
   }, [])
 
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field)
+      showToast(`${field} copied successfully.`)
+      setTimeout(() => setCopiedField(null), 2000)
+    })
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-8" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.push("/dashboard")}>
-          <ArrowLeft className="text-white" size={20} />
+    <div className="h-screen overflow-hidden flex flex-col bg-gray-50">
+      {/* Header - 56px */}
+      <div className="flex items-center justify-between px-4 h-14" style={{ backgroundColor: "#0000FF" }}>
+        <button onClick={() => router.push("/dashboard")} className="text-white">
+          <ArrowLeft size={20} />
         </button>
-        <h1 className="text-white text-lg font-bold">Transaction Details</h1>
-        <div className="w-6"></div>
+        <h1 className="text-white text-sm font-bold">Transaction Details</h1>
+        <div className="w-5"></div>
       </div>
 
-      <div className="px-4 py-6 max-w-md mx-auto">
-        {/* Success Icon */}
-        <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
-            <CheckCircle size={32} />
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-3 py-2 max-w-md mx-auto w-full">
+        {/* Success Icon - 48px */}
+        <div className="flex justify-center mb-2">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+            <CheckCircle size={24} />
           </div>
         </div>
 
-        {/* Status and Amount */}
-        <div className="text-center mb-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Transfer to {withdrawalData?.selectedBank}</h2>
-          <p className="text-3xl font-bold text-gray-900 mb-3">₦{amount}</p>
-          <p className="text-teal-600 font-semibold">Successful</p>
+        {/* Status and Amount - Ultra Compact */}
+        <div className="text-center mb-2">
+          <h2 className="text-sm font-bold text-gray-900 mb-0.5">Transfer to {withdrawalData?.accountName}</h2>
+          <p className="text-xl font-bold text-gray-900 mb-0.5">₦{amount}</p>
+          <p className="text-teal-600 font-semibold text-xs">Successful</p>
         </div>
 
-        {/* Progress Timeline */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            {/* Payment Successful */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+        {/* Progress Timeline - Ultra Compact */}
+        <div className="mb-2">
+          <div className="flex items-center justify-between">
+            {/* Withdrawal Initiated */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Withdrawal<br />initiated</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Initiated</p>
             </div>
 
             {/* Line 1 */}
-            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-0.5" style={{ backgroundColor: "#0000FF" }}></div>
 
-            {/* Processing */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+            {/* Processing by Bank */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Processing<br />by bank</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Processing</p>
             </div>
 
             {/* Line 2 */}
-            <div className="flex-1 h-0.5 mx-2 mt-2" style={{ backgroundColor: "#0000FF" }}></div>
+            <div className="flex-1 h-0.5 mx-0.5" style={{ backgroundColor: "#0000FF" }}></div>
 
-            {/* Completed */}
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white mb-2" style={{ backgroundColor: "#0000FF" }}>
-                <CheckCircle size={20} />
+            {/* Completed in Account */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: "#0000FF" }}>
+                <CheckCircle size={12} />
               </div>
-              <p className="text-xs font-semibold text-gray-900 text-center">Completed<br />in account</p>
-              <p className="text-xs text-gray-600 mt-1">{new Date().toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-gray-900 text-center leading-none mt-0.5">Completed</p>
             </div>
           </div>
         </div>
 
-        {/* Info message */}
-        <div className="bg-gray-100 rounded-lg p-3 mb-6 text-center">
-          <p className="text-sm text-gray-700">
-            Your withdrawal has been processed successfully and will be reflected in your account shortly, subject to your bank&apos;s processing time.
+        {/* Info Message - Ultra Compact */}
+        <div className="bg-gray-100 rounded p-2 mb-2 text-center">
+          <p className="text-xs text-gray-700 leading-tight">
+            Withdrawal processed successfully. Funds will reflect in your account shortly.
           </p>
         </div>
 
-        {/* Transaction Details Section */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-3">Withdrawal Details</h3>
+        {/* Transaction Receipt - Full-Width Flex Rows */}
+        <div className="bg-white rounded p-2.5 mb-2">
+          <h3 className="text-xs font-bold text-gray-900 mb-1.5">Receipt</h3>
+          
+          {/* Receipt Rows - Each row full-width with flex layout */}
+          <div className="space-y-1.5">
+            {/* Name Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Name</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</span>
+            </div>
 
-          {/* Bank Details */}
-          <div className="bg-white rounded-lg p-3 mb-3">
-            <p className="text-xs text-gray-600 mb-1">Bank Details</p>
-            <p className="text-sm font-semibold text-gray-900">{withdrawalData?.accountName}</p>
-            <p className="text-sm text-gray-600">{withdrawalData?.selectedBank} | {withdrawalData?.accountNumber}</p>
+            {/* Bank Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Bank</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</span>
+            </div>
+
+            {/* Account Number Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Account Number</span>
+              <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</span>
+            </div>
+
+            {/* Amount Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Amount</span>
+              <span className="text-xs font-semibold text-gray-900">₦{amount}</span>
+            </div>
+
+            {/* Transaction ID Row with Copy */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Transaction ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900">{transactionId}</span>
+                <button
+                  onClick={() => handleCopy(transactionId, "Transaction ID")}
+                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Transaction ID"
+                >
+                  {copiedField === "Transaction ID" ? (
+                    <Check size={12} className="text-green-600" />
+                  ) : (
+                    <Copy size={12} className="text-gray-400" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Session ID Row with Copy */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Session ID</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold text-gray-900">{sessionId}</span>
+                <button
+                  onClick={() => handleCopy(sessionId, "Session ID")}
+                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Copy Session ID"
+                >
+                  {copiedField === "Session ID" ? (
+                    <Check size={12} className="text-green-600" />
+                  ) : (
+                    <Copy size={12} className="text-gray-400" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Date Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Date</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</span>
+            </div>
+
+            {/* Time Row */}
+            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+              <span className="text-xs text-gray-600">Time</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
+            </div>
+
+            {/* Status Row */}
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-600">Status</span>
+              <span className="text-xs font-semibold text-teal-600">Successful</span>
+            </div>
           </div>
-
-          {/* Amount */}
-          <div className="bg-white rounded-lg p-3 mb-3">
-            <p className="text-xs text-gray-600 mb-1">Amount</p>
-            <p className="text-sm font-semibold text-gray-900">₦{amount}</p>
-          </div>
-
-          {/* Date & Time */}
-          <div className="bg-white rounded-lg p-3">
-            <p className="text-xs text-gray-600 mb-1">Date & Time</p>
-            <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleString()}</p>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="space-y-3">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="w-full py-3 rounded-full text-white font-bold text-base"
-            style={{ backgroundColor: "#0000FF" }}
-          >
-            Back to Dashboard
-          </button>
-
-          <button
-            onClick={() => router.push("/transactions")}
-            className="w-full py-3 rounded-full font-bold text-base border-2"
-            style={{ borderColor: "#0000FF", color: "#0000FF", backgroundColor: "#fff" }}
-          >
-            View Transactions
-          </button>
         </div>
       </div>
+
+      {/* Action Buttons - Fixed at Bottom */}
+      <div className="flex gap-2 px-3 py-2 bg-gray-50">
+        <button
+          onClick={() => {
+            const subject = "Report Issue - Withdrawal"
+            const body = `Transaction ID: ${transactionId}\n\nPlease describe your issue...`
+            window.location.href = `mailto:support@bluepay.ng?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+          }}
+          className="flex-1 h-10 rounded-2xl font-bold text-xs transition-colors"
+          style={{ backgroundColor: "#E8F5E9", color: "#0000FF" }}
+        >
+          Report Issues
+        </button>
+
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="flex-1 h-10 rounded-2xl text-white font-bold text-xs"
+          style={{ backgroundColor: "#0000FF" }}
+        >
+          Back to Dashboard
+        </button>
+      </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} />
     </div>
   )
 }
