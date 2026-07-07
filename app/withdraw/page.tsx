@@ -131,24 +131,24 @@ export default function WithdrawPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="flex items-center justify-center p-4 pt-12 relative" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.back()} className="absolute left-4 text-white">
-          <ArrowLeft size={20} />
+      <div className="flex items-center justify-center p-3 pt-8 relative" style={{ backgroundColor: "#0000FF" }}>
+        <button onClick={() => router.back()} className="absolute left-3 text-white">
+          <ArrowLeft size={18} />
         </button>
-        <h1 className="text-white text-xl font-bold">Transfer To Bank</h1>
+        <h1 className="text-white text-base font-bold">Transfer To Bank</h1>
       </div>
 
-      <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Bank Details</h2>
+      <div className="p-3 max-w-md mx-auto">
+        <h2 className="text-lg font-bold text-gray-800 mb-3">Bank Details</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-2.5">
           <div>
             <input
               type="text"
               placeholder="Account Name"
               value={accountName}
               onChange={(e) => setAccountName(e.target.value)}
-              className="w-full p-4 border-2 border-blue-500 rounded-xl bg-white text-gray-800 placeholder-gray-500"
+              className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 placeholder-gray-500"
             />
           </div>
 
@@ -158,7 +158,7 @@ export default function WithdrawPage() {
               placeholder="Account Number (10 digits)"
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
-              className="w-full p-4 border-2 border-blue-500 rounded-xl bg-white text-gray-800 placeholder-gray-500"
+              className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 placeholder-gray-500"
             />
           </div>
 
@@ -166,14 +166,14 @@ export default function WithdrawPage() {
             <button
               type="button"
               onClick={() => setShowBankDropdown(!showBankDropdown)}
-              className="w-full p-4 border-2 border-blue-500 rounded-xl bg-white text-gray-800 text-left flex items-center justify-between"
+              className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 text-left flex items-center justify-between"
             >
               <span className={selectedBank ? "text-gray-800" : "text-gray-500"}>{selectedBank || "Select Bank"}</span>
-              <ChevronDown size={20} />
+              <ChevronDown size={18} />
             </button>
 
             {showBankDropdown && (
-              <div className="absolute top-full left-0 right-0 bg-white border-2 border-blue-500 rounded-xl mt-1 max-h-48 overflow-y-auto z-10">
+              <div className="absolute top-full left-0 right-0 bg-white border-2 border-blue-500 rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
                 {banks.map((bank) => (
                   <button
                     key={bank}
@@ -182,7 +182,7 @@ export default function WithdrawPage() {
                       setSelectedBank(bank)
                       setShowBankDropdown(false)
                     }}
-                    className="w-full p-3 text-left hover:bg-blue-50 text-gray-800"
+                    className="w-full p-2 text-sm text-left hover:bg-blue-50 text-gray-800"
                   >
                     {bank}
                   </button>
@@ -197,7 +197,7 @@ export default function WithdrawPage() {
               placeholder="Amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))}
-              className="w-full p-4 border-2 border-blue-500 rounded-xl bg-white text-gray-800 placeholder-gray-500"
+              className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 placeholder-gray-500"
             />
           </div>
 
@@ -207,23 +207,23 @@ export default function WithdrawPage() {
               placeholder="BPC CODE (Buy BPC)"
               value={bpcCode}
               onChange={(e) => setBpcCode(e.target.value)}
-              className="w-full p-4 border-2 border-blue-500 rounded-xl bg-white text-gray-800 placeholder-gray-500"
+              className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 placeholder-gray-500"
             />
           </div>
 
-          <button type="button" onClick={handleBuyBPCCode} className="text-blue-600 font-semibold hover:underline">
+          <button type="button" onClick={handleBuyBPCCode} className="text-sm text-blue-600 font-semibold hover:underline">
             Buy BPC code
           </button>
 
-          {error && <p className="text-red-500 font-semibold">{error}</p>}
+          {error && <p className="text-sm text-red-500 font-semibold">{error}</p>}
 
-          <div className="mt-3">
-            <p className="text-lg font-bold text-gray-800">Available Balance: ₦{balance.toLocaleString()}</p>
+          <div className="mt-2">
+            <p className="text-sm font-bold text-gray-800">Available Balance: ₦{balance.toLocaleString()}</p>
           </div>
 
           <button
             type="submit"
-            className="w-full p-4 rounded-xl text-white font-bold text-lg mt-3"
+            className="w-full p-3 rounded-lg text-white font-bold text-sm mt-2"
             style={{ backgroundColor: "#0000FF" }}
           >
             Submit
