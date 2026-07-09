@@ -15,49 +15,54 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState("")
   const [bpcCode, setBpcCode] = useState("")
   const [showBankDropdown, setShowBankDropdown] = useState(false)
+  const [bankSearch, setBankSearch] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [balance, setBalance] = useState(200000)
 
-  const banks = [
+  const allBanks = [
     "Access Bank",
-    "GTBank",
-    "First Bank",
-    "UBA",
-    "Zenith Bank",
-    "Fidelity Bank",
-    "FCMB",
-    "Sterling Bank",
-    "Union Bank",
-    "Wema Bank",
-    "Stanbic IBTC",
+    "ALAT by Wema",
+    "Carbon",
     "Ecobank",
-    "Heritage Bank",
-    "Keystone Bank",
-    "Polaris Bank",
-    "Unity Bank",
-    "Providus Bank",
-    "Jaiz Bank",
-    "SunTrust Bank",
-    "Titan Trust Bank",
+    "Eyowo",
+    "Fidelity Bank",
+    "First Bank",
+    "Flutterwave",
+    "FCMB",
     "Globus Bank",
-    "PalmPay",
-    "OPay",
+    "GTBank",
+    "Heritage Bank",
+    "Interswitch",
+    "Jaiz Bank",
+    "Keystone Bank",
     "Kuda Bank",
     "Moniepoint",
-    "Sparkle",
-    "VFD Microfinance Bank",
-    "Rubies Bank",
-    "Carbon",
-    "ALAT by Wema",
-    "Eyowo",
+    "OPay",
     "Paga",
+    "PalmPay",
     "Paystack",
-    "Flutterwave",
-    "Interswitch",
+    "Polaris Bank",
+    "Providus Bank",
     "Remita",
+    "Rubies Bank",
+    "Sparkle",
+    "Stanbic IBTC",
+    "Sterling Bank",
+    "SunTrust Bank",
+    "Titan Trust Bank",
+    "UBA",
+    "Union Bank",
+    "Unity Bank",
+    "VFD Microfinance Bank",
+    "Wema Bank",
+    "Zenith Bank",
   ]
+
+  const filteredBanks = allBanks.filter((bank) =>
+    bank.toLowerCase().includes(bankSearch.toLowerCase())
+  )
 
   useEffect(() => {
     const savedBalance = localStorage.getItem("userBalance")
@@ -165,28 +170,48 @@ export default function WithdrawPage() {
           <div className="relative">
             <button
               type="button"
-              onClick={() => setShowBankDropdown(!showBankDropdown)}
+              onClick={() => {
+                setShowBankDropdown(!showBankDropdown)
+                if (!showBankDropdown) setBankSearch("")
+              }}
               className="w-full p-3 text-sm border-2 border-blue-500 rounded-lg bg-white text-gray-800 text-left flex items-center justify-between"
             >
-              <span className={selectedBank ? "text-gray-800" : "text-gray-500"}>{selectedBank || "Select Bank"}</span>
-              <ChevronDown size={18} />
+              <span className={selectedBank ? "text-gray-800" : "text-gray-500"}>{selectedBank || "Search or Select bankname drop-down input"}</span>
+              <ChevronDown size={18} className={`transition-transform ${showBankDropdown ? "rotate-180" : ""}`} />
             </button>
 
             {showBankDropdown && (
-              <div className="absolute top-full left-0 right-0 bg-white border-2 border-blue-500 rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
-                {banks.map((bank) => (
-                  <button
-                    key={bank}
-                    type="button"
-                    onClick={() => {
-                      setSelectedBank(bank)
-                      setShowBankDropdown(false)
-                    }}
-                    className="w-full p-2 text-sm text-left hover:bg-blue-50 text-gray-800"
-                  >
-                    {bank}
-                  </button>
-                ))}
+              <div className="absolute top-full left-0 right-0 bg-white border-2 border-blue-500 rounded-lg mt-1 z-10 shadow-lg">
+                <input
+                  type="text"
+                  placeholder="Search banks..."
+                  value={bankSearch}
+                  onChange={(e) => setBankSearch(e.target.value)}
+                  className="w-full p-2.5 text-sm border-b-2 border-blue-200 rounded-t-lg focus:outline-none focus:border-blue-500"
+                  autoFocus
+                />
+                <div className="max-h-48 overflow-y-auto">
+                  {filteredBanks.length > 0 ? (
+                    filteredBanks.map((bank) => (
+                      <button
+                        key={bank}
+                        type="button"
+                        onClick={() => {
+                          setSelectedBank(bank)
+                          setShowBankDropdown(false)
+                          setBankSearch("")
+                        }}
+                        className="w-full p-2.5 text-sm text-left hover:bg-blue-50 text-gray-800 border-b border-gray-100 transition-colors"
+                      >
+                        {bank}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-3 text-sm text-gray-500 text-center">
+                      No banks found
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

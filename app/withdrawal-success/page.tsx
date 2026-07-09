@@ -126,88 +126,88 @@ export default function WithdrawalSuccessPage() {
           </p>
         </div>
 
-        {/* Transaction Receipt - Full-Width Flex Rows */}
+        {/* Transaction Receipt - Full Width Layout */}
         <div className="bg-white rounded p-2.5 mb-2">
           <h3 className="text-xs font-bold text-gray-900 mb-1.5">Receipt</h3>
           
-          {/* Receipt Rows - Each row full-width with flex layout */}
-          <div className="space-y-1.5">
-            {/* Name Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+          {/* Full Width Rows */}
+          <div className="space-y-1">
+            {/* Name */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Name</span>
               <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountName}</span>
             </div>
 
-            {/* Bank Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Bank */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Bank</span>
               <span className="text-xs font-semibold text-gray-900">{withdrawalData?.selectedBank}</span>
             </div>
 
-            {/* Account Number Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Account Number */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Account Number</span>
               <span className="text-xs font-semibold text-gray-900">{withdrawalData?.accountNumber}</span>
             </div>
 
-            {/* Amount Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Amount */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Amount</span>
               <span className="text-xs font-semibold text-gray-900">₦{amount}</span>
             </div>
 
-            {/* Transaction ID Row with Copy */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Transaction ID */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Transaction ID</span>
               <div className="flex items-center gap-1">
                 <span className="text-xs font-semibold text-gray-900">{transactionId}</span>
                 <button
                   onClick={() => handleCopy(transactionId, "Transaction ID")}
-                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  className="flex-shrink-0 p-0.5 hover:bg-gray-100 rounded transition-colors"
                   aria-label="Copy Transaction ID"
                 >
                   {copiedField === "Transaction ID" ? (
-                    <Check size={12} className="text-green-600" />
+                    <Check size={10} className="text-green-600" />
                   ) : (
-                    <Copy size={12} className="text-gray-400" />
+                    <Copy size={10} className="text-gray-400" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Session ID Row with Copy */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Session ID */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Session ID</span>
               <div className="flex items-center gap-1">
                 <span className="text-xs font-semibold text-gray-900">{sessionId}</span>
                 <button
                   onClick={() => handleCopy(sessionId, "Session ID")}
-                  className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  className="flex-shrink-0 p-0.5 hover:bg-gray-100 rounded transition-colors"
                   aria-label="Copy Session ID"
                 >
                   {copiedField === "Session ID" ? (
-                    <Check size={12} className="text-green-600" />
+                    <Check size={10} className="text-green-600" />
                   ) : (
-                    <Copy size={12} className="text-gray-400" />
+                    <Copy size={10} className="text-gray-400" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Date Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Date */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Date</span>
-              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</span>
             </div>
 
-            {/* Time Row */}
-            <div className="flex items-center justify-between pb-1.5 border-b border-gray-100">
+            {/* Time */}
+            <div className="flex justify-between items-center border-b border-gray-100 pb-1">
               <span className="text-xs text-gray-600">Time</span>
-              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
+              <span className="text-xs font-semibold text-gray-900">{new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</span>
             </div>
 
-            {/* Status Row */}
-            <div className="flex items-center justify-between">
+            {/* Status */}
+            <div className="flex justify-between items-center">
               <span className="text-xs text-gray-600">Status</span>
               <span className="text-xs font-semibold text-teal-600">Successful</span>
             </div>

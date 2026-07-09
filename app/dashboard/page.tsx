@@ -902,14 +902,7 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <div className="mt-3">
-          <button
-            onClick={handleLogout}
-            className="w-full py-3 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors"
-          >
-            LOG OUT
-          </button>
-        </div>
+
       </div>
 
       {/* Compact Banner Carousel - PalmPay Style */}

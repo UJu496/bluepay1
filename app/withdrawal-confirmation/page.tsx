@@ -33,10 +33,50 @@ export default function WithdrawalConfirmationPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0000FF" }}>
+      <div className="min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 flex flex-col items-center justify-center px-4">
         <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-xl font-semibold">Wait while Preparing your withdrawal results</p>
+          {/* Animated Processing Card */}
+          <div className="mb-8">
+            <div className="relative w-24 h-24 mx-auto">
+              <div className="absolute inset-0 bg-white/20 rounded-full animate-ping" />
+              <div className="absolute inset-4 bg-white/30 rounded-full animate-pulse" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                    <div className="animate-spin">
+                      <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <h2 className="text-2xl font-bold mb-3">Processing Withdrawal</h2>
+          <p className="text-blue-100 text-lg mb-2">Please wait while we prepare</p>
+          <p className="text-blue-100 text-lg mb-8">your withdrawal results</p>
+          
+          {/* Status Steps */}
+          <div className="space-y-3 text-left max-w-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                <span className="text-xs">✓</span>
+              </div>
+              <span className="text-sm">Verifying details</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-white/50 animate-pulse flex items-center justify-center">
+                <span className="text-xs">...</span>
+              </div>
+              <span className="text-sm">Submitting to bank</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                <span className="text-xs">→</span>
+              </div>
+              <span className="text-sm">Completing transaction</span>
+            </div>
+          </div>
         </div>
       </div>
     )

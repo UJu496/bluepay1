@@ -181,40 +181,47 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-20">
-      <div style={{ backgroundColor: "#0000FF" }} className="text-white p-3 pt-8">
-        <div className="flex items-center justify-between mb-3">
-          <button onClick={() => router.push("/dashboard")} className="p-1.5 hover:bg-white/10 rounded-full">
-            <ArrowLeft size={18} />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pb-20">
+      {/* Header */}
+      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={() => router.push("/dashboard")} className="p-1.5 hover:bg-gray-100 rounded-full text-gray-600">
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="text-base font-bold">Transactions</h1>
-          <button onClick={() => setShowAddModal(true)} className="p-1.5 hover:bg-white/10 rounded-full">
-            <Plus size={18} />
+          <h1 className="text-xl font-bold text-gray-900">Recent Transactions</h1>
+          <button onClick={() => setShowAddModal(true)} className="p-1.5 hover:bg-blue-50 rounded-full text-blue-600">
+            <Plus size={20} />
           </button>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <TrendingUp size={14} />
-              <p className="text-xs opacity-90">Income</p>
+        {/* Summary Cards - Modern Card Design */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-3 border border-blue-200">
+            <div className="flex items-center gap-1.5 mb-1">
+              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                <TrendingUp size={12} className="text-white" />
+              </div>
+              <p className="text-xs text-gray-700 font-medium">Income</p>
             </div>
-            <p className="text-sm font-bold">₦{totals.income.toLocaleString()}</p>
+            <p className="text-sm font-bold text-gray-900">₦{totals.income.toLocaleString()}</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <TrendingDown size={14} />
-              <p className="text-xs opacity-90">Expenses</p>
+          <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-3 border border-red-200">
+            <div className="flex items-center gap-1.5 mb-1">
+              <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                <TrendingDown size={12} className="text-white" />
+              </div>
+              <p className="text-xs text-gray-700 font-medium">Expenses</p>
             </div>
-            <p className="text-sm font-bold">₦{totals.expenses.toLocaleString()}</p>
+            <p className="text-sm font-bold text-gray-900">₦{totals.expenses.toLocaleString()}</p>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <Wallet size={14} />
-              <p className="text-xs opacity-90">Net</p>
+          <div className={`bg-gradient-to-br ${totals.net >= 0 ? "from-green-50 to-green-100" : "from-yellow-50 to-yellow-100"} rounded-2xl p-3 border ${totals.net >= 0 ? "border-green-200" : "border-yellow-200"}`}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <div className={`w-6 h-6 rounded-full ${totals.net >= 0 ? "bg-green-500" : "bg-yellow-500"} flex items-center justify-center`}>
+                <Wallet size={12} className="text-white" />
+              </div>
+              <p className="text-xs text-gray-700 font-medium">Net</p>
             </div>
-            <p className={`text-sm font-bold ${totals.net >= 0 ? "text-green-300" : "text-red-300"}`}>
+            <p className={`text-sm font-bold ${totals.net >= 0 ? "text-green-700" : "text-yellow-700"}`}>
               ₦{totals.net.toLocaleString()}
             </p>
           </div>
@@ -279,60 +286,58 @@ export default function TransactionsPage() {
       </div>
 
       {/* Transactions List */}
-      <div className="p-3">
+      <div className="p-4">
         {filteredTransactions.length === 0 ? (
-          <div className="bg-white rounded-lg p-4 text-center">
-            <Wallet className="mx-auto mb-2 text-gray-400" size={36} />
-            <h3 className="text-sm font-semibold text-gray-800 mb-1">No transactions found</h3>
-            <p className="text-xs text-gray-600 mb-3">Start by adding your first transaction</p>
+          <div className="bg-white rounded-2xl p-8 text-center mt-8">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Wallet className="text-gray-400" size={32} />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-2">No transactions yet</h3>
+            <p className="text-sm text-gray-600 mb-6">Start tracking your financial activities</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-1.5 text-sm text-white rounded-lg hover:opacity-90"
+              className="px-6 py-3 text-sm text-white rounded-full font-semibold hover:opacity-90"
               style={{ backgroundColor: "#0000FF" }}
             >
               Add Transaction
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="bg-white rounded-lg p-2.5 shadow-sm">
+              <div key={transaction.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1">
+                  <div className="flex items-center gap-3 flex-1">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.type === "income" ? "bg-blue-100" : "bg-red-100"
+                      className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        transaction.type === "income" ? "bg-green-100" : "bg-red-100"
                       }`}
                     >
                       {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-blue-600" size={16} />
+                        <ArrowDownRight className="text-green-600" size={20} />
                       ) : (
-                        <ArrowUpRight className="text-red-600" size={16} />
+                        <ArrowUpRight className="text-red-600" size={20} />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-800 text-sm truncate">{transaction.description}</p>
-                      <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-                        <span className="text-xs text-gray-500">{transaction.category}</span>
+                      <p className="font-semibold text-gray-900 text-sm truncate">{transaction.description}</p>
+                      <div className="flex items-center gap-2 flex-wrap mt-1">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700 font-medium">
+                          {transaction.category}
+                        </span>
                         {transaction.userName && (
-                          <span className="text-xs text-gray-600 font-medium truncate">{transaction.userName}</span>
-                        )}
-                        {transaction.phoneNumber && (
-                          <span className="text-xs text-blue-600 font-medium">{transaction.phoneNumber}</span>
-                        )}
-                        {transaction.accountNumber && (
-                          <span className="text-xs text-blue-600 font-medium">{transaction.accountNumber}</span>
+                          <span className="text-xs text-gray-600 truncate">{transaction.userName}</span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
-                        {transaction.date} {new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                      <div className="text-xs text-gray-500 mt-1.5">
+                        {transaction.date} • {new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0 ml-2">
+                  <div className="text-right flex-shrink-0 ml-4">
                     <p
-                      className={`text-sm font-bold ${
-                        transaction.type === "income" ? "text-blue-600" : "text-red-600"
+                      className={`text-base font-bold ${
+                        transaction.type === "income" ? "text-green-600" : "text-red-600"
                       }`}
                     >
                       {transaction.type === "income" ? "+" : "-"}₦{transaction.amount.toLocaleString()}
