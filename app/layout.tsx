@@ -8,10 +8,10 @@ const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "BLUEPAY MOBILE",
-  description: "Fast, Secure & Reliable Digital Financial Platform.",
+  description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
   openGraph: {
     title: "BLUEPAY MOBILE",
-    description: "Fast, Secure & Reliable Digital Financial Platform.",
+    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
     images: [
       {
         url: "https://www-bluepaymobile2026.vercel.app/og-image.jpg",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "BLUEPAY MOBILE",
-    description: "Fast, Secure & Reliable Digital Financial Platform.",
+    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
     images: ["https://www-bluepaymobile2026.vercel.app/og-image.jpg"],
   },
 }
