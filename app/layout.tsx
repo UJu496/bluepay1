@@ -7,9 +7,28 @@ const geistSans = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "BLUEPAY MOBILE",
+  description: "Fast, Secure & Reliable Digital Financial Platform.",
+  openGraph: {
+    title: "BLUEPAY MOBILE",
+    description: "Fast, Secure & Reliable Digital Financial Platform.",
+    images: [
+      {
+        url: "https://www-bluepaymobile2026.vercel.app/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "BLUEPAY MOBILE",
+      },
+    ],
+    type: "website",
+    url: "https://www-bluepaymobile2026.vercel.app/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BLUEPAY MOBILE",
+    description: "Fast, Secure & Reliable Digital Financial Platform.",
+    images: ["https://www-bluepaymobile2026.vercel.app/og-image.jpg"],
+  },
 }
 
 export default function RootLayout({
