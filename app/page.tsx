@@ -52,12 +52,12 @@ export default function HomePage() {
       {/* Hero Section */}
       <section id="home" className="relative w-full bg-white">
         {/* Title above hero image */}
-        <div className="pt-20 sm:pt-24 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8">
+        <div className="pt-16 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black" style={{ color: "#0000FF" }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black" style={{ color: "#0000FF" }}>
               BLUEPAY MOBILE
             </h2>
-            <p className="text-3xl sm:text-4xl font-bold mt-2" style={{ color: "#0000FF" }}>
+            <p className="text-lg sm:text-2xl font-bold mt-1" style={{ color: "#0000FF" }}>
               2026
             </p>
           </div>
