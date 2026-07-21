@@ -30,7 +30,7 @@ export default function TestimoniesPage() {
           id: 1,
           name: "Maxwell Prince Chukwu",
           story:
-            "BLUEPAY INT'L has revolutionized my financial life! The BPC code system is incredibly secure and the CBN partnership gives me complete confidence. I've earned over ₦50,000 through their earning tasks and the withdrawal process is seamless. This platform is truly the future of digital payments in Nigeria!",
+            "BLUEPAY MOBILE 2026 has revolutionized my financial life! The BPC code system is incredibly secure and the CBN partnership gives me complete confidence. I've earned over ₦50,000 through their earning tasks and the withdrawal process is seamless. This platform is truly the future of digital payments in Nigeria!",
           date: "2025-01-20",
           likes: 156,
           amount: 200000,

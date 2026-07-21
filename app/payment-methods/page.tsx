@@ -135,7 +135,7 @@ export default function PaymentMethodsPage() {
   ])
 
   const [savedBanks, setSavedBanks] = useState([
-    { id: 1, name: "Access Bank", accountNumber: "6711230988", accountName: "MOD...CHI...AGB.. (BLUEPAY INT'L Agent)", isDefault: true },
+    { id: 1, name: "Access Bank", accountNumber: "6711230988", accountName: "MOD...CHI...AGB.. (BLUEPAY MOBILE 2026 Agent)", isDefault: true },
     {
       id: 2,
       name: "GTBank (Guaranty Trust Bank)",
@@ -443,7 +443,7 @@ export default function PaymentMethodsPage() {
                   <CreditCard size={20} />
                   <span className="text-sm font-semibold">{card.type}</span>
                 </div>
-                <p className="text-lg font-mono mb-2">•••• •••• •••• {card.last4}</p>
+                <p className="text-lg font-mono mb-2">•••• •••�� •••• {card.last4}</p>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs opacity-80">Expires {card.expiry}</p>

@@ -68,7 +68,7 @@ export default function AboutPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">About BLUEPAY INT'L</h1>
+            <h1 className="text-xl font-bold text-gray-900">About BLUEPAY MOBILE 2026</h1>
             <p className="text-sm text-gray-600">Empowering financial freedom for all Nigerians</p>
           </div>
           <Globe className="h-8 w-8 text-blue-600" />
@@ -101,7 +101,7 @@ export default function AboutPage() {
           </h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              BLUEPAY INT'L was founded in 2020 with a simple yet powerful vision: to make financial services accessible
+              BLUEPAY MOBILE 2026 was founded in 2020 with a simple yet powerful vision: to make financial services accessible
               to every Nigerian, regardless of their location or economic status.
             </p>
             <p>

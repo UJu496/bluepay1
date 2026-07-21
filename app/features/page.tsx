@@ -302,7 +302,7 @@ export default function FeaturesPage() {
 
         {/* Company Information */}
         <div>
-          <h3 className="text-xl font-bold text-foreground mb-6">About BLUEPAY INT'L</h3>
+          <h3 className="text-xl font-bold text-foreground mb-6">About BLUEPAY MOBILE 2026</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {companyInfo.map((info, index) => (
               <div key={index} className="bg-card rounded-xl p-4 border shadow-sm">

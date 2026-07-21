@@ -564,7 +564,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-800">Credit Alert!</h3>
-                  <p className="text-sm text-gray-600">From: BLUEPAY INT'L</p>
+                  <p className="text-sm text-gray-600">From: BLUEPAY MOBILE 2026</p>
                 </div>
               </div>
               <button
