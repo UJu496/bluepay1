@@ -333,12 +333,8 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setShowJoinGroup(true)
-      setTimeout(() => setShowJoinGroup(false), 3000)
-    }, 2000)
-
-    return () => clearInterval(interval)
+    // Keep Monica widget visible permanently
+    setShowJoinGroup(true)
   }, [])
 
   useEffect(() => {
@@ -590,22 +586,35 @@ export default function DashboardPage() {
       )}
 
       {showJoinGroup && (
-        <div className="fixed bottom-24 right-4 z-50 animate-bounce-slow">
+        <div className="fixed bottom-24 right-4 z-50" style={{
+          animation: "float 3s ease-in-out infinite"
+        }}>
+          <style>{`
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-15px); }
+            }
+          `}</style>
           <button
-            onClick={handleJoinGroup}
-            className="relative w-20 h-20 rounded-xl shadow-2xl transform transition-transform hover:scale-110"
+            onClick={() => {
+              window.open("https://wa.me/2349167089066?text=Hi,%20I%20would%20like%20to%20contact%20BLUEPAY%20MOBILE%20customer%20representative", "_blank")
+              setShowJoinGroup(false)
+            }}
+            className="relative w-16 h-16 rounded-full shadow-2xl transform transition-transform hover:scale-110 overflow-hidden border-4 border-white"
             style={{
-              background: "linear-gradient(135deg, #54a9eb 0%, #2e7ab5 100%)",
-              boxShadow: "0 8px 20px rgba(46, 122, 181, 0.4), 0 4px 10px rgba(0, 0, 0, 0.2)",
+              background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+              boxShadow: "0 8px 20px rgba(37, 211, 102, 0.4), 0 4px 10px rgba(0, 0, 0, 0.2)",
             }}
           >
-            {/* Red notification badge */}
-            <div className="absolute -top-2 -left-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-sm">1</span>
-            </div>
-            {/* White paper plane icon */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Send className="text-white transform rotate-45" size={30} strokeWidth={2.5} />
+            {/* Profile image */}
+            <img 
+              src="/monica.png" 
+              alt="Monica" 
+              className="w-full h-full object-cover"
+            />
+            {/* Tooltip text */}
+            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-3 py-1 rounded-lg text-xs whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity">
+              Hi, I'm Monica
             </div>
           </button>
         </div>
