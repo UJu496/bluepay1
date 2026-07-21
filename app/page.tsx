@@ -62,13 +62,13 @@ export default function HomePage() {
               </p>
 
               {/* Primary CTA Button */}
-              <Link 
+              <a 
                 href="/get-started" 
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 text-white px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 w-full sm:w-auto cta-button"
               >
                 Get Started
                 <ArrowRight size={18} />
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -137,6 +137,17 @@ export default function HomePage() {
           border-bottom: 3px solid #0000FF;
           padding-bottom: 0.25rem;
           flex-shrink: 0;
+        }
+
+        .cta-button {
+          background-color: #0000FF;
+          color: white;
+          text-decoration: none;
+        }
+
+        .cta-button:hover {
+          background-color: #0000DD;
+          box-shadow: 0 10px 25px rgba(0, 0, 255, 0.3);
         }
 
         @media (max-width: 640px) {
