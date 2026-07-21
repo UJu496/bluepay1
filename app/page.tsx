@@ -31,33 +31,28 @@ export default function HomePage() {
 
           {/* Nav Links - Hidden on mobile */}
           <div className="hidden md:flex items-center gap-8">
+            <a href="#home" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium">
+              Home
+            </a>
             <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium">
               Features
             </a>
-            <a href="#why-choose" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium">
-              Why BluePay
-            </a>
-            <a href="#trust" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium">
-              Trust
+            <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium">
+              Contact
             </a>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/login" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium hidden sm:block">
-              Sign In
-            </Link>
-            <Link href="/onboarding" className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 transition-all duration-300 hover:shadow-lg">
-              Get Started
-            </Link>
-          </div>
+          {/* Sign In - Desktop only */}
+          <Link href="/login" className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium hidden sm:block">
+            Sign In
+          </Link>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 sm:pt-24 pb-8 sm:pb-12">
+      <section id="home" className="pt-16 sm:pt-20 pb-6 sm:pb-8 flex flex-col h-screen max-h-screen">
         {/* Hero Image */}
-        <div className="relative w-full h-64 sm:h-80 md:h-96 overflow-hidden">
+        <div className="relative w-full flex-1 min-h-0 overflow-hidden">
           <img
             src="/onboarding-hero-updated.png"
             alt="BLUEPAY MOBILE 2026"
@@ -68,40 +63,29 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white"></div>
         </div>
 
-        {/* Hero Content - Reduced white space */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-10">
-          <div className="text-center mb-8">
+        {/* Hero Content - Compact layout */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full -mt-10 sm:-mt-12 relative z-10 pb-4 sm:pb-6">
+          <div className="text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-4 py-2 rounded-full mb-4 sm:mb-6 text-xs sm:text-sm font-semibold">
-              <span>🚀</span>
+            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-4 py-2 rounded-full mb-2 sm:mb-3 text-xs sm:text-sm font-semibold">
               <span>Fast • Secure • Affordable</span>
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 sm:mb-5 leading-tight text-balance">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 leading-tight text-balance">
               Pay Bills, Buy Airtime & Data in Seconds
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto text-balance">
+            <p className="text-sm sm:text-base text-gray-600 mb-3 leading-snug max-w-2xl mx-auto text-balance">
               Everything you need to manage your digital payments in one place.
             </p>
 
-            {/* Description */}
-            <p className="text-sm sm:text-base text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-              BluePay Mobile lets you buy airtime, data bundles, pay electricity bills, TV subscriptions, and other essential services quickly and securely. Enjoy instant transactions, affordable prices, and reliable service anytime, anywhere.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Link href="/onboarding" className="bg-blue-600 text-white px-8 py-3 sm:py-3.5 rounded-full font-bold text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105 inline-flex items-center justify-center gap-2">
-                Get Started
-                <ArrowRight size={20} />
-              </Link>
-              <button className="border-2 border-blue-600 text-blue-600 px-8 py-3 sm:py-3.5 rounded-full font-bold text-base hover:bg-blue-50 transition-all duration-300">
-                Learn More
-              </button>
-            </div>
+            {/* Primary CTA Button - Only one */}
+            <Link href="/onboarding" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+              Get Started
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
@@ -191,37 +175,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section - More coming soon */}
-      <section id="features" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-4">More Features Coming Soon</h2>
-          <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            We&apos;re constantly adding new features to make your digital payments experience even better.
-          </p>
-          <div className="inline-flex gap-3 sm:gap-4">
-            <button className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-bold hover:bg-blue-700 transition-all duration-300 hover:shadow-lg">
-              Notify Me
-            </button>
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6">Ready to Simplify Your Payments?</h2>
-          <p className="text-base sm:text-lg text-blue-100 mb-8 leading-relaxed">
-            Join thousands of users who trust BluePay for their digital payment needs.
-          </p>
-          <Link href="/onboarding" className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 sm:py-3.5 rounded-full font-bold text-base hover:bg-blue-50 transition-all duration-300 hover:shadow-lg hover:scale-105">
-            Get Started Now
-            <ArrowRight size={20} />
-          </Link>
-        </div>
-      </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-8 sm:py-12">
+      <footer id="contact" className="bg-gray-900 text-gray-400 py-8 sm:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             <div>
