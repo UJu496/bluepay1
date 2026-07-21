@@ -38,7 +38,7 @@ export default function SupportPage() {
     }
 
     if (message.includes("support") || message.includes("help") || message.includes("contact")) {
-      return "You can contact our support team via email (bluepay032@gmail.com), WhatsApp (+234 916 708 9066), or phone. We're available 24/7 for urgent issues."
+      return "You can contact our support team via email (bluepay032@gmail.com), WhatsApp (+2349167089066), or phone. We're available 24/7 for urgent issues."
     }
 
     if (message.includes("account") || message.includes("profile")) {
@@ -53,7 +53,7 @@ export default function SupportPage() {
       return "Hello! Welcome to BLUEPAY support. I'm here to help you with any questions about BPC codes, withdrawals, airtime, data, earnings, or account management. What would you like to know?"
     }
 
-    return "I understand you need help with that. For detailed assistance, please contact our support team at bluepay032@gmail.com or WhatsApp +234 916 708 9066. Our human agents are available 24/7 to help you with any specific issues."
+      return "I understand you need help with that. For detailed assistance, please contact our support team at bluepay032@gmail.com or WhatsApp +2349167089066. Our human agents are available 24/7 to help you with any specific issues."
   }
 
   const sendMessage = async () => {
@@ -245,7 +245,7 @@ export default function SupportPage() {
               </div>
               <div className="flex-1 text-left">
                 <h3 className="font-semibold text-gray-800">WhatsApp Support</h3>
-                <p className="text-sm text-gray-600">+234 916 708 9066</p>
+                <p className="text-sm text-gray-600">+2349167089066</p>
                 <p className="text-xs text-gray-500">Instant messaging support</p>
               </div>
             </button>
@@ -260,7 +260,7 @@ export default function SupportPage() {
               </div>
               <div className="flex-1 text-left">
                 <h3 className="font-semibold text-gray-800">Phone Support</h3>
-                <p className="text-sm text-gray-600">+234 916 708 9066</p>
+                <p className="text-sm text-gray-600">+2349167089066</p>
                 <p className="text-xs text-gray-500">Available 24/7</p>
               </div>
             </button>
