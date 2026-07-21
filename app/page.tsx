@@ -22,20 +22,19 @@ export default function HomePage() {
         {/* Centered Title */}
         <div className="text-center">
           <h2 
-            className="text-2xl sm:text-3xl font-black tracking-tight" 
+            className="text-2xl sm:text-3xl font-black tracking-tight title-gradient" 
             style={{
               background: "linear-gradient(135deg, #5D4FEF 0%, #6D5FFF 40%, #CCCCCC 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              textShadow: "0 2px 8px rgba(93, 79, 239, 0.15)",
               filter: "drop-shadow(0 0 8px rgba(93, 79, 239, 0.1))"
             }}
           >
             BLUEPAY MOBILE
           </h2>
           <p 
-            className="text-lg sm:text-xl font-bold mt-0.5" 
+            className="text-lg sm:text-xl font-bold mt-0.5 title-gradient" 
             style={{
               background: "linear-gradient(135deg, #5D4FEF 0%, #6D5FFF 40%, #CCCCCC 100%)",
               WebkitBackgroundClip: "text",
@@ -47,12 +46,6 @@ export default function HomePage() {
             2026
           </p>
         </div>
-
-        <style jsx>{`
-          h2, p {
-            letter-spacing: 0.02em;
-          }
-        `}</style>
       </header>
 
       {/* Hero Section - Fills remaining screen */}
@@ -125,6 +118,10 @@ export default function HomePage() {
         
         .animation-delay-200 {
           animation-delay: 0.2s;
+        }
+        
+        .title-gradient {
+          letter-spacing: 0.02em;
         }
       `}</style>
     </div>
