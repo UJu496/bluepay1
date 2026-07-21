@@ -19,66 +19,14 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Centered Title - Matching BM Logo Design */}
-        <div className="text-center">
-          <div className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
-            <span 
-              className="inline-block logo-blue" 
-              style={{
-                background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                filter: "drop-shadow(0 2px 4px rgba(93, 79, 239, 0.2))",
-                textShadow: "0 0 12px rgba(107, 95, 255, 0.3)",
-                letterSpacing: "0.02em"
-              }}
-            >
-              BLUE
-            </span>
-            <span 
-              className="inline-block logo-silver ml-0.5" 
-              style={{
-                background: "linear-gradient(180deg, #E8E8E8 0%, #D0D0D0 50%, #B8B8B8 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                filter: "drop-shadow(0 2px 4px rgba(176, 176, 176, 0.2))",
-                textShadow: "0 0 8px rgba(200, 200, 200, 0.2)",
-                letterSpacing: "0.02em"
-              }}
-            >
-              PAY
-            </span>
+        {/* Animated Scrolling Title */}
+        <div className="w-full overflow-hidden py-2 sm:py-3">
+          <div className="scrolling-ticker">
+            <div className="ticker-content">
+              <span className="ticker-text">BLUEPAY MOBILE 2026</span>
+              <span className="ticker-text">BLUEPAY MOBILE 2026</span>
+            </div>
           </div>
-          <div className="text-lg sm:text-xl font-bold">
-            <span 
-              className="inline-block logo-blue" 
-              style={{
-                background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                filter: "drop-shadow(0 1.5px 3px rgba(93, 79, 239, 0.15))",
-                letterSpacing: "0.015em"
-              }}
-            >
-              MOBILE
-            </span>
-          </div>
-          <p 
-            className="text-base sm:text-lg font-bold mt-1 logo-blue" 
-            style={{
-              background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(0 1.5px 3px rgba(93, 79, 239, 0.15))",
-              letterSpacing: "0.015em"
-            }}
-          >
-            2026
-          </p>
         </div>
       </header>
 
@@ -141,6 +89,15 @@ export default function HomePage() {
           }
         }
         
+        @keyframes scrollLeft {
+          0% {
+            transform: translateX(100%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        
         .animate-fade-in {
           animation: fadeIn 0.6s ease-out forwards;
           opacity: 0;
@@ -156,6 +113,37 @@ export default function HomePage() {
         
         .title-gradient {
           letter-spacing: 0.02em;
+        }
+
+        .scrolling-ticker {
+          width: 100%;
+          overflow: hidden;
+          background: white;
+        }
+
+        .ticker-content {
+          display: flex;
+          animation: scrollLeft 20s linear infinite;
+          white-space: nowrap;
+        }
+
+        .ticker-text {
+          display: inline-block;
+          font-size: 1.875rem;
+          font-weight: 900;
+          color: #0000FF;
+          padding: 0 2rem;
+          letter-spacing: 0.02em;
+          border-bottom: 3px solid #0000FF;
+          padding-bottom: 0.25rem;
+          flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+          .ticker-text {
+            font-size: 1.5rem;
+            padding: 0 1.5rem;
+          }
         }
       `}</style>
     </div>
