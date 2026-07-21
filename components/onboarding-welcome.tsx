@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowRight } from "lucide-react"
+import Image from "next/image"
 
 interface OnboardingWelcomeProps {
   onNext: () => void
@@ -9,46 +10,58 @@ interface OnboardingWelcomeProps {
 export default function OnboardingWelcome({ onNext }: OnboardingWelcomeProps) {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
-      {/* Hero Banner Image */}
-      <div className="w-full flex-shrink-0 overflow-hidden">
+      {/* Hero Banner Image - Optimized height for mobile viewport */}
+      <div className="w-full flex-shrink-0 h-40 sm:h-48 overflow-hidden">
         <img
           src="/onboarding-hero-updated.png"
           alt="BLUEPAY MOBILE 2026 - Get Your Account Ready"
-          className="w-full h-auto object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
-      {/* Content Section - Scrollable */}
-      <div className="flex-1 flex flex-col overflow-y-auto px-6 py-8 pb-32">
-        {/* Text Content */}
-        <div className="space-y-6">
-          <h1 
-            className="text-4xl md:text-5xl font-bold leading-tight"
-            style={{ color: '#0000FF' }}
-          >
-            Get Your Account Ready And Instantly.
-          </h1>
+      {/* Logo and Content Section */}
+      <div className="flex-1 flex flex-col px-4 sm:px-6 py-2 sm:py-3 min-h-0 justify-between">
+        {/* Upper Section - Logo and Text */}
+        <div className="flex-1 flex flex-col min-h-0 justify-start">
+          {/* BLUEPAY Logo */}
+          <div className="flex-shrink-0 h-8 sm:h-10 mb-2">
+            <img
+              src="/bluepay-mobile-logo.png"
+              alt="BLUEPAY MOBILE 2026"
+              className="h-full object-contain"
+            />
+          </div>
 
-          <p 
-            className="text-base md:text-lg leading-relaxed"
-            style={{ color: '#0000FF' }}
-          >
-            Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills at a cheaper price.
-          </p>
+          {/* Text Content - Optimized spacing */}
+          <div className="space-y-1.5 sm:space-y-2 overflow-hidden">
+            <h1 
+              className="text-xl sm:text-2xl font-bold leading-snug"
+              style={{ color: '#0000FF' }}
+            >
+              Get Your Account Ready And Instantly.
+            </h1>
+
+            <p 
+              className="text-xs sm:text-sm leading-snug"
+              style={{ color: '#0000FF' }}
+            >
+              Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills at a cheaper price.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Fixed Bottom Button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-6 shadow-lg">
+      {/* Bottom Button - Fixed */}
+      <div className="flex-shrink-0 bg-white px-4 sm:px-6 py-2.5 sm:py-3">
         <button
           onClick={onNext}
-          className="w-full py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-3"
+          className="w-full py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
           style={{ backgroundColor: '#0000FF' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0000CC'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0000FF'}
         >
           <span style={{ color: '#FFFFFF' }}>Get Started</span>
-          <ArrowRight size={24} color="#FFFFFF" />
+          <ArrowRight size={16} color="#FFFFFF" />
         </button>
       </div>
     </div>
