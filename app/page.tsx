@@ -64,7 +64,8 @@ export default function HomePage() {
               {/* Primary CTA Button */}
               <Link 
                 href="/get-started" 
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 text-white px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 w-full sm:w-auto"
+                style={{ backgroundColor: "#0000FF" }}
               >
                 Get Started
                 <ArrowRight size={18} />
