@@ -19,28 +19,62 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Centered Title */}
+        {/* Centered Title - Matching BM Logo Design */}
         <div className="text-center">
-          <h2 
-            className="text-2xl sm:text-3xl font-black tracking-tight title-gradient" 
-            style={{
-              background: "linear-gradient(135deg, #5D4FEF 0%, #6D5FFF 40%, #CCCCCC 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(0 0 8px rgba(93, 79, 239, 0.1))"
-            }}
-          >
-            BLUEPAY MOBILE
-          </h2>
+          <div className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
+            <span 
+              className="inline-block logo-blue" 
+              style={{
+                background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 2px 4px rgba(93, 79, 239, 0.2))",
+                textShadow: "0 0 12px rgba(107, 95, 255, 0.3)",
+                letterSpacing: "0.02em"
+              }}
+            >
+              BLUE
+            </span>
+            <span 
+              className="inline-block logo-silver ml-0.5" 
+              style={{
+                background: "linear-gradient(180deg, #E8E8E8 0%, #D0D0D0 50%, #B8B8B8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 2px 4px rgba(176, 176, 176, 0.2))",
+                textShadow: "0 0 8px rgba(200, 200, 200, 0.2)",
+                letterSpacing: "0.02em"
+              }}
+            >
+              PAY
+            </span>
+          </div>
+          <div className="text-lg sm:text-xl font-bold">
+            <span 
+              className="inline-block logo-blue" 
+              style={{
+                background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 1.5px 3px rgba(93, 79, 239, 0.15))",
+                letterSpacing: "0.015em"
+              }}
+            >
+              MOBILE
+            </span>
+          </div>
           <p 
-            className="text-lg sm:text-xl font-bold mt-0.5 title-gradient" 
+            className="text-base sm:text-lg font-bold mt-1 logo-blue" 
             style={{
-              background: "linear-gradient(135deg, #5D4FEF 0%, #6D5FFF 40%, #CCCCCC 100%)",
+              background: "linear-gradient(180deg, #6B5FFF 0%, #5D4FEF 50%, #4A3FD8 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              filter: "drop-shadow(0 0 6px rgba(93, 79, 239, 0.08))"
+              filter: "drop-shadow(0 1.5px 3px rgba(93, 79, 239, 0.15))",
+              letterSpacing: "0.015em"
             }}
           >
             2026
