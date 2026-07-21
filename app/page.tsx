@@ -211,9 +211,9 @@ export default function HomePage() {
             <div>
               <h4 className="text-white font-bold mb-4">Legal</h4>
               <ul className="space-y-2 text-xs sm:text-sm">
-                <li><a href="/terms" className="hover:text-white transition-colors">Terms</a></li>
-                <li><a href="/privacy" className="hover:text-white transition-colors">Privacy</a></li>
-                <li><a href="/security" className="hover:text-white transition-colors">Security</a></li>
+                <li><a href="/terms" className="hover:text-white transition-colors cursor-pointer" onClick={(e) => {e.preventDefault(); alert("Please sign in or create an account to view terms.");}}>Terms</a></li>
+                <li><a href="/privacy" className="hover:text-white transition-colors cursor-pointer" onClick={(e) => {e.preventDefault(); alert("Please sign in or create an account to view privacy policy.");}}>Privacy</a></li>
+                <li><a href="/security" className="hover:text-white transition-colors cursor-pointer" onClick={(e) => {e.preventDefault(); alert("Please sign in or create an account to view security settings.");}}>Security</a></li>
               </ul>
             </div>
             <div>
