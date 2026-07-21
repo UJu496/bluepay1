@@ -1,102 +1,69 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { ArrowRight } from "lucide-react"
+import Image from "next/image"
 
 interface OnboardingWelcomeProps {
   onNext: () => void
 }
 
 export default function OnboardingWelcome({ onNext }: OnboardingWelcomeProps) {
-  const [isSlicing, setIsSlicing] = useState(false)
-  const [currentRobotIndex, setCurrentRobotIndex] = useState(0)
-
-  const robotImages = [
-    "/robot-lineup-1.jpg",
-    "/robot-close-up-blue.jpg",
-    "/robot-lineup-2.jpg",
-    "/robot-bluepay-branded.jpg",
-    "/robot-lineup-3.jpg",
-  ]
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsSlicing(true)
-      setTimeout(() => setIsSlicing(false), 1000)
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const robotInterval = setInterval(() => {
-      setCurrentRobotIndex((prev) => (prev + 1) % robotImages.length)
-    }, 1500)
-
-    return () => clearInterval(robotInterval)
-  }, [robotImages.length])
-
   return (
-    <div className="text-center">
-      {/* Slicing Button Animation */}
-      <div className="mb-4">
-        <div className="relative inline-block">
-          <div
-            className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl transition-all duration-500 overflow-hidden ${
-              isSlicing ? "bg-white scale-110" : "bg-white/90 scale-100"
-            }`}
-          >
-            <div className="relative w-full h-full">
-              <img
-                src={robotImages[currentRobotIndex] || "/placeholder.svg"}
-                alt="BLUEPAY Robot"
-                className="w-full h-full object-cover rounded-full animate-pulse"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-slide-right-to-left"></div>
-            </div>
+    <div className="flex flex-col h-screen bg-white overflow-hidden">
+      {/* Hero Banner Image - Optimized height for mobile viewport */}
+      <div className="w-full flex-shrink-0 h-40 sm:h-48 overflow-hidden">
+        <img
+          src="/onboarding-hero-updated.png"
+          alt="BLUEPAY MOBILE 2026 - Get Your Account Ready"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Logo and Content Section */}
+      <div className="flex-1 flex flex-col px-4 sm:px-6 py-2 sm:py-3 min-h-0 justify-between">
+        {/* Upper Section - Logo and Text */}
+        <div className="flex-1 flex flex-col min-h-0 justify-start">
+          {/* BLUEPAY Logo */}
+          <div className="flex-shrink-0 h-8 sm:h-10 mb-2">
+            <img
+              src="/bluepay-mobile-logo.png"
+              alt="BLUEPAY MOBILE 2026"
+              className="h-full object-contain"
+            />
           </div>
-          <div
-            className={`absolute -inset-4 bg-white/30 rounded-full transition-all duration-500 ${
-              isSlicing ? "animate-ping scale-110" : "scale-100"
-            }`}
-          ></div>
-          {/* Slicing effect */}
-          <div
-            className={`absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 transition-all duration-500 ${
-              isSlicing ? "opacity-70 animate-pulse" : ""
-            }`}
-          ></div>
+
+          {/* Text Content - Optimized spacing */}
+          <div className="space-y-1.5 sm:space-y-2 overflow-hidden">
+            <h1 
+              className="text-xl sm:text-2xl font-bold leading-snug"
+              style={{ color: '#0000FF' }}
+            >
+              Get Your Account Ready And Instantly.
+            </h1>
+
+            <p 
+              className="text-xs sm:text-sm leading-snug"
+              style={{ color: '#0000FF' }}
+            >
+              Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills at a cheaper price.
+            </p>
+          </div>
         </div>
       </div>
 
-      <h1 className="text-3xl font-bold text-white mb-3">Welcome to BLUEPAY INT'L</h1>
-      <h2 className="text-xl font-semibold text-white/90 mb-6">Your Digital Payment Solution</h2>
-
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4 border border-white/20">
-        <p className="text-white/90 text-base leading-relaxed">
-          Operate or transact on Telegram without closing the app. Purchase airtime, data, or BPC CODE, and withdraw
-          funds seamlessly.
-        </p>
+      {/* Bottom Button - Fixed */}
+      <div className="flex-shrink-0 bg-white px-4 sm:px-6 py-2.5 sm:py-3">
+        <button
+          onClick={onNext}
+          className="w-full py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
+          style={{ backgroundColor: '#0000FF' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0000CC'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0000FF'}
+        >
+          <span style={{ color: '#FFFFFF' }}>Get Started</span>
+          <ArrowRight size={16} color="#FFFFFF" />
+        </button>
       </div>
-
-      <button
-        onClick={onNext}
-        className="w-full py-4 bg-white text-black rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
-      >
-        <span>Continue</span>
-        <ArrowRight size={20} />
-      </button>
-
-      <style jsx>{`
-        @keyframes slide-right-to-left {
-          0% { transform: translateX(100%); opacity: 0; }
-          50% { transform: translateX(0%); opacity: 1; }
-          100% { transform: translateX(-100%); opacity: 0; }
-        }
-        .animate-slide-right-to-left {
-          animation: slide-right-to-left 3s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   )
 }
