@@ -8,12 +8,16 @@ export default function HomePage() {
     <div className="h-screen w-full bg-white overflow-hidden flex flex-col">
       {/* Header with Logo and Title */}
       <header className="pt-3 sm:pt-4 pb-2 px-4 sm:px-6 flex-shrink-0 animate-fade-in">
-        {/* Logo */}
-        <img 
-          src="/bluepay-mobile-logo.png" 
-          alt="BLUEPAY MOBILE" 
-          className="h-7 sm:h-8 object-contain mb-2"
-        />
+        {/* Logo Container */}
+        <div className="mb-3 flex justify-start">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center flex-shrink-0">
+            <img 
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot_20260721-145421_1.png-n7Q9BXsaGuJpaUoZyYpOVKnrfn48JY.jpeg" 
+              alt="BluePay BM" 
+              className="h-8 sm:h-10 object-contain"
+            />
+          </div>
+        </div>
         
         {/* Centered Title */}
         <div className="text-center">
