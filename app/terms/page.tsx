@@ -75,7 +75,7 @@ export default function TermsPage() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">1. Acceptance of Terms</h3>
               <p>
-                By accessing and using BLUEPAY INT'L services, you accept and agree to be bound by these Terms of
+                By accessing and using BLUEPAY MOBILE 2026 services, you accept and agree to be bound by these Terms of
                 Service. If you do not agree to these terms, please do not use our services.
               </p>
             </div>
@@ -278,7 +278,7 @@ export default function TermsPage() {
             Regulatory Compliance
           </h3>
           <div className="space-y-2 text-sm text-gray-700">
-            <p>BLUEPAY INT'L is fully compliant with:</p>
+            <p>BLUEPAY MOBILE 2026 is fully compliant with:</p>
             <ul className="list-disc ml-6 space-y-1">
               <li>Central Bank of Nigeria (CBN) Regulations</li>
               <li>Nigeria Data Protection Regulation (NDPR)</li>
