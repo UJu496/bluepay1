@@ -50,7 +50,16 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="pt-16 sm:pt-20 pb-6 sm:pb-8 flex flex-col h-screen max-h-screen">
+      <section id="home" className="relative h-screen w-full overflow-hidden bg-white pt-16 sm:pt-20 flex flex-col">
+        {/* BluePay Logo - Top */}
+        <div className="relative z-20 px-4 sm:px-6 lg:px-8 mb-4">
+          <img 
+            src="/bluepay-mobile-logo.png" 
+            alt="BLUEPAY MOBILE" 
+            className="h-8 sm:h-10 object-contain"
+          />
+        </div>
+
         {/* Hero Image */}
         <div className="relative w-full flex-1 min-h-0 overflow-hidden">
           <img
@@ -63,29 +72,31 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-white"></div>
         </div>
 
-        {/* Hero Content - Compact layout */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full -mt-10 sm:-mt-12 relative z-10 pb-4 sm:pb-6">
-          <div className="text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-4 py-2 rounded-full mb-2 sm:mb-3 text-xs sm:text-sm font-semibold">
-              <span>Fast • Secure • Affordable</span>
+        {/* Hero Content - Overlaid on bottom of hero */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-white via-white/95 to-transparent pt-12 pb-6 sm:pb-8">
+          <div className="max-w-6xl mx-auto px-6 sm:px-6 lg:px-8 w-full">
+            <div className="text-center">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-4 py-2 rounded-full mb-2 sm:mb-3 text-xs sm:text-sm font-semibold">
+                <span>Fast • Secure • Affordable</span>
+              </div>
+
+              {/* Main Heading */}
+              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2 leading-tight text-balance">
+                Pay Bills, Buy Airtime & Data in Seconds
+              </h1>
+
+              {/* Description */}
+              <p className="text-sm sm:text-base text-gray-600 mb-6 leading-snug max-w-2xl mx-auto text-balance">
+                Everything you need to manage your digital payments in one place.
+              </p>
+
+              {/* Primary CTA Button - Full width on mobile */}
+              <Link href="/get-started" className="flex items-center justify-center gap-2 bg-blue-600 text-white w-full sm:w-auto mx-auto px-6 sm:px-8 py-3.5 sm:py-3 rounded-full font-bold text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg active:scale-95">
+                Get Started
+                <ArrowRight size={20} />
+              </Link>
             </div>
-
-            {/* Main Heading */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 leading-tight text-balance">
-              Pay Bills, Buy Airtime & Data in Seconds
-            </h1>
-
-            {/* Subheading */}
-            <p className="text-sm sm:text-base text-gray-600 mb-3 leading-snug max-w-2xl mx-auto text-balance">
-              Everything you need to manage your digital payments in one place.
-            </p>
-
-            {/* Primary CTA Button - Only one */}
-            <Link href="/onboarding" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:bg-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
-              Get Started
-              <ArrowRight size={18} />
-            </Link>
           </div>
         </div>
       </section>
