@@ -33,6 +33,16 @@ export default function OnboardingWelcome({ onNext }: OnboardingWelcomeProps) {
             />
           </div>
 
+          {/* BLUEPAY MOBILE Branding */}
+          <div className="mb-4 sm:mb-6">
+            <div className="text-2xl sm:text-4xl font-black" style={{ color: '#0000FF' }}>
+              BLUEPAY MOBILE
+            </div>
+            <div className="text-xl sm:text-2xl font-black" style={{ color: '#0000FF' }}>
+              BM
+            </div>
+          </div>
+
           {/* Text Content - Moved down significantly */}
           <div className="space-y-2 sm:space-y-3 overflow-hidden">
             <h1 
