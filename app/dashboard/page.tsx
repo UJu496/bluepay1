@@ -421,7 +421,7 @@ export default function DashboardPage() {
   }
 
   const handleGroup = () => {
-    window.open("https://t.me/bluepay2", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
   }
 
   const handleEarn = () => {
@@ -597,8 +597,7 @@ export default function DashboardPage() {
           `}</style>
           <button
             onClick={() => {
-              window.open("https://wa.me/2349167089066?text=Hi,%20I%20would%20like%20to%20contact%20BLUEPAY%20MOBILE%20customer%20representative", "_blank")
-              setShowJoinGroup(false)
+              window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
             }}
             className="relative w-16 h-16 rounded-full shadow-2xl transform transition-transform hover:scale-110 overflow-hidden border-4 border-white"
             style={{
