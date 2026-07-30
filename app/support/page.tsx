@@ -244,23 +244,23 @@ export default function SupportPage() {
                 <MessageCircle className="text-green-600" size={20} />
               </div>
               <div className="flex-1 text-left">
-                <h3 className="font-semibold text-gray-800">WhatsApp Support</h3>
-                <p className="text-sm text-gray-600">+2349167089066</p>
+                <h3 className="font-semibold text-gray-800">WhatsApp Community</h3>
+                <p className="text-sm text-gray-600">Join our group</p>
                 <p className="text-xs text-gray-500">Instant messaging support</p>
               </div>
             </button>
 
-            {/* Phone Support */}
+            {/* Phone Support - Now redirects to WhatsApp Community */}
             <button
               onClick={handleCallSupport}
               className="w-full p-4 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow"
             >
-              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <Phone className="text-red-600" size={20} />
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                <MessageCircle className="text-green-600" size={20} />
               </div>
               <div className="flex-1 text-left">
-                <h3 className="font-semibold text-gray-800">Phone Support</h3>
-                <p className="text-sm text-gray-600">+2349167089066</p>
+                <h3 className="font-semibold text-gray-800">WhatsApp Group Support</h3>
+                <p className="text-sm text-gray-600">Join our group</p>
                 <p className="text-xs text-gray-500">Available 24/7</p>
               </div>
             </button>
