@@ -106,11 +106,11 @@ export default function SupportPage() {
   }
 
   const handleWhatsAppSupport = () => {
-    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
   }
 
   const handleCallSupport = () => {
-    window.location.href = "tel:+2349167089066"
+    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
   }
 
   const handleJoinCommunity = () => {
