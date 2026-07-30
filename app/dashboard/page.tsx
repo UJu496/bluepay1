@@ -91,7 +91,6 @@ const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: numb
 export default function DashboardPage() {
   const router = useRouter()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
-  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false)
   const [userName, setUserName] = useState("User")
   const [displayedName, setDisplayedName] = useState("")
   const [balance, setBalance] = useState(200000)
@@ -598,7 +597,7 @@ export default function DashboardPage() {
           `}</style>
           <button
             onClick={() => {
-              setShowWhatsAppPopup(true)
+              window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
             }}
             className="relative w-16 h-16 rounded-full shadow-2xl transform transition-transform hover:scale-110 overflow-hidden border-4 border-white"
             style={{
@@ -791,43 +790,6 @@ export default function DashboardPage() {
             >
               Close Analytics
             </button>
-          </div>
-        </div>
-      )}
-
-      {showWhatsAppPopup && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="text-green-600" size={32} />
-              </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">Join Our WhatsApp Community</h2>
-              <p className="text-gray-600 text-sm">
-                Join our official WhatsApp community to receive important updates, support, announcements, and connect with other members.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
-                  setShowWhatsAppPopup(false)
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 text-white rounded-xl font-semibold transition-colors"
-                style={{ backgroundColor: "#25D366" }}
-              >
-                <MessageCircle size={20} />
-                Join Group
-              </button>
-
-              <button
-                onClick={() => setShowWhatsAppPopup(false)}
-                className="w-full py-3 bg-gray-200 text-gray-800 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
           </div>
         </div>
       )}
