@@ -106,15 +106,15 @@ export default function SupportPage() {
   }
 
   const handleWhatsAppSupport = () => {
-    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
+    window.open("https://chat.whatsapp.com/CBNqoGML6jZ8qmxIeu9D16?s=cl&p=a&ilr=1", "_blank")
   }
 
   const handleCallSupport = () => {
-    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf?s=cl&p=a&ilr=1", "_blank")
+    window.open("https://chat.whatsapp.com/CBNqoGML6jZ8qmxIeu9D16?s=cl&p=a&ilr=1", "_blank")
   }
 
   const handleJoinCommunity = () => {
-    window.open("https://chat.whatsapp.com/FKn3uJPVnrs9WL6Cp4Torf", "_blank")
+    window.open("https://chat.whatsapp.com/CBNqoGML6jZ8qmxIeu9D16?s=cl&p=a&ilr=1", "_blank")
   }
 
   return (
