@@ -1098,7 +1098,7 @@ export default function EarnPage() {
     } else if (taskId === "explore-features" || taskId === "explore-dashboard") {
       router.push("/features")
     } else if (taskId === "join-community-chat" || taskId === "join-whatsapp-group") {
-      window.open("https://chat.whatsapp.com/FthsBQIFAho9iSGubiqbIg?s=cl&p=a&ilr=1", "_blank")
+      window.open("https://chat.whatsapp.com/DwnorgZKe092za6pQ7kn07?s=cl&p=a&ilr=1", "_blank")
     } else if (taskId === "verify-account") {
       router.push("/verify-account")
     } else if (taskId === "setup-pin-security" || taskId === "enable-biometric-security") {
