@@ -354,7 +354,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % 17)
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % 10)
     }, 3000)
 
     return () => clearInterval(interval)
@@ -929,23 +929,10 @@ export default function DashboardPage() {
         <div className="relative h-28">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative w-full h-full">
-              {/* Slide 1 - M-CELL and MTN Evolution */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2816%29-uKJFcT3ala35PyCbhBpQe2SJIZ4QgH.png"
-                  alt="MTN Evolution"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 2 - iPhone 17 Pro */}
               <div
                 className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
                 }`}
               >
                 <img
@@ -955,36 +942,10 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Slide 3 - Glo Logo with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 17 === 2 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2868%29-SoKEs8Bou8XuwFBPeqoE1CY7UWBsdm.jpeg"
-                  alt="Glo"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 4 - MTN on Phone */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 3 ? "opacity-100 scale-100" : "opacity-0 scale-75"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2859%29-icdqatSvE2KNT4FysLMhbqaDNJsJYW.jpeg"
-                  alt="MTN Mobile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 5 - Technizo Concept */}
               <div
                 className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 4 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
                 }`}
               >
                 <img
@@ -994,62 +955,10 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Slide 6 - MTN Y'ello with fade and slide */}
-              <div
-                className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 17 === 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2858%29-2ttLoYx7E8CcuW15mgHR9xzuwzoOUg.jpeg"
-                  alt="MTN Y'ello"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 7 - MTN 5G Person */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 6 ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-90 rotate-3"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2861%29-rN5uPUremTf4rsXnoZW9Rew7IH7lqd.jpeg"
-                  alt="MTN 5G"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 8 - Airtel MTN Capsule with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 17 === 7 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2867%29-ygIRGOvgzOfxfr1MCvS41M6e5gBLJf.jpeg"
-                  alt="Airtel MTN"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 9 - All Networks Grid */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 17 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2864%29-a6rzXeKQJUOG0k5T34WvRgkZiZX7gy.jpeg"
-                  alt="All Networks"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 10 - Storefront with slide and fade */}
               <div
                 className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 17 === 9 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                  currentSlide % 10 === 2 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
                 }`}
               >
                 <img
@@ -1060,37 +969,37 @@ export default function DashboardPage() {
               </div>
 
               {/* Slide 11 - Dangote tanker operations */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 10 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 3 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%286%29-e5qXa141xrdBQNeXCjzLeEKOc5JZJ9.jpeg" alt="Dangote refinery tanker operations" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 12 - Refinery construction */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 11 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%2810%29-GOOBH8cY0ooKZEEb0Yiz6kVNnIcMZ5.jpeg" alt="Dangote refinery construction" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 13 - Dangote executive */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 12 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 5 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%288%29-kaC04hqKryBfWAuTEDI42Bc5z54n5i.jpeg" alt="Dangote Petroleum Refinery executive" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 14 - Aerial refinery */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 13 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 6 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%287%29-UkS8JK0lpN9IoNUMNpfM60gZwHdhUx.jpeg" alt="Aerial view of Dangote refinery" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 15 - IPO details */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 14 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 7 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%282%29-jI3iIxbxAtX306RnEw7IPxdYSmRBvT.jpeg" alt="Dangote Refinery IPO key details" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 16 - Refinery at sunset */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 15 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%287%29-Vns2ZxuisLAudsCIRjcBSzXbHBPU9W.jpeg" alt="Dangote refinery at sunset" className="w-full h-full object-cover" />
               </div>
 
               {/* Slide 17 - How to buy Dangote shares */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 17 === 16 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%281%29-Yi2Rt3EzvXZ4ubbeUnrkoLdU0aUKyN.jpeg" alt="How to buy Dangote shares guide" className="w-full h-full object-cover" />
               </div>
             </div>
@@ -1098,11 +1007,11 @@ export default function DashboardPage() {
 
           {/* Slideshow indicators - bottom positioned */}
           <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-            {[...Array(17)].map((_, index) => (
+            {[...Array(10)].map((_, index) => (
               <div
                 key={index}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentSlide % 17 === index ? "w-6 bg-blue-500" : "w-1.5 bg-gray-300"
+                  currentSlide % 10 === index ? "w-6 bg-blue-500" : "w-1.5 bg-gray-300"
                 }`}
               />
             ))}
