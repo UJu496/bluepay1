@@ -27,6 +27,7 @@ import {
   PiggyBank,
   Zap,
   Send,
+  LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
 
@@ -426,6 +427,10 @@ export default function DashboardPage() {
 
   const handleEarn = () => {
     router.push("/earn")
+  }
+
+  const handleDangoteIpo = () => {
+    router.push("/dangote-ipo")
   }
 
   const handleProfile = () => {
@@ -895,6 +900,12 @@ export default function DashboardPage() {
               <DollarSign className="text-yellow-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Earn</p>
+          </button>
+          <button onClick={handleDangoteIpo} className="text-center">
+            <div className="w-14 h-14 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-2">
+              <LineChart className="text-rose-600" size={20} />
+            </div>
+            <p className="text-sm text-gray-700">Dangote IPO</p>
           </button>
           <button onClick={handleProfile} className="text-center">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
