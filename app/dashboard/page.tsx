@@ -27,7 +27,6 @@ import {
   PiggyBank,
   Zap,
   Send,
-  LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
 
@@ -901,11 +900,12 @@ export default function DashboardPage() {
             </div>
             <p className="text-sm text-gray-700">Earn</p>
           </button>
-          <button onClick={handleDangoteIpo} className="text-center">
-            <div className="w-14 h-14 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-2">
-              <LineChart className="text-rose-600" size={20} />
-            </div>
-            <p className="text-sm text-gray-700">Dangote IPO</p>
+          <button
+            onClick={handleDangoteIpo}
+            className="inline-flex min-h-[56px] w-full items-center justify-center gap-3 rounded-[13px] bg-[#ED0000] px-5 text-base font-bold tracking-wide text-white shadow-sm transition-colors duration-200 hover:bg-[#c90000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ED0000] focus-visible:ring-offset-2"
+          >
+            <span>DANGOTE IPO</span>
+            <span aria-hidden="true" className="text-2xl leading-none font-normal">→</span>
           </button>
           <button onClick={handleProfile} className="text-center">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
