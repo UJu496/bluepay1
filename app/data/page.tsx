@@ -39,7 +39,7 @@ export default function DataPage() {
       return
     }
 
-    if (bpcCode !== "BPC2026_TELE_BOT_46Qa_VMC5") {
+    if (bpcCode !== "BPC2026_TQ85_BVT_46Qa_VMC2") {
       setMessage("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       setMessageType("error")
       return
