@@ -9,6 +9,9 @@ const geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "BLUEPAY MOBILE",
   description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
+  verification: {
+    google: "eR5tw2Q3nzT2G97TOSqYtRxLED76aXC2xnRwI16Iv0M",
+  },
   openGraph: {
     title: "BLUEPAY MOBILE",
     description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
