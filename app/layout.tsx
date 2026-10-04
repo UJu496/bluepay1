@@ -10,7 +10,10 @@ export const metadata: Metadata = {
   title: "BLUEPAY MOBILE",
   description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
   verification: {
-    google: "eR5tw2Q3nzT2G97TOSqYtRxLED76aXC2xnRwI16Iv0M",
+    google: [
+      "eR5tw2Q3nzT2G97TOSqYtRxLED76aXC2xnRwI16Iv0M",
+      "ZhOslAdkYj7tX-0Bx01Y_Rs4FQAETRZukqNvM4khTx0",
+    ],
   },
   openGraph: {
     title: "BLUEPAY MOBILE",
