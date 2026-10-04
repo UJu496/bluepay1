@@ -7,6 +7,10 @@ const geistSans = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bluepaymobile2026.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
   title: "BLUEPAY MOBILE",
   description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
   verification: {
