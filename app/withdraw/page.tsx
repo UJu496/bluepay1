@@ -95,7 +95,7 @@ export default function WithdrawPage() {
       return
     }
 
-    if (bpcCode !== "BPC2026_TQ85_BVT_46Qa_VMC2") {
+    if (bpcCode !== "BPC2026_TQ85_VTD54_BVT_46Qa_VMC2") {
       setError("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       return
     }
