@@ -39,17 +39,6 @@ export function getRecentTransactions(limit = 5): Transaction[] {
   return getTransactions().slice(0, limit)
 }
 
-export function getUnreadTransactionNotificationCount(): number {
-  if (typeof window === "undefined") return 0
-  const readAt = Number(localStorage.getItem("transactionNotificationsReadAt") || 0)
-  return getTransactions().filter((transaction) => transaction.type === "income" && new Date(transaction.timestamp).getTime() > readAt).length
-}
-
-export function markTransactionNotificationsRead() {
-  if (typeof window === "undefined") return
-  localStorage.setItem("transactionNotificationsReadAt", Date.now().toString())
-}
-
 export function getSpendingByCategory() {
   const transactions = getTransactions()
   const categoryTotals: Record<string, number> = {}
