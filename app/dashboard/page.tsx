@@ -599,7 +599,7 @@ export default function DashboardPage() {
             onClick={() => {
               window.open("https://chat.whatsapp.com/DwnorgZKe092za6pQ7kn07?s=cl&p=a&ilr=1", "_blank")
             }}
-            className="relative w-16 h-16 rounded-full shadow-2xl transform transition-transform hover:scale-110 overflow-hidden border-4 border-white"
+            className="relative h-14 w-14 overflow-hidden rounded-full border-4 border-white shadow-xl transition-transform hover:scale-105"
             style={{
               background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
               boxShadow: "0 8px 20px rgba(37, 211, 102, 0.4), 0 4px 10px rgba(0, 0, 0, 0.2)",
@@ -794,7 +794,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
+      <div className="sticky top-0 z-30 flex h-16 items-center justify-between bg-[#0000ff] px-4 shadow-sm">
         <button onClick={handleMenuClick}>
           <Menu className="text-white" size={20} />
         </button>
@@ -810,23 +810,25 @@ export default function DashboardPage() {
       </div>
 
       {/* Greeting Section with Continuous Word-by-Word Animation */}
-      <div className="text-white px-3 py-2 text-center" style={{ backgroundColor: "#0000FF" }}>
-        <p className="text-sm font-semibold">
-          {greeting},{" "}
-          <WordByWordAnimation text={userName} delay={2000} />
-        </p>
+      <div className="flex items-center gap-3 bg-white px-4 py-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-100 text-[#0000ff]">
+          {userProfilePhoto ? <img src={userProfilePhoto} alt="Profile" className="h-full w-full object-cover" /> : <User size={22} />}
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs text-slate-500">{greeting || "Welcome back"}</p>
+          <p className="truncate text-sm font-bold text-slate-900">{userName}</p>
+        </div>
       </div>
 
-      {/* Profile and Menu Section - Dashboard Card with proper spacing */}
-      <div className="mx-3 mb-4 p-4 rounded-xl text-white mt-4" style={{ backgroundColor: "#0000FF" }}>
+      <div className="mx-3 mb-4 rounded-[18px] bg-gradient-to-br from-[#0000ff] to-[#3030d8] p-4 text-white shadow-lg shadow-blue-200">
         <div className="flex items-center justify-between mb-3">
-          <div>
+          <div className="min-w-0">
             <p className="text-white/80 text-xs mb-1">Available Balance</p>
-            <p className="text-xl font-bold">₦{balance.toLocaleString()}</p>
+            <p className="truncate text-[clamp(1.7rem,8vw,2.1rem)] font-bold tracking-tight">₦{balance.toLocaleString()}</p>
           </div>
           <button
             onClick={handleWithdraw}
-            className="bg-white text-blue-600 px-5 py-1 rounded-full font-semibold text-sm hover:bg-gray-100 transition-colors"
+            className="shrink-0 rounded-[10px] bg-white px-4 py-2 text-sm font-semibold text-[#0000ff] transition-colors hover:bg-blue-50"
           >
             Withdraw
           </button>
@@ -842,26 +844,26 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 px-3 mb-4">
-        <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
+      <div className="grid grid-cols-4 gap-2 px-3 mb-5">
+        <button onClick={handleBuyBPC} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" disabled={isLoadingBPC}>
           <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-1">
             <CreditCard className="text-yellow-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Buy BPC</p>
         </button>
-        <button onClick={handleOrderATM} className="text-center">
+        <button onClick={handleOrderATM} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-1">
             <CreditCard className="text-purple-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Order Atm</p>
         </button>
-        <button onClick={handleWatch} className="text-center">
+        <button onClick={handleWatch} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-1">
             <Clock className="text-blue-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Watch</p>
         </button>
-        <button onClick={handleAirtime} className="text-center">
+        <button onClick={handleAirtime} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-1">
             <Phone className="text-green-600" size={20} />
           </div>
@@ -871,26 +873,26 @@ export default function DashboardPage() {
 
       <div className="px-3 mb-4">
         <h2 className="text-base font-semibold text-gray-800 mb-3">More Services</h2>
-        <div className="grid grid-cols-4 gap-4">
-          <button onClick={handleData} className="text-center">
+        <div className="grid grid-cols-4 gap-2">
+          <button onClick={handleData} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
               <BarChart className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Data</p>
           </button>
-          <button onClick={handleSupport} className="text-center">
+          <button onClick={handleSupport} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
               <Headphones className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Support</p>
           </button>
-          <button onClick={handleGroup} className="text-center">
+          <button onClick={handleGroup} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
               <Globe className="text-blue-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Group</p>
           </button>
-          <button onClick={handleEarn} className="text-center">
+          <button onClick={handleEarn} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
               <DollarSign className="text-yellow-600" size={20} />
             </div>
@@ -1263,7 +1265,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-4px_18px_rgba(15,23,42,0.06)] backdrop-blur">
         <div className="flex items-center justify-around">
           <button onClick={handleCalendar} className="text-center">
             <Calendar className="text-blue-500 mx-auto mb-1" size={20} />
