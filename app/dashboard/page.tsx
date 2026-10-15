@@ -493,8 +493,8 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {showBPCWarning && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-4 w-full max-w-sm shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#101a43]/55 p-3 sm:items-center">
+          <div className="w-full max-w-sm overflow-hidden rounded-[24px] bg-white shadow-2xl">
             <div className="text-center mb-4">
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
                 <CreditCard className="text-blue-600" size={20} />
@@ -1122,11 +1122,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="mx-4 mb-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Financial Overview</h2>
-
-        {/* Income, Expenses, Savings Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm">
+<div className="mb-3 flex items-center justify-between"><div><h2 className="text-base font-bold text-[#172033]">Financial overview</h2><p className="text-[11px] text-[#788196]">Your monthly money snapshot</p></div><span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-semibold text-[#0000ff]">This month</span></div>
+  
+  {/* Income, Expenses, Savings Cards */}
+  <div className="grid grid-cols-3 gap-2 mb-5">
+  <div className="rounded-2xl border border-[#e7eaf2] bg-white p-3 shadow-sm">
             <div className="flex items-center justify-between mb-1">
               <TrendingUp className="text-green-500" size={20} />
               <ArrowUpRight className="text-green-500" size={16} />
