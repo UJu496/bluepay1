@@ -92,7 +92,7 @@ const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: numb
 export default function DashboardPage() {
   const router = useRouter()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
-  const [userName, setUserName] = useState("User")
+  const [userName, setUserName] = useState("")
   const [displayedName, setDisplayedName] = useState("")
   const [balance, setBalance] = useState(200000)
   const [isLoadingBPC, setIsLoadingBPC] = useState(false)
@@ -197,7 +197,7 @@ export default function DashboardPage() {
 
   const featuredTestimonies = [
     {
-      name: "Maxwell Prince Chukwu",
+      name: "BLUEPAY customer",
       location: "Lagos, Nigeria",
       text: "BLUEPAY2026 has completely transformed how I handle my financial transactions. The BPC code system is revolutionary and the CBN partnership gives me complete confidence in the platform's security.",
       rating: 5,
@@ -239,7 +239,7 @@ export default function DashboardPage() {
     const userData = localStorage.getItem("userData")
     if (userData) {
       const parsedData = JSON.parse(userData)
-      setUserName(parsedData.fullName || "User")
+      setUserName(parsedData.fullName || "Account holder")
     }
 
     const savedPhoto = localStorage.getItem("userProfilePhoto")

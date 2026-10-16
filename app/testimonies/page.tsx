@@ -28,7 +28,7 @@ export default function TestimoniesPage() {
       const defaultTestimonies = [
         {
           id: 1,
-          name: "Maxwell Prince Chukwu",
+          name: "BLUEPAY customer",
           story:
             "BLUEPAY MOBILE 2026 has revolutionized my financial life! The BPC code system is incredibly secure and the CBN partnership gives me complete confidence. I've earned over ₦50,000 through their earning tasks and the withdrawal process is seamless. This platform is truly the future of digital payments in Nigeria!",
           date: "2025-01-20",
