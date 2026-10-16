@@ -1,18 +1,25 @@
 import { NextResponse } from "next/server"
+import { localBanks } from "@/lib/banks"
 
 export async function GET() {
   const secret = process.env.PAYSTACK_SECRET_KEY
   if (!secret) {
-    return NextResponse.json({ error: "Bank directory is not configured. Set PAYSTACK_SECRET_KEY on the server." }, { status: 503 })
+    return NextResponse.json({ banks: localBanks, source: "local" })
   }
 
-  const response = await fetch("https://api.paystack.co/bank?country=nigeria&perPage=100", {
-    headers: { Authorization: `Bearer ${secret}` },
-    next: { revalidate: 3600 },
-  })
-  const payload = await response.json()
+  let response: Response
+  let payload: { status?: boolean; data?: Array<{ id: number; name: string; code: string; logo?: string }> }
+  try {
+    response = await fetch("https://api.paystack.co/bank?country=nigeria&perPage=100", {
+      headers: { Authorization: `Bearer ${secret}` },
+      next: { revalidate: 3600 },
+    })
+    payload = await response.json()
+  } catch {
+    return NextResponse.json({ banks: localBanks, source: "local" })
+  }
   if (!response.ok || !payload.status) {
-    return NextResponse.json({ error: "The bank directory provider is unavailable." }, { status: 502 })
+    return NextResponse.json({ banks: localBanks, source: "local" })
   }
 
   const banks = payload.data.map((bank: { id: number; name: string; code: string; logo?: string }) => ({

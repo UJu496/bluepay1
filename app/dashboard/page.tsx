@@ -248,10 +248,10 @@ export default function DashboardPage() {
     }
 
     const loadBalance = () => {
-      const savedBalance = localStorage.getItem("userBalance")
-      if (savedBalance) {
-        setBalance(Number.parseInt(savedBalance))
-      }
+  const savedBalance = localStorage.getItem("userBalance")
+  const authoritativeBalance = savedBalance ? Number.parseInt(savedBalance, 10) : 200000
+  if (!savedBalance) localStorage.setItem("userBalance", String(authoritativeBalance))
+  setBalance(authoritativeBalance)
     }
 
     loadBalance()
