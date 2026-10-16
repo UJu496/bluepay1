@@ -12,6 +12,9 @@ export interface Transaction {
   network?: string
   userName?: string
   bpcCode?: string
+  status?: "successful" | "pending" | "failed" | "reversed"
+  reference?: string
+  fee?: number
 }
 
 export function saveTransaction(transaction: Omit<Transaction, "id" | "timestamp">) {
@@ -23,6 +26,10 @@ export function saveTransaction(transaction: Omit<Transaction, "id" | "timestamp
   }
   transactions.unshift(newTransaction)
   localStorage.setItem("userTransactions", JSON.stringify(transactions))
+  if (newTransaction.status !== "pending" && newTransaction.status !== "failed" && newTransaction.status !== "reversed") {
+    const unread = JSON.parse(localStorage.getItem("bluepayUnreadTransactions") || "[]") as string[]
+    localStorage.setItem("bluepayUnreadTransactions", JSON.stringify([...new Set([newTransaction.id, ...unread])]))
+  }
   return newTransaction
 }
 

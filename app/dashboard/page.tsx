@@ -29,7 +29,7 @@ import {
   Send,
   LineChart,
 } from "lucide-react"
-import { getRecentTransactions, getSpendingByCategory, getUnreadTransactionNotificationCount } from "@/lib/transactions"
+import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
 
 const TypewriterText = ({
   text,
@@ -109,6 +109,11 @@ export default function DashboardPage() {
   const [showDataUsage, setShowDataUsage] = useState(false)
   const [showCreditAlert, setShowCreditAlert] = useState(false)
   const [showBPCWarning, setShowBPCWarning] = useState(true)
+
+  useEffect(() => {
+    const unread = JSON.parse(localStorage.getItem("bluepayUnreadTransactions") || "[]") as string[]
+    setUnreadTransactionCount(unread.length)
+  }, [])
 
   const [monthlyIncome] = useState(450000)
   const [monthlyExpenses] = useState(285000)
@@ -257,7 +262,6 @@ export default function DashboardPage() {
     }
 
     loadTransactions()
-    setUnreadTransactionCount(getUnreadTransactionNotificationCount())
 
     const checkWithdrawalNotification = () => {
       const withdrawalSuccess = localStorage.getItem("withdrawalSuccess")
@@ -451,9 +455,11 @@ export default function DashboardPage() {
   }
 
   const handleBellClick = () => {
-  localStorage.setItem("withdrawalSuccess", "false")
-  setHasWithdrawalNotification(false)
-  router.push("/recent-activities")
+    localStorage.setItem("withdrawalSuccess", "false")
+    localStorage.setItem("bluepayUnreadTransactions", "[]")
+    setHasWithdrawalNotification(false)
+    setUnreadTransactionCount(0)
+    router.push("/recent-activities")
   }
 
   const handleCalendar = () => {
@@ -810,7 +816,7 @@ export default function DashboardPage() {
           <Bell className="text-white" size={20} />
   {(hasWithdrawalNotification || unreadTransactionCount > 0) && (
   <div className="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-red-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white">
-  {unreadTransactionCount > 9 ? "9+" : unreadTransactionCount || ""}
+  {unreadTransactionCount > 9 ? "9+" : unreadTransactionCount || 1}
   </div>
   )}
         </button>
