@@ -10,7 +10,13 @@ export default function PaymentConfirmationPage() {
   const router = useRouter()
   const [attempt, setAttempt] = useState<Attempt | null>(null)
   const [message, setMessage] = useState("")
-  useEffect(() => { const stored = localStorage.getItem("paymentAttempt"); if (stored) setAttempt(JSON.parse(stored)) }, [])
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("attemptId")
+    const stored = id ? localStorage.getItem(`bluepayPaymentAttempt:${id}`) : localStorage.getItem("paymentAttempt")
+    const value = stored ? JSON.parse(stored) : null
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "null")
+    if (value && currentUser && (!value.userId || value.userId === currentUser.id || value.userId === currentUser.email)) setAttempt(value)
+  }, [])
   if (!attempt) return <main className="grid min-h-screen place-items-center bg-[#f6f8fc] p-6 text-sm text-slate-500">No payment attempt found.</main>
   const date = attempt.createdAt ? new Date(attempt.createdAt).toLocaleString("en-NG", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded"
   function recheck() { setMessage("Automatic bank payment verification is unavailable. This attempt remains awaiting review.") }
