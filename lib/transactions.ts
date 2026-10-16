@@ -14,15 +14,22 @@ export interface Transaction {
   bpcCode?: string
   status?: "successful" | "pending" | "failed" | "reversed"
   reference?: string
+  trackingId?: string
+  createdAt?: string
   fee?: number
 }
 
 export function saveTransaction(transaction: Omit<Transaction, "id" | "timestamp">) {
   const transactions = getTransactions()
+  const createdAt = new Date().toISOString()
+  const id = crypto.randomUUID()
   const newTransaction: Transaction = {
     ...transaction,
-    id: Date.now().toString(),
-    timestamp: new Date().toISOString(),
+    id,
+    timestamp: createdAt,
+    createdAt,
+    reference: transaction.reference || `BPM-WD-${createdAt.slice(0, 10).replaceAll("-", "")}-${id.slice(0, 8).toUpperCase()}`,
+    trackingId: transaction.trackingId || `BPM-TRACK-${id.replaceAll("-", "").slice(0, 12).toUpperCase()}`,
   }
   transactions.unshift(newTransaction)
   localStorage.setItem("userTransactions", JSON.stringify(transactions))

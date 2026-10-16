@@ -1,367 +1,57 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect } from "react"
-import { ArrowLeft, Copy, Upload, X } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { ArrowLeft, Check, Copy, FileText, Info, Upload, X, AlertTriangle } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+
+const accountNumber = "6711230988"
+const allowedTypes = ["image/png", "image/jpeg", "application/pdf"]
 
 export default function PaymentPage() {
   const router = useRouter()
-  const [showLoading, setShowLoading] = useState(true)
-  const [showOpayWarning, setShowOpayWarning] = useState(false)
-  const [showAccountDetails, setShowAccountDetails] = useState(false)
-  const [showPaymentCheck, setShowPaymentCheck] = useState(false)
-  const [showPaymentResult, setShowPaymentResult] = useState(false)
-  const [uploadedReceipt, setUploadedReceipt] = useState<File | null>(null)
-  const [receiptPreview, setReceiptPreview] = useState<string | null>(null)
-  const [showReconfirmLoading, setShowReconfirmLoading] = useState(false)
-  const [userData, setUserData] = useState({ fullName: "", email: "", amount: "" })
+  const [user, setUser] = useState({ name: "", email: "", amount: "₦10,680.00" })
+  const [acknowledged, setAcknowledged] = useState(false)
+  const [receipt, setReceipt] = useState<File | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [error, setError] = useState("")
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData") || "{}")
-    const paymentData = JSON.parse(localStorage.getItem("paymentData") || "{}")
-    setUserData({
-      fullName: storedUserData.fullName || "User",
-      email: storedUserData.email || "user@example.com",
-      amount: paymentData.amount || "8,500.00",
-    })
-
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-      setShowOpayWarning(true)
-    }, 5000)
-
-    return () => clearTimeout(timer)
+    const profile = JSON.parse(localStorage.getItem("userData") || "{}")
+    const payment = JSON.parse(localStorage.getItem("paymentData") || "{}")
+    setUser({ name: payment.userName || profile.fullName || "", email: payment.userEmail || profile.email || "", amount: formatAmount(payment.amount || "10680") })
   }, [])
 
-  const handleOpayWarningAccept = () => {
-    setShowOpayWarning(false)
-    setShowAccountDetails(true)
+  function formatAmount(value: string | number) {
+    const numeric = Number(String(value).replace(/[^0-9.]/g, ""))
+    return Number.isFinite(numeric) ? `₦${numeric.toLocaleString("en-NG", { minimumFractionDigits: 2 })}` : "₦0.00"
   }
 
-  const handleReceiptUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  function chooseReceipt(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    if (file) {
-      setUploadedReceipt(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setReceiptPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
+    if (!file) return
+    if (!allowedTypes.includes(file.type)) { setError("Choose a PNG, JPG, JPEG, or PDF receipt."); return }
+    if (file.size > 8 * 1024 * 1024) { setError("Receipt must be smaller than 8 MB."); return }
+    setError(""); setReceipt(file)
   }
 
-  const removeReceipt = () => {
-    setUploadedReceipt(null)
-    setReceiptPreview(null)
+  async function copyAccount() {
+    await navigator.clipboard?.writeText(accountNumber)
+    setCopied(true); window.setTimeout(() => setCopied(false), 1800)
   }
 
-  const handlePaymentMade = () => {
-    setShowAccountDetails(false)
-    setShowPaymentCheck(true)
-
-    setTimeout(() => {
-      setShowPaymentCheck(false)
-      setShowPaymentResult(true)
-    }, 6000)
+  function submitPayment() {
+    if (submitting) return
+    setSubmitting(true)
+    const id = crypto.randomUUID()
+    const attempt = { id, reference: `BPM-PAY-${id.slice(0, 8).toUpperCase()}`, createdAt: new Date().toISOString(), status: "awaiting_review", name: user.name, email: user.email, amount: user.amount, receiptName: receipt?.name || null }
+    localStorage.setItem("paymentAttempt", JSON.stringify(attempt))
+    localStorage.setItem("paymentData", JSON.stringify({ userName: user.name, userEmail: user.email, amount: user.amount, attemptId: id }))
+    router.push("/payment-confirmation")
   }
 
-  const handleReconfirm = () => {
-    setShowPaymentResult(false)
-    setShowReconfirmLoading(true)
-
-    setTimeout(() => {
-      setShowReconfirmLoading(false)
-      setShowPaymentResult(true)
-    }, 7000)
-  }
-
-  const copyAccountNumber = () => {
-    navigator.clipboard.writeText("6711230988")
-  }
-
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0000FF" }}>
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12">
-        <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={20} />
-        </button>
-        <h1 className="text-white text-xl font-bold">Payment Details</h1>
-      </div>
-
-      <div className="flex items-center justify-center min-h-[80vh] p-4">
-        {showLoading && (
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white text-lg">Loading payment details...</p>
-          </div>
-        )}
-
-        {showOpayWarning && (
-          <div className="bg-white rounded-lg p-4 w-full max-w-md">
-            <div className="text-center mb-6">
-              <div className="flex justify-center mb-4">
-                <Image src="/images/opay-logo.png" alt="OPay Logo" width={80} height={80} className="rounded-lg" />
-              </div>
-              <h2 className="text-xl font-bold text-red-600 mb-4">⚠️ Important Notice</h2>
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-red-800 font-semibold text-lg mb-2">
-                  We are NOT accepting payments from OPay accounts
-                </p>
-                <p className="text-red-700 text-sm">
-                  Please use other bank accounts like GTBank, Access Bank, First Bank, UBA, Zenith Bank, or other
-                  traditional banks for your BPC code purchase. OPay transactions cannot be processed by our payment
-                  system.
-                </p>
-              </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                <p className="text-blue-800 text-sm">
-                  💡 <strong>Tip:</strong> Use your withdrawal account for faster payment verification and seamless
-                  transaction processing.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleOpayWarningAccept}
-              className="w-full text-white py-3 rounded-lg font-semibold"
-              style={{ backgroundColor: "#0000FF" }}
-            >
-              I WON'T USE OPAY
-            </button>
-          </div>
-        )}
-
-        {showAccountDetails && (
-          <div className="bg-white rounded-lg p-4 w-full max-w-md">
-            <h2 className="text-xl font-bold text-center mb-6 text-gray-800">Account Details</h2>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-gray-600 text-sm font-medium mb-1">Bank:</label>
-                <p className="text-gray-800 font-semibold">MONIEPOINT MFB</p>
-              </div>
-
-              <div>
-                <label className="block text-gray-600 text-sm font-medium mb-1">Account Number:</label>
-                <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                  <p className="text-gray-800 font-semibold">6711230988</p>
-                  <button onClick={copyAccountNumber} className="text-blue-600 hover:text-blue-800">
-                    <Copy size={20} />
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-600 text-sm font-medium mb-1">Name:</label>
-                <p className="text-gray-800 font-semibold">MOD... CH... AGB (BLUEPAY2026 Agent)</p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-3 overflow-hidden">
-                <div className="animate-marquee whitespace-nowrap text-blue-800 text-xs font-medium">
-                  📄 Upload your payment receipt for faster verification and easier payment checking by our automated
-                  system
-                </div>
-              </div>
-
-              <label className="block text-gray-600 text-sm font-medium mb-2">Upload Payment Receipt (Optional)</label>
-
-              {!uploadedReceipt ? (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                  <input
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={handleReceiptUpload}
-                    className="hidden"
-                    id="receipt-upload"
-                  />
-                  <label htmlFor="receipt-upload" className="cursor-pointer">
-                    <Upload className="mx-auto mb-2 text-gray-400" size={20} />
-                    <p className="text-gray-600 text-sm">Click to upload receipt</p>
-                    <p className="text-gray-400 text-xs mt-1">PNG, JPG or PDF</p>
-                  </label>
-                </div>
-              ) : (
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Upload className="text-green-600 mr-2" size={20} />
-                      <span className="text-sm text-gray-700 truncate">{uploadedReceipt.name}</span>
-                    </div>
-                    <button onClick={removeReceipt} className="text-red-500 hover:text-red-700">
-                      <X size={16} />
-                    </button>
-                  </div>
-                  {receiptPreview && uploadedReceipt.type.startsWith("image/") && (
-                    <img
-                      src={receiptPreview || "/placeholder.svg"}
-                      alt="Receipt preview"
-                      className="mt-2 max-h-32 rounded"
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={handlePaymentMade}
-              className="w-full text-white py-3 rounded-lg font-semibold"
-              style={{ backgroundColor: "#0000FF" }}
-            >
-              I've made payment
-            </button>
-          </div>
-        )}
-
-        {showPaymentCheck && (
-          <div className="bg-white rounded-xl p-5 w-full max-w-lg shadow-2xl">
-            <div className="text-center mb-6">
-              <div className="relative">
-                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
-                </div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full animate-pulse"></div>
-              </div>
-
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Verifying Payment</h2>
-
-              {/* User Details Display */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6 border border-blue-200">
-                <div className="space-y-2 text-left">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Name:</span>
-                    <span className="text-gray-800 font-semibold">{userData.fullName}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Email:</span>
-                    <span className="text-gray-800 font-semibold text-sm">{userData.email}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Amount:</span>
-                    <span className="text-green-600 font-bold text-lg">₦{userData.amount}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Verification Messages */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-center gap-3 text-blue-600">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                  <p className="font-semibold">Hold on, let me check and verify your payment receipts</p>
-                </div>
-
-                {uploadedReceipt && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                    <div className="flex items-center justify-center gap-2 text-yellow-700">
-                      <Upload size={16} />
-                      <p className="text-sm font-medium">Analyzing uploaded receipt: {uploadedReceipt.name}</p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="text-gray-600 text-sm">
-                  <p>I'm just checking your payment receipts to know if you have made payment</p>
-                </div>
-
-                {/* Animated Progress Dots */}
-                <div className="flex justify-center gap-1 mt-4">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100"></div>
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showReconfirmLoading && (
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-white text-lg">Rechecking your payment...</p>
-            <p className="text-white text-sm mt-2">Please wait while we verify again</p>
-          </div>
-        )}
-
-        {showPaymentResult && (
-          <div className="bg-white rounded-xl p-5 w-full max-w-lg shadow-2xl">
-            <div className="text-center">
-              {/* Animated Error Icon */}
-              <div className="relative mb-6">
-                <div className="w-24 h-24 mx-auto bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <div className="text-xl text-white animate-pulse">🚫</div>
-                </div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-100 px-3 py-1 rounded-full">
-                  <span className="text-red-600 text-xs font-semibold">FAILED</span>
-                </div>
-              </div>
-
-              <h2 className="text-xl font-bold text-red-600 mb-3">Payment Not Confirmed</h2>
-
-              {/* User Details in Error State */}
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-                <div className="space-y-2 text-left">
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-600 font-medium">Name:</span>
-                    <span className="text-red-800 font-semibold">{userData.fullName}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-600 font-medium">Email:</span>
-                    <span className="text-red-800 font-semibold text-sm">{userData.email}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-red-600 font-medium">Amount:</span>
-                    <span className="text-red-700 font-bold text-lg">₦{userData.amount}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                <p className="text-yellow-800 text-sm font-medium mb-2">⚠️ Payment Verification Failed</p>
-                <p className="text-yellow-700 text-xs">
-                  We couldn't verify your payment at this time. Please ensure you've sent the exact amount to the
-                  correct account details.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <button
-                  onClick={handleReconfirm}
-                  className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                >
-                  🔄 RECHECK PAYMENT
-                </button>
-
-                <button
-                  onClick={() => router.push("/dashboard")}
-                  className="w-full text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                  style={{ background: "linear-gradient(135deg, #0000FF 0%, #8A2BE2 100%)" }}
-                >
-                  🏠 Back to Dashboard
-                </button>
-              </div>
-
-              <p className="text-gray-500 text-xs mt-4">
-                Need help? Contact our support team for assistance with your payment.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 25s linear infinite;
-        }
-      `}</style>
-    </div>
-  )
+  return <main className="min-h-screen bg-[#f6f8fc] text-slate-950"><header className="bg-[#0000ff] px-4 pb-4 pt-10 text-white"><div className="mx-auto flex max-w-lg items-center gap-3"><button onClick={() => router.back()} aria-label="Go back" className="rounded-full p-2 hover:bg-white/10"><ArrowLeft size={19}/></button><div><p className="text-[11px] text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-semibold">Payment details</h1></div></div></header><section className="mx-auto max-w-lg space-y-3 px-4 py-4"><div className="flex items-center justify-between text-xs font-semibold text-slate-500"><span className="text-[#0000ff]">01 Payment details</span><span>02 Review</span><span>03 Status</span></div>{!acknowledged ? <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4"><div className="flex gap-3"><Image src="/images/opay-logo.png" alt="OPay" width={40} height={40} className="h-10 w-10 rounded-xl bg-white object-contain p-1"/><div><div className="flex items-center gap-2 font-semibold text-amber-950"><AlertTriangle size={17}/> Important Payment Notice</div><p className="mt-2 text-xs leading-5 text-amber-900">We are <strong>NOT accepting payments from OPay accounts.</strong> Please use another bank account, such as GTBank, Access Bank, First Bank, UBA, Zenith Bank, or another traditional bank. Payments sent from OPay accounts cannot be verified through the current payment process.</p><p className="mt-2 text-xs leading-5 text-amber-900"><strong>Tip:</strong> Where appropriate, use your usual withdrawal bank account and keep your payment receipt.</p></div></div><button onClick={() => setAcknowledged(true)} className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0000ff] text-sm font-semibold text-white">I WON&apos;T USE OPAY <Check size={16}/></button></div> : <><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className="flex items-center justify-between"><div><p className="text-xs text-slate-500">BPC Code purchase</p><p className="mt-1 text-2xl font-bold">{user.amount}</p></div><Info className="text-[#0000ff]" size={20}/></div></div><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><h2 className="font-semibold">Account details</h2><div className="mt-3 space-y-3 text-sm"><Row label="Bank" value="MONIEPOINT MFB"/><Row label="Account name" value="MOD... CH... AGB (BLUEPAY2026 Agent)"/><div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3"><span className="text-slate-500">Account number</span><span className="flex items-center gap-2 font-bold tracking-wider">{accountNumber}<button onClick={copyAccount} aria-label="Copy account number" className="rounded-lg p-1.5 text-[#0000ff] hover:bg-blue-50"><Copy size={16}/></button></span></div>{copied && <p className="text-right text-xs text-emerald-600">Account number copied</p>}</div><p className="mt-3 text-xs text-slate-500">Do not claim these account details are verified through an API.</p></div><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Payment receipt</h2><p className="mt-1 text-xs text-slate-500">Upload your payment receipt for easier payment checking.</p></div><FileText className="text-[#0000ff]" size={20}/></div>{receipt ? <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs"><span className="flex min-w-0 items-center gap-2 truncate"><FileText size={16} className="shrink-0 text-emerald-600"/>{receipt.name}</span><button onClick={() => setReceipt(null)} aria-label="Remove receipt" className="p-1 text-red-500"><X size={16}/></button></div> : <label htmlFor="payment-receipt" className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 py-4 text-xs font-semibold text-slate-600"><Upload size={17}/> Click to upload receipt<input id="payment-receipt" type="file" accept=".png,.jpg,.jpeg,.pdf" onChange={chooseReceipt} className="sr-only"/></label>}<p className="mt-2 text-[11px] text-slate-400">Upload Payment Receipt (Optional) · PNG, JPG, JPEG, PDF</p></div>{error && <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{error}</p>}<button onClick={submitPayment} disabled={submitting} className="h-11 w-full rounded-xl bg-[#0000ff] text-sm font-semibold text-white disabled:opacity-50">{submitting ? "Saving payment attempt..." : "I&apos;VE MADE PAYMENT"}</button><p className="text-center text-[11px] text-slate-500">Submitting records an internal attempt for review. It does not verify a bank payment.</p></>}</section></main>
 }
+function Row({ label, value }: { label: string; value: string }) { return <div className="flex items-start justify-between gap-4"><span className="text-slate-500">{label}</span><span className="max-w-[65%] text-right font-semibold">{value}</span></div> }
