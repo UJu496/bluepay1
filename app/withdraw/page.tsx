@@ -33,7 +33,7 @@ export default function WithdrawPage() {
     const value = Number(amount)
     if (!selectedBank || accountNumber.length !== 10 || !accountName || !value || !bpcCode) return setError("Complete all transfer details to continue.")
     if (value > balance) return setError("Insufficient available balance.")
-    if (bpcCode !== "BPC2026_TELE_BOT_46Qa_VMC5") return setError("This BPC code is invalid. Buy a valid code from BLUEPAY2026.")
+    if (bpcCode !== "BPC2026_TQ85_VTD54_BVT_46Qa_VMC2") return setError("This BPC code is invalid. Buy a valid code from BLUEPAY2026.")
     saveTransaction({ type: "expense", category: "Withdrawal", description: `Transfer to ${selectedBank}`, amount: value, date: new Date().toISOString().split("T")[0], accountNumber, bankName: selectedBank, userName: accountName })
     localStorage.setItem("withdrawalData", JSON.stringify({ accountName, accountNumber, selectedBank, amount: value, balance }))
     router.push("/withdrawal-confirmation")
