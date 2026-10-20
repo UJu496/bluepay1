@@ -982,6 +982,26 @@ const taskSets = [
   ],
 ]
 
+const catalogCategories = ["Daily", "Video", "Learning", "Community", "Feedback", "Lifestyle", "Money Tips", "Social Impact", "Wellness", "Creativity"]
+const catalogVerbs = ["Explore", "Review", "Learn", "Share", "Complete", "Discover", "Rate", "Practice", "Try", "Answer"]
+const generatedTaskCatalog: Task[] = Array.from({ length: 2400 }, (_, index) => {
+  const category = catalogCategories[index % catalogCategories.length]
+  const verb = catalogVerbs[index % catalogVerbs.length]
+  const number = index + 1
+  return {
+    id: `catalog-task-${number}`,
+    title: `${verb} BLUEPAY opportunity ${number}`,
+    description: `Complete this ${category.toLowerCase()} activity and build your BLUEPAY rewards streak.`,
+    reward: 350 + (index % 12) * 125,
+    icon: <Target className="text-blue-600" size={18} />,
+    category,
+    timeRequired: `${2 + (index % 8)} mins`,
+    completed: false,
+    action: "Start task",
+  }
+})
+const taskSetsWithCatalog = taskSets.map((set) => [...set, ...generatedTaskCatalog])
+
 export default function EarnPage() {
   const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
@@ -1006,8 +1026,8 @@ export default function EarnPage() {
     if (lastResetDate !== today) {
       // Calculate which task set to use based on day
       const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24))
-      const taskSetIndex = daysSinceEpoch % taskSets.length
-      const todaysTasks = taskSets[taskSetIndex]
+      const taskSetIndex = daysSinceEpoch % taskSetsWithCatalog.length
+      const todaysTasks = taskSetsWithCatalog[taskSetIndex]
 
       // Reset all tasks for new day
       localStorage.removeItem("completedTasks")
@@ -1037,7 +1057,7 @@ export default function EarnPage() {
       // Load current task set and completed tasks
       const savedTaskSet = localStorage.getItem("currentTaskSet")
       const taskSetIndex = savedTaskSet ? Number.parseInt(savedTaskSet) : 0
-      const currentTasks = taskSets[taskSetIndex] || taskSets[0]
+      const currentTasks = taskSetsWithCatalog[taskSetIndex] || taskSetsWithCatalog[0]
 
       const saved = localStorage.getItem("completedTasks")
       if (saved) {
@@ -1179,8 +1199,14 @@ export default function EarnPage() {
   ]
 
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [visibleCount, setVisibleCount] = useState(30)
 
+  const normalizedQuery = searchQuery.trim().toLowerCase()
   let filteredTasks = selectedCategory === "All" ? tasks : tasks.filter((task) => task.category === selectedCategory)
+  if (normalizedQuery) {
+    filteredTasks = filteredTasks.filter((task) => `${task.title} ${task.description} ${task.category}`.toLowerCase().includes(normalizedQuery))
+  }
 
   const recurringTasks = [
     {
@@ -1230,6 +1256,8 @@ export default function EarnPage() {
       }
     }
   })
+
+  const visibleTasks = filteredTasks.slice(0, visibleCount)
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -1283,8 +1311,21 @@ export default function EarnPage() {
           </button>
         </div>
 
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Task marketplace</p>
+            <p className="text-sm font-semibold text-slate-800">{filteredTasks.length.toLocaleString()} opportunities available</p>
+          </div>
+          <div className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-[#0000ff]">Earn more, learn more</div>
+        </div>
+        <label className="mb-3 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+          <Search size={16} className="text-slate-400" />
+          <span className="sr-only">Search tasks</span>
+          <input value={searchQuery} onChange={(event) => { setSearchQuery(event.target.value); setVisibleCount(30) }} placeholder="Search 2,400+ tasks" className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400" />
+        </label>
+
         {/* Categories */}
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="flex gap-2 overflow-x-auto pb-2">
             {categories.map((category) => (
               <button
@@ -1304,7 +1345,7 @@ export default function EarnPage() {
 
         {/* Tasks List */}
         <div className="space-y-2.5 pb-20">
-          {filteredTasks.map((task) => (
+          {visibleTasks.map((task) => (
             <div key={task.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
@@ -1363,6 +1404,11 @@ export default function EarnPage() {
             </div>
           ))}
         </div>
+        {visibleCount < filteredTasks.length && (
+          <button onClick={() => setVisibleCount((count) => count + 30)} className="mt-3 w-full rounded-xl border border-blue-200 bg-white py-2.5 text-xs font-bold text-[#0000ff] transition hover:bg-blue-50">
+            Load 30 more tasks ({(filteredTasks.length - visibleCount).toLocaleString()} left)
+          </button>
+        )}
       </div>
     </div>
   )
