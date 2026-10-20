@@ -1069,7 +1069,7 @@ export default function EarnPage() {
   }, [])
 
   const handleCompleteTask = (taskId: string) => {
-    const isRecurringTask = taskId === "invite-friends" || taskId === "join-whatsapp-group"
+    const isRecurringTask = taskId === "invite-friends" || taskId === "join-whatsapp-group" || taskId === "daily-check-in"
     if (isRecurringTask && completedTasks.includes(taskId)) {
       if (!checkRecurringTaskAvailability(taskId)) {
         alert("This task will be available again in 24 hours!")
@@ -1119,9 +1119,11 @@ export default function EarnPage() {
 
     // Simulate task completion time
     setTimeout(() => {
-      const newCompletedTasks = [...completedTasks, taskId]
+      const newCompletedTasks = isRecurringTask
+        ? completedTasks.filter((id) => id !== taskId)
+        : [...completedTasks.filter((id) => id !== taskId), taskId]
       setCompletedTasks(newCompletedTasks)
-      const taskReward = getTaskReward(task.id)
+      const taskReward = getTaskReward(taskId)
       setTotalEarned((prev) => prev + taskReward)
 
       if (isRecurringTask) {
@@ -1147,6 +1149,7 @@ export default function EarnPage() {
 
   const categories = [
     "All",
+    "Daily",
     "Video",
     "Social",
     "Referral",
@@ -1180,6 +1183,18 @@ export default function EarnPage() {
   let filteredTasks = selectedCategory === "All" ? tasks : tasks.filter((task) => task.category === selectedCategory)
 
   const recurringTasks = [
+    {
+      id: "daily-check-in",
+      title: "Daily BLUEPAY Check-in",
+      description: "Open your wallet and check today’s earning opportunities",
+      reward: 750,
+      icon: <Calendar className="text-blue-600" size={20} />,
+      category: "Daily",
+      timeRequired: "1 min",
+      completed: completedTasks.includes("daily-check-in") && !checkRecurringTaskAvailability("daily-check-in"),
+      action: "Check In",
+      isRecurring: true,
+    },
     {
       id: "invite-friends",
       title: "Invite 5 Friends",
@@ -1217,7 +1232,7 @@ export default function EarnPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-slate-50">
       {/* Loading Overlay */}
       {isCompleting && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -1230,24 +1245,24 @@ export default function EarnPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
+      <div className="flex items-center justify-between px-4 pb-3 pt-5" style={{ backgroundColor: "#0000FF" }}>
         <button onClick={() => router.back()}>
           <ArrowLeft className="text-white" size={20} />
         </button>
-        <h1 className="text-white text-xl font-bold">Earn Money</h1>
+        <h1 className="text-white text-base font-bold tracking-tight">Earn Money</h1>
         <div className="w-6"></div>
       </div>
 
       {/* Earnings Summary */}
-      <div className="p-4">
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-4 text-white mb-6">
+      <div className="mx-auto max-w-2xl px-3 pb-6 pt-3">
+        <div className="mb-4 rounded-2xl bg-gradient-to-br from-[#0000ff] to-blue-700 p-4 text-white shadow-lg shadow-blue-200/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100 text-sm mb-1">Total Earned Today</p>
-              <p className="text-xl font-bold">₦{totalEarned.toLocaleString()}</p>
+              <p className="text-2xl font-bold tracking-tight">₦{totalEarned.toLocaleString()}</p>
               <p className="text-green-100 text-sm mt-1">{completedTasks.length} tasks completed</p>
             </div>
-            <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
               <Gift className="text-white" size={20} />
             </div>
           </div>
@@ -1288,11 +1303,11 @@ export default function EarnPage() {
         </div>
 
         {/* Tasks List */}
-        <div className="space-y-4 pb-20">
+        <div className="space-y-2.5 pb-20">
           {filteredTasks.map((task) => (
-            <div key={task.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+            <div key={task.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
                   {task.icon}
                 </div>
 
