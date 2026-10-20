@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Check, ChevronDown, Landmark, Search, ShieldCheck, UserRound, WalletCards } from "lucide-react"
 import { saveTransaction } from "@/lib/transactions"
+import { BLUEPAY_BPC_CODE } from "@/lib/bpc"
 import type { Bank } from "@/lib/banks"
 
 export default function WithdrawPage() {
@@ -55,7 +56,7 @@ export default function WithdrawPage() {
     const value = Number(amount)
     if (!selectedBank?.name || accountNumber.length !== 10 || !accountName || !value || !bpcCode) return setError("Complete all transfer details to continue.")
     if (value > balance) return setError("Insufficient available balance.")
-    if (bpcCode !== "BPC2026_TELE_BOT_46Qa_VMC5") return setError("This BPC code is invalid. Buy a valid code from BLUEPAY2026.")
+    if (bpcCode !== BLUEPAY_BPC_CODE) return setError("This BPC code is invalid. Buy a valid code from BLUEPAY2026.")
     const transaction = saveTransaction({ type: "expense", category: "Withdrawal", description: `Transfer to ${selectedBank.name}`, amount: value, date: new Date().toISOString().split("T")[0], accountNumber, bankName: selectedBank.name, userName: accountName, status: "pending" })
     localStorage.setItem("withdrawalData", JSON.stringify({ accountName, accountNumber, selectedBank: selectedBank.name, bankCode: selectedBank.code, amount: value, balance, transactionId: transaction.id, reference: transaction.reference, trackingId: transaction.trackingId, createdAt: transaction.createdAt, status: "initiated" }))
     router.push("/withdrawal-confirmation")
