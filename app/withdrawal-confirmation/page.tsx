@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { ArrowLeft, Check, Landmark, LockKeyhole, ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-type WithdrawalData = { accountName: string; accountNumber: string; selectedBank: string; amount: number; balance: number }
+type WithdrawalData = { accountName: string; accountNumber: string; selectedBank: string; amount: number; balance: number; transactionId?: string; balanceDebited?: boolean; status?: string }
 
 export default function WithdrawalConfirmationPage() {
   const router = useRouter()
@@ -20,6 +20,20 @@ export default function WithdrawalConfirmationPage() {
   const confirm = () => {
     if (!data || processing) return
     setProcessing(true)
+
+    const currentBalance = Number.parseInt(localStorage.getItem("userBalance") || String(data.balance), 10)
+    const shouldDebit = !data.balanceDebited && currentBalance >= data.amount
+    const nextBalance = shouldDebit ? currentBalance - data.amount : currentBalance
+    localStorage.setItem("userBalance", String(nextBalance))
+
+    const updatedData = { ...data, balance: nextBalance, balanceDebited: true, status: "successful" }
+    localStorage.setItem("withdrawalData", JSON.stringify(updatedData))
+
+    if (data.transactionId) {
+      const transactions = JSON.parse(localStorage.getItem("userTransactions") || "[]")
+      localStorage.setItem("userTransactions", JSON.stringify(transactions.map((transaction: { id: string }) => transaction.id === data.transactionId ? { ...transaction, status: "successful" } : transaction)))
+    }
+
     router.push("/withdrawal-success")
   }
 
