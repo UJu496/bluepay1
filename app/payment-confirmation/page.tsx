@@ -1,152 +1,27 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ArrowLeft } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ArrowLeft, Clock3, LayoutDashboard, LifeBuoy, RefreshCw } from "lucide-react"
 import { useRouter } from "next/navigation"
+
+type Attempt = { id: string; reference?: string; createdAt?: string; status?: string; name?: string; email?: string; amount?: number | string; receiptName?: string | null; userId?: string }
 
 export default function PaymentConfirmationPage() {
   const router = useRouter()
-  const [userName, setUserName] = useState("User")
-  const [userEmail, setUserEmail] = useState("user@example.com")
-  const [amount, setAmount] = useState("₦8,500.00")
-  const [isLoading, setIsLoading] = useState(false)
-
+  const [attempt, setAttempt] = useState<Attempt | null>(null)
+  const [message, setMessage] = useState("")
   useEffect(() => {
-    const paymentData = localStorage.getItem("paymentData")
-    const userData = localStorage.getItem("userData")
-
-    if (paymentData) {
-      const parsedData = JSON.parse(paymentData)
-      setAmount(parsedData.amount || "₦8,500.00")
-    }
-
-    if (userData) {
-      const user = JSON.parse(userData)
-      setUserName(user.fullName || "User")
-      setUserEmail(user.email || "user@example.com")
-    }
+    const id = new URLSearchParams(window.location.search).get("attemptId")
+    const stored = id ? localStorage.getItem(`bluepayPaymentAttempt:${id}`) : localStorage.getItem("paymentAttempt")
+    const value = stored ? JSON.parse(stored) : null
+    const currentUser = JSON.parse(localStorage.getItem("userData") || "null")
+    if (value && currentUser && (!value.userId || value.userId === currentUser.id || value.userId === currentUser.email)) setAttempt(value)
   }, [])
-
-  const handleConfirm = () => {
-    setIsLoading(true)
-
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/payment")
-    }, 5000)
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0000FF" }}>
-        <div className="text-center">
-          <div className="relative mb-4">
-            {/* Outer rotating ring */}
-            <div className="w-24 h-24 border-4 border-white/30 rounded-full animate-spin mx-auto"></div>
-            {/* Inner pulsing circle */}
-            <div className="absolute top-2 left-2 w-20 h-20 bg-white/20 rounded-full animate-pulse"></div>
-            {/* Center dot */}
-            <div className="absolute top-5 left-8 w-8 h-8 bg-white rounded-full animate-bounce"></div>
-          </div>
-
-          {/* Animated dots */}
-          <div className="flex justify-center space-x-2 mb-4">
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
-          </div>
-
-          <p className="text-white text-xl font-semibold">Processing your confirmation...</p>
-          <p className="text-white/80 text-sm mt-2">Please wait while we verify your details</p>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0000FF" }}>
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12">
-        <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={20} />
-        </button>
-        <h1 className="text-white text-xl font-bold">Confirm Payment Details</h1>
-      </div>
-
-      <div className="p-4 mt-4">
-        {/* Confirmation Card */}
-        <div className="bg-white rounded-lg p-4 mb-4 shadow-lg">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6 overflow-hidden">
-            <div className="flex items-center">
-              <span className="text-yellow-600 mr-2">⚠️</span>
-              <div className="flex-1 overflow-hidden">
-                <div className="animate-marquee whitespace-nowrap text-yellow-800 text-sm font-medium">
-                  🚨 CRITICAL REMINDER: Use your registered withdrawal account for this BPC purchase! Our intelligent
-                  payment bot scans transactions every 30 seconds and will instantly detect payments from verified
-                  accounts. Using a different account may cause delays or payment verification issues. Stay smart, stay
-                  fast - use your withdrawal account! 🏦⚡
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <h2 className="text-xl font-bold text-center mb-6 text-gray-800">Confirm Your Details</h2>
-
-          {/* User Details */}
-          <div className="space-y-4 mb-4">
-            <div className="border-b border-gray-200 pb-3">
-              <label className="block text-sm font-medium text-gray-600 mb-1">FULL NAME</label>
-              <p className="text-lg font-semibold text-gray-800">{userName}</p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-3">
-              <label className="block text-sm font-medium text-gray-600 mb-1">EMAIL</label>
-              <p className="text-lg font-semibold text-gray-800">{userEmail}</p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-3">
-              <label className="block text-sm font-medium text-gray-600 mb-1">AMOUNT</label>
-              <p className="text-xl font-bold" style={{ color: "#0000FF" }}>
-                {amount}
-              </p>
-            </div>
-          </div>
-
-          {/* Confirmation Message */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-center text-gray-700 font-medium">
-              Please confirm that these details are correct before proceeding to payment.
-            </p>
-          </div>
-
-          <button
-            onClick={handleConfirm}
-            disabled={isLoading}
-            className="w-full text-white py-4 rounded-lg font-bold text-lg shadow-lg hover:opacity-90 transition-opacity disabled:opacity-50"
-            style={{ backgroundColor: "#0000FF" }}
-          >
-            I CONFIRM DETAILS
-          </button>
-        </div>
-
-        {/* Back Button */}
-        <button
-          onClick={() => router.back()}
-          className="w-full bg-white text-gray-700 py-3 rounded-lg font-semibold border border-gray-300 hover:bg-gray-50 transition-colors"
-        >
-          Go Back
-        </button>
-      </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 100s linear infinite;
-        }
-      `}</style>
-    </div>
-  )
+  if (!attempt) return <main className="grid min-h-screen place-items-center bg-[#f6f8fc] p-5 text-center text-sm text-slate-500">No saved payment review was found for this account.</main>
+  const date = attempt.createdAt ? new Date(attempt.createdAt).toLocaleString("en-NG", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded"
+  const amount = `₦${(Number(String(attempt.amount).replace(/[^0-9.]/g, "")) || 0).toLocaleString("en-NG", { minimumFractionDigits: 2 })}`
+  function recheck() { setMessage("Automatic bank payment verification is unavailable. This attempt remains awaiting review.") }
+  return <main className="min-h-screen bg-[#f6f8fc] text-slate-950"><header className="bg-[#0000ff] px-3 pb-3 pt-7 text-white"><div className="mx-auto flex max-w-lg items-center gap-2"><button onClick={() => router.back()} aria-label="Go back" className="rounded-full p-1.5"><ArrowLeft size={17} /></button><div><p className="text-[10px] text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-semibold">Payment review</h1></div></div></header><section className="mx-auto max-w-lg space-y-2.5 px-3 py-3"><div className="rounded-xl border border-amber-200 bg-amber-50 p-3"><div className="flex items-center gap-2.5"><div className="rounded-lg bg-white p-2 text-amber-600"><Clock3 size={17} /></div><div><p className="text-xs font-semibold text-amber-950">Payment not confirmed</p><p className="text-[11px] text-amber-900">Your submission was recorded for review.</p></div></div></div><div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><div className="flex items-start justify-between gap-3"><div><p className="text-[10px] text-slate-500">Amount</p><p className="text-xl font-bold">{amount}</p></div><span className="shrink-0 rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-800">Awaiting review</span></div><div className="mt-3 space-y-2 border-t border-slate-100 pt-2 text-[11px]"><Row label="Name" value={attempt.name || "Not provided"} /><Row label="Email" value={attempt.email || "Not provided"} wrap /><Row label="Recorded" value={date} /><Row label="Reference" value={attempt.reference || "Unavailable"} wrap /><Row label="Receipt" value={attempt.receiptName ? "Attached locally" : "Not attached"} /></div></div><p className="rounded-lg bg-blue-50 px-3 py-2.5 text-[10px] leading-4 text-blue-950">BLUEPAY MOBILE has no automatic bank-payment verification. Keep your receipt and contact support for review. No BPC code is issued while payment remains unconfirmed.</p>{message && <p role="status" className="rounded-lg bg-slate-100 px-3 py-2 text-[10px] text-slate-700">{message}</p>}<div className="grid grid-cols-3 gap-2"><button onClick={recheck} className="flex h-9 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[10px] font-semibold"><RefreshCw size={13} /> Recheck</button><button onClick={() => router.push("/support")} className="flex h-9 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[10px] font-semibold"><LifeBuoy size={13} /> Support</button><button onClick={() => router.push("/dashboard")} className="flex h-9 items-center justify-center gap-1 rounded-lg bg-[#0000ff] text-[10px] font-semibold text-white"><LayoutDashboard size={13} /> Dashboard</button></div></section></main>
 }
+
+function Row({ label, value, wrap = false }: { label: string; value: string; wrap?: boolean }) { return <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-3"><span className="text-slate-500">{label}</span><span className={`min-w-0 text-right font-medium ${wrap ? "break-words [overflow-wrap:anywhere]" : ""}`}>{value}</span></div> }

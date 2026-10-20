@@ -92,7 +92,7 @@ const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: numb
 export default function DashboardPage() {
   const router = useRouter()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
-  const [userName, setUserName] = useState("User")
+  const [userName, setUserName] = useState("")
   const [displayedName, setDisplayedName] = useState("")
   const [balance, setBalance] = useState(200000)
   const [isLoadingBPC, setIsLoadingBPC] = useState(false)
@@ -102,12 +102,18 @@ export default function DashboardPage() {
   const [currentTestimony, setCurrentTestimony] = useState(0)
   const [userProfilePhoto, setUserProfilePhoto] = useState<string | null>(null)
   const [hasWithdrawalNotification, setHasWithdrawalNotification] = useState(false)
+  const [unreadTransactionCount, setUnreadTransactionCount] = useState(0)
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
   const [showCalendar, setShowCalendar] = useState(false)
   const [showSocial, setShowSocial] = useState(false)
   const [showDataUsage, setShowDataUsage] = useState(false)
   const [showCreditAlert, setShowCreditAlert] = useState(false)
   const [showBPCWarning, setShowBPCWarning] = useState(true)
+
+  useEffect(() => {
+    const unread = JSON.parse(localStorage.getItem("bluepayUnreadTransactions") || "[]") as string[]
+    setUnreadTransactionCount(unread.length)
+  }, [])
 
   const [monthlyIncome] = useState(450000)
   const [monthlyExpenses] = useState(285000)
@@ -191,7 +197,7 @@ export default function DashboardPage() {
 
   const featuredTestimonies = [
     {
-      name: "Maxwell Prince Chukwu",
+      name: "BLUEPAY customer",
       location: "Lagos, Nigeria",
       text: "BLUEPAY2026 has completely transformed how I handle my financial transactions. The BPC code system is revolutionary and the CBN partnership gives me complete confidence in the platform's security.",
       rating: 5,
@@ -233,7 +239,7 @@ export default function DashboardPage() {
     const userData = localStorage.getItem("userData")
     if (userData) {
       const parsedData = JSON.parse(userData)
-      setUserName(parsedData.fullName || "User")
+      setUserName(parsedData.fullName || "Account holder")
     }
 
     const savedPhoto = localStorage.getItem("userProfilePhoto")
@@ -242,10 +248,10 @@ export default function DashboardPage() {
     }
 
     const loadBalance = () => {
-      const savedBalance = localStorage.getItem("userBalance")
-      if (savedBalance) {
-        setBalance(Number.parseInt(savedBalance))
-      }
+  const savedBalance = localStorage.getItem("userBalance")
+  const authoritativeBalance = savedBalance ? Number.parseInt(savedBalance, 10) : 200000
+  if (!savedBalance) localStorage.setItem("userBalance", String(authoritativeBalance))
+  setBalance(authoritativeBalance)
     }
 
     loadBalance()
@@ -450,8 +456,10 @@ export default function DashboardPage() {
 
   const handleBellClick = () => {
     localStorage.setItem("withdrawalSuccess", "false")
+    localStorage.setItem("bluepayUnreadTransactions", "[]")
     setHasWithdrawalNotification(false)
-    router.push("/notifications")
+    setUnreadTransactionCount(0)
+    router.push("/recent-activities")
   }
 
   const handleCalendar = () => {
@@ -806,11 +814,11 @@ export default function DashboardPage() {
         <h1 className="text-white text-xl font-bold">BLUEPAY2026</h1>
         <button onClick={handleBellClick} className="relative">
           <Bell className="text-white" size={20} />
-          {hasWithdrawalNotification && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          )}
+  {(hasWithdrawalNotification || unreadTransactionCount > 0) && (
+  <div className="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-red-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white">
+  {unreadTransactionCount > 9 ? "9+" : unreadTransactionCount || 1}
+  </div>
+  )}
         </button>
       </div>
 
@@ -1136,69 +1144,6 @@ export default function DashboardPage() {
                       style={{ width: `${item.percentage}%` }}
                     ></div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Recent Transactions */}
-        <div className="bg-white rounded-xl p-5 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">Recent Transactions</h3>
-            <button onClick={() => router.push("/transactions")} className="text-blue-500 text-sm font-medium">
-              See All
-            </button>
-          </div>
-          <div className="space-y-3">
-            {recentTransactions.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4">
-                No transactions yet. Start using BLUEPAY services!
-              </p>
-            ) : (
-              recentTransactions.slice(0, 4).map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        transaction.type === "income" ? "bg-green-100" : "bg-red-100"
-                      }`}
-                    >
-                      {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={20} />
-                      ) : (
-                        <ArrowUpRight className="text-red-600" size={20} />
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">{transaction.description}</p>
-                      <p className="text-xs text-gray-500">
-                        {transaction.accountNumber
-                          ? `${transaction.bankName} - ${transaction.accountNumber}`
-                          : transaction.phoneNumber
-                            ? `${transaction.phoneNumber}`
-                            : transaction.date}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {new Date(transaction.timestamp).toLocaleString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                  <p
-                    className={`text-sm font-semibold ${
-                      transaction.type === "income" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {transaction.type === "income" ? "+" : "-"}₦{transaction.amount.toLocaleString()}
-                  </p>
                 </div>
               ))
             )}
