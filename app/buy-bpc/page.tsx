@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react"
 import { ArrowLeft, Info, Mail, UserRound } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { BLUEPAY_BPC_PURCHASE_AMOUNT } from "@/lib/bpc"
 
-const PURCHASE_AMOUNT = 10680
+const PURCHASE_AMOUNT = BLUEPAY_BPC_PURCHASE_AMOUNT
 
 export default function BuyBpcPage() {
   const router = useRouter()
