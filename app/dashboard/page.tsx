@@ -459,7 +459,7 @@ export default function DashboardPage() {
     localStorage.setItem("bluepayUnreadTransactions", "[]")
     setHasWithdrawalNotification(false)
     setUnreadTransactionCount(0)
-    router.push("/recent-activities")
+    router.push("/transactions")
   }
 
   const handleCalendar = () => {
