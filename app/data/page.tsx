@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Phone, ChevronDown, Wifi } from "lucide-react"
 import { saveTransaction } from "@/lib/transactions"
+import { BLUEPAY_BPC_CODE } from "@/lib/bpc"
 
 export default function DataPage() {
   const router = useRouter()
@@ -39,7 +40,7 @@ export default function DataPage() {
       return
     }
 
-    if (bpcCode !== "BPC2026_TELE_BOT_46Qa_VMC5") {
+    if (bpcCode !== BLUEPAY_BPC_CODE) {
       setMessage("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       setMessageType("error")
       return

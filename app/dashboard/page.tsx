@@ -27,6 +27,7 @@ import {
   PiggyBank,
   Zap,
   Send,
+  LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
 
@@ -91,7 +92,7 @@ const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: numb
 export default function DashboardPage() {
   const router = useRouter()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
-  const [userName, setUserName] = useState("User")
+  const [userName, setUserName] = useState("")
   const [displayedName, setDisplayedName] = useState("")
   const [balance, setBalance] = useState(200000)
   const [isLoadingBPC, setIsLoadingBPC] = useState(false)
@@ -101,12 +102,18 @@ export default function DashboardPage() {
   const [currentTestimony, setCurrentTestimony] = useState(0)
   const [userProfilePhoto, setUserProfilePhoto] = useState<string | null>(null)
   const [hasWithdrawalNotification, setHasWithdrawalNotification] = useState(false)
+  const [unreadTransactionCount, setUnreadTransactionCount] = useState(0)
   const [currentDateTime, setCurrentDateTime] = useState(new Date())
   const [showCalendar, setShowCalendar] = useState(false)
   const [showSocial, setShowSocial] = useState(false)
   const [showDataUsage, setShowDataUsage] = useState(false)
   const [showCreditAlert, setShowCreditAlert] = useState(false)
   const [showBPCWarning, setShowBPCWarning] = useState(true)
+
+  useEffect(() => {
+    const unread = JSON.parse(localStorage.getItem("bluepayUnreadTransactions") || "[]") as string[]
+    setUnreadTransactionCount(unread.length)
+  }, [])
 
   const [monthlyIncome] = useState(450000)
   const [monthlyExpenses] = useState(285000)
@@ -190,7 +197,7 @@ export default function DashboardPage() {
 
   const featuredTestimonies = [
     {
-      name: "Maxwell Prince Chukwu",
+      name: "BLUEPAY customer",
       location: "Lagos, Nigeria",
       text: "BLUEPAY2026 has completely transformed how I handle my financial transactions. The BPC code system is revolutionary and the CBN partnership gives me complete confidence in the platform's security.",
       rating: 5,
@@ -232,7 +239,7 @@ export default function DashboardPage() {
     const userData = localStorage.getItem("userData")
     if (userData) {
       const parsedData = JSON.parse(userData)
-      setUserName(parsedData.fullName || "User")
+      setUserName(parsedData.fullName || "Account holder")
     }
 
     const savedPhoto = localStorage.getItem("userProfilePhoto")
@@ -241,10 +248,10 @@ export default function DashboardPage() {
     }
 
     const loadBalance = () => {
-      const savedBalance = localStorage.getItem("userBalance")
-      if (savedBalance) {
-        setBalance(Number.parseInt(savedBalance))
-      }
+  const savedBalance = localStorage.getItem("userBalance")
+  const authoritativeBalance = savedBalance ? Number.parseInt(savedBalance, 10) : 200000
+  if (!savedBalance) localStorage.setItem("userBalance", String(authoritativeBalance))
+  setBalance(authoritativeBalance)
     }
 
     loadBalance()
@@ -353,7 +360,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % 27)
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % 10)
     }, 3000)
 
     return () => clearInterval(interval)
@@ -428,6 +435,10 @@ export default function DashboardPage() {
     router.push("/earn")
   }
 
+  const handleDangoteIpo = () => {
+    router.push("/dangote-ipo")
+  }
+
   const handleProfile = () => {
     router.push("/profile")
   }
@@ -445,8 +456,10 @@ export default function DashboardPage() {
 
   const handleBellClick = () => {
     localStorage.setItem("withdrawalSuccess", "false")
+    localStorage.setItem("bluepayUnreadTransactions", "[]")
     setHasWithdrawalNotification(false)
-    router.push("/notifications")
+    setUnreadTransactionCount(0)
+    router.push("/transactions")
   }
 
   const handleCalendar = () => {
@@ -493,8 +506,8 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {showBPCWarning && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-4 w-full max-w-sm shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#101a43]/55 p-3 sm:items-center">
+          <div className="w-full max-w-sm overflow-hidden rounded-[24px] bg-white shadow-2xl">
             <div className="text-center mb-4">
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
                 <CreditCard className="text-blue-600" size={20} />
@@ -597,9 +610,13 @@ export default function DashboardPage() {
           `}</style>
           <button
             onClick={() => {
+<<<<<<< HEAD
               window.open("https://chat.whatsapp.com/BVCw2uEvJlsFy1GIpHFb1V?s=cl&p=a&mlu=4&ilr=4", "_blank")
+=======
+              window.open("https://chat.whatsapp.com/E1yyvIJiH0F10ELvRvs3sR?s=cl&p=a&mlu=4&ilr=4", "_blank")
+>>>>>>> 55d928fa57dc86242bd2d8b43846c327347a27e2
             }}
-            className="relative w-16 h-16 rounded-full shadow-2xl transform transition-transform hover:scale-110 overflow-hidden border-4 border-white"
+            className="relative h-14 w-14 overflow-hidden rounded-full border-4 border-white shadow-xl transition-transform hover:scale-105"
             style={{
               background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
               boxShadow: "0 8px 20px rgba(37, 211, 102, 0.4), 0 4px 10px rgba(0, 0, 0, 0.2)",
@@ -697,7 +714,11 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => {
+<<<<<<< HEAD
                   window.open("https://chat.whatsapp.com/BVCw2uEvJlsFy1GIpHFb1V?s=cl&p=a&mlu=4&ilr=4", "_blank")
+=======
+                  window.open("https://chat.whatsapp.com/E1yyvIJiH0F10ELvRvs3sR?s=cl&p=a&mlu=4&ilr=4", "_blank")
+>>>>>>> 55d928fa57dc86242bd2d8b43846c327347a27e2
                   setShowSocial(false)
                 }}
                 className="w-full flex items-center gap-4 p-4 text-white rounded-xl hover:opacity-90 transition-colors"
@@ -794,39 +815,41 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-between p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
+      <div className="sticky top-0 z-30 flex h-16 items-center justify-between bg-[#0000ff] px-4 shadow-sm">
         <button onClick={handleMenuClick}>
           <Menu className="text-white" size={20} />
         </button>
         <h1 className="text-white text-xl font-bold">BLUEPAY2026</h1>
         <button onClick={handleBellClick} className="relative">
           <Bell className="text-white" size={20} />
-          {hasWithdrawalNotification && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          )}
+  {(hasWithdrawalNotification || unreadTransactionCount > 0) && (
+  <div className="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-red-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white">
+  {unreadTransactionCount > 9 ? "9+" : unreadTransactionCount || 1}
+  </div>
+  )}
         </button>
       </div>
 
       {/* Greeting Section with Continuous Word-by-Word Animation */}
-      <div className="text-white px-3 py-2 text-center" style={{ backgroundColor: "#0000FF" }}>
-        <p className="text-sm font-semibold">
-          {greeting},{" "}
-          <WordByWordAnimation text={userName} delay={2000} />
-        </p>
+      <div className="flex items-center gap-3 bg-white px-4 py-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-100 text-[#0000ff]">
+          {userProfilePhoto ? <img src={userProfilePhoto} alt="Profile" className="h-full w-full object-cover" /> : <User size={22} />}
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs text-slate-500">{greeting || "Welcome back"}</p>
+          <p className="truncate text-sm font-bold text-slate-900">{userName}</p>
+        </div>
       </div>
 
-      {/* Profile and Menu Section - Dashboard Card with proper spacing */}
-      <div className="mx-3 mb-4 p-4 rounded-xl text-white mt-4" style={{ backgroundColor: "#0000FF" }}>
+      <div className="mx-3 mb-4 rounded-[18px] bg-gradient-to-br from-[#0000ff] to-[#3030d8] p-4 text-white shadow-lg shadow-blue-200">
         <div className="flex items-center justify-between mb-3">
-          <div>
+          <div className="min-w-0">
             <p className="text-white/80 text-xs mb-1">Available Balance</p>
-            <p className="text-xl font-bold">₦{balance.toLocaleString()}</p>
+            <p className="truncate text-[clamp(1.7rem,8vw,2.1rem)] font-bold tracking-tight">₦{balance.toLocaleString()}</p>
           </div>
           <button
             onClick={handleWithdraw}
-            className="bg-white text-blue-600 px-5 py-1 rounded-full font-semibold text-sm hover:bg-gray-100 transition-colors"
+            className="shrink-0 rounded-[10px] bg-white px-4 py-2 text-sm font-semibold text-[#0000ff] transition-colors hover:bg-blue-50"
           >
             Withdraw
           </button>
@@ -842,26 +865,26 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 px-3 mb-4">
-        <button onClick={handleBuyBPC} className="text-center" disabled={isLoadingBPC}>
+      <div className="grid grid-cols-4 gap-2 px-3 mb-5">
+        <button onClick={handleBuyBPC} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" disabled={isLoadingBPC}>
           <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-1">
             <CreditCard className="text-yellow-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Buy BPC</p>
         </button>
-        <button onClick={handleOrderATM} className="text-center">
+        <button onClick={handleOrderATM} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-purple-200 flex items-center justify-center mx-auto mb-1">
             <CreditCard className="text-purple-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Order Atm</p>
         </button>
-        <button onClick={handleWatch} className="text-center">
+        <button onClick={handleWatch} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-1">
             <Clock className="text-blue-600" size={20} />
           </div>
           <p className="text-xs text-gray-700">Watch</p>
         </button>
-        <button onClick={handleAirtime} className="text-center">
+        <button onClick={handleAirtime} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="w-14 h-14 rounded-full bg-green-200 flex items-center justify-center mx-auto mb-1">
             <Phone className="text-green-600" size={20} />
           </div>
@@ -871,30 +894,36 @@ export default function DashboardPage() {
 
       <div className="px-3 mb-4">
         <h2 className="text-base font-semibold text-gray-800 mb-3">More Services</h2>
-        <div className="grid grid-cols-4 gap-4">
-          <button onClick={handleData} className="text-center">
+        <div className="grid grid-cols-4 gap-2">
+          <button onClick={handleData} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
               <BarChart className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Data</p>
           </button>
-          <button onClick={handleSupport} className="text-center">
+          <button onClick={handleSupport} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
               <Headphones className="text-gray-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Support</p>
           </button>
-          <button onClick={handleGroup} className="text-center">
+          <button onClick={handleGroup} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center mx-auto mb-2">
               <Globe className="text-blue-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Group</p>
           </button>
-          <button onClick={handleEarn} className="text-center">
+          <button onClick={handleEarn} className="flex h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="w-14 h-14 rounded-full bg-yellow-200 flex items-center justify-center mx-auto mb-2">
               <DollarSign className="text-yellow-600" size={20} />
             </div>
             <p className="text-sm text-gray-700">Earn</p>
+          </button>
+          <button onClick={handleDangoteIpo} className="text-center">
+            <div className="mx-auto mb-2 flex size-14 items-center justify-center rounded-full bg-[#ED0000] transition-colors duration-200 hover:bg-[#c90000]">
+              <LineChart aria-hidden="true" className="text-white" size={21} strokeWidth={2.5} />
+            </div>
+            <p className="text-sm text-gray-700">Dangote IPO</p>
           </button>
           <button onClick={handleProfile} className="text-center">
             <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-2">
@@ -918,23 +947,10 @@ export default function DashboardPage() {
         <div className="relative h-28">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative w-full h-full">
-              {/* Slide 1 - M-CELL and MTN Evolution */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2816%29-uKJFcT3ala35PyCbhBpQe2SJIZ4QgH.png"
-                  alt="MTN Evolution"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 2 - iPhone 17 Pro */}
               <div
                 className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
                 }`}
               >
                 <img
@@ -944,36 +960,10 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Slide 3 - Glo Logo with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 10 === 2 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2868%29-SoKEs8Bou8XuwFBPeqoE1CY7UWBsdm.jpeg"
-                  alt="Glo"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 4 - MTN on Phone */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 3 ? "opacity-100 scale-100" : "opacity-0 scale-75"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2859%29-icdqatSvE2KNT4FysLMhbqaDNJsJYW.jpeg"
-                  alt="MTN Mobile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 5 - Technizo Concept */}
               <div
                 className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
                 }`}
               >
                 <img
@@ -983,62 +973,10 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Slide 6 - MTN Y'ello with fade and slide */}
-              <div
-                className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 10 === 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2858%29-2ttLoYx7E8CcuW15mgHR9xzuwzoOUg.jpeg"
-                  alt="MTN Y'ello"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 7 - MTN 5G Person */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 6 ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-90 rotate-3"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2861%29-rN5uPUremTf4rsXnoZW9Rew7IH7lqd.jpeg"
-                  alt="MTN 5G"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 8 - Airtel MTN Capsule with fade */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-2000 ${
-                  currentSlide % 10 === 7 ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2867%29-ygIRGOvgzOfxfr1MCvS41M6e5gBLJf.jpeg"
-                  alt="Airtel MTN"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 9 - All Networks Grid */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2864%29-a6rzXeKQJUOG0k5T34WvRgkZiZX7gy.jpeg"
-                  alt="All Networks"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
               {/* Slide 10 - Storefront with slide and fade */}
               <div
                 className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+                  currentSlide % 10 === 2 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
                 }`}
               >
                 <img
@@ -1046,6 +984,41 @@ export default function DashboardPage() {
                   alt="Telecom Store"
                   className="w-full h-full object-cover"
                 />
+              </div>
+
+              {/* Slide 11 - Dangote tanker operations */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 3 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%286%29-e5qXa141xrdBQNeXCjzLeEKOc5JZJ9.jpeg" alt="Dangote refinery tanker operations" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 12 - Refinery construction */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%2810%29-GOOBH8cY0ooKZEEb0Yiz6kVNnIcMZ5.jpeg" alt="Dangote refinery construction" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 13 - Dangote executive */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 5 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%288%29-kaC04hqKryBfWAuTEDI42Bc5z54n5i.jpeg" alt="Dangote Petroleum Refinery executive" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 14 - Aerial refinery */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 6 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%287%29-UkS8JK0lpN9IoNUMNpfM60gZwHdhUx.jpeg" alt="Aerial view of Dangote refinery" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 15 - IPO details */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 7 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%282%29-jI3iIxbxAtX306RnEw7IPxdYSmRBvT.jpeg" alt="Dangote Refinery IPO key details" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 16 - Refinery at sunset */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%287%29-Vns2ZxuisLAudsCIRjcBSzXbHBPU9W.jpeg" alt="Dangote refinery at sunset" className="w-full h-full object-cover" />
+              </div>
+
+              {/* Slide 17 - How to buy Dangote shares */}
+              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%281%29-Yi2Rt3EzvXZ4ubbeUnrkoLdU0aUKyN.jpeg" alt="How to buy Dangote shares guide" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -1120,11 +1093,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="mx-4 mb-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Financial Overview</h2>
-
-        {/* Income, Expenses, Savings Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm">
+<div className="mb-3 flex items-center justify-between"><div><h2 className="text-base font-bold text-[#172033]">Financial overview</h2><p className="text-[11px] text-[#788196]">Your monthly money snapshot</p></div><span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-semibold text-[#0000ff]">This month</span></div>
+  
+  {/* Income, Expenses, Savings Cards */}
+  <div className="grid grid-cols-3 gap-2 mb-5">
+  <div className="rounded-2xl border border-[#e7eaf2] bg-white p-3 shadow-sm">
             <div className="flex items-center justify-between mb-1">
               <TrendingUp className="text-green-500" size={20} />
               <ArrowUpRight className="text-green-500" size={16} />
@@ -1185,69 +1158,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Transactions */}
-        <div className="bg-white rounded-xl p-5 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">Recent Transactions</h3>
-            <button onClick={() => router.push("/transactions")} className="text-blue-500 text-sm font-medium">
-              See All
-            </button>
-          </div>
-          <div className="space-y-3">
-            {recentTransactions.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4">
-                No transactions yet. Start using BLUEPAY services!
-              </p>
-            ) : (
-              recentTransactions.slice(0, 4).map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        transaction.type === "income" ? "bg-green-100" : "bg-red-100"
-                      }`}
-                    >
-                      {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={20} />
-                      ) : (
-                        <ArrowUpRight className="text-red-600" size={20} />
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">{transaction.description}</p>
-                      <p className="text-xs text-gray-500">
-                        {transaction.accountNumber
-                          ? `${transaction.bankName} - ${transaction.accountNumber}`
-                          : transaction.phoneNumber
-                            ? `${transaction.phoneNumber}`
-                            : transaction.date}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {new Date(transaction.timestamp).toLocaleString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                  <p
-                    className={`text-sm font-semibold ${
-                      transaction.type === "income" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {transaction.type === "income" ? "+" : "-"}₦{transaction.amount.toLocaleString()}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
         {/* Quick Financial Stats */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white">
@@ -1263,7 +1173,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-4px_18px_rgba(15,23,42,0.06)] backdrop-blur">
         <div className="flex items-center justify-around">
           <button onClick={handleCalendar} className="text-center">
             <Calendar className="text-blue-500 mx-auto mb-1" size={20} />
