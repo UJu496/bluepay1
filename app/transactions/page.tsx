@@ -305,38 +305,36 @@ export default function TransactionsPage() {
         ) : (
           <div className="space-y-2">
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="bg-white rounded-xl p-2.5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1">
-                    <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        transaction.type === "income" ? "bg-green-100" : "bg-red-100"
-                      }`}
-                    >
-                      {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={16} />
-                      ) : (
-                        <ArrowUpRight className="text-red-600" size={16} />
+              <div key={transaction.id} className="bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-2.5 gap-y-2 items-start">
+                  <div
+                    className={`row-span-2 w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      transaction.type === "income" ? "bg-green-100" : "bg-red-100"
+                    }`}
+                  >
+                    {transaction.type === "income" ? (
+                      <ArrowDownRight className="text-green-600" size={16} />
+                    ) : (
+                      <ArrowUpRight className="text-red-600" size={16} />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900 text-sm leading-5 break-words">{transaction.description}</p>
+                    <div className="flex items-center gap-2 flex-wrap mt-1">
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-700 font-medium">
+                        {transaction.category}
+                      </span>
+                      {transaction.userName && (
+                        <span className="text-xs text-gray-600 truncate">{transaction.userName}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm truncate">{transaction.description}</p>
-                      <div className="flex items-center gap-2 flex-wrap mt-1">
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-700 font-medium">
-                          {transaction.category}
-                        </span>
-                        {transaction.userName && (
-                          <span className="text-xs text-gray-600 truncate">{transaction.userName}</span>
-                        )}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1.5">
-                        {transaction.date} • {new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
-                      </div>
+                    <div className="text-xs text-gray-500 mt-1.5">
+                      {transaction.date} • {new Date(transaction.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0 ml-4">
+                  <div className="col-start-2 rounded-lg bg-gray-50 px-2.5 py-1.5 text-right">
                     <p
-                      className={`text-sm font-bold ${
+                      className={`text-base font-extrabold tracking-tight whitespace-nowrap ${
                         transaction.type === "income" ? "text-green-600" : "text-red-600"
                       }`}
                     >
