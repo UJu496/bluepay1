@@ -428,7 +428,7 @@ export default function DashboardPage() {
   }
 
   const handleGroup = () => {
-    window.open("https://chat.whatsapp.com/E1yyvIJiH0F10ELvRvs3sR?s=cl&p=a&mlu=4&ilr=4", "_blank")
+    window.open("https://chat.whatsapp.com/BVCw2uEvJlsFy1GIpHFb1V?s=cl&p=a&mlu=4&ilr=4", "_blank")
   }
 
   const handleEarn = () => {
@@ -610,7 +610,11 @@ export default function DashboardPage() {
           `}</style>
           <button
             onClick={() => {
+<<<<<<< HEAD
+              window.open("https://chat.whatsapp.com/BVCw2uEvJlsFy1GIpHFb1V?s=cl&p=a&mlu=4&ilr=4", "_blank")
+=======
               window.open("https://chat.whatsapp.com/E1yyvIJiH0F10ELvRvs3sR?s=cl&p=a&mlu=4&ilr=4", "_blank")
+>>>>>>> 55d928fa57dc86242bd2d8b43846c327347a27e2
             }}
             className="relative h-14 w-14 overflow-hidden rounded-full border-4 border-white shadow-xl transition-transform hover:scale-105"
             style={{
@@ -710,7 +714,11 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => {
+<<<<<<< HEAD
+                  window.open("https://chat.whatsapp.com/BVCw2uEvJlsFy1GIpHFb1V?s=cl&p=a&mlu=4&ilr=4", "_blank")
+=======
                   window.open("https://chat.whatsapp.com/E1yyvIJiH0F10ELvRvs3sR?s=cl&p=a&mlu=4&ilr=4", "_blank")
+>>>>>>> 55d928fa57dc86242bd2d8b43846c327347a27e2
                   setShowSocial(false)
                 }}
                 className="w-full flex items-center gap-4 p-4 text-white rounded-xl hover:opacity-90 transition-colors"
