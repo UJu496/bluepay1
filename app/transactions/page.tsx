@@ -183,40 +183,40 @@ export default function TransactionsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pb-20">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-4">
-        <div className="flex items-center justify-between mb-4">
+      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-3 py-2.5">
+        <div className="flex items-center justify-between mb-2.5">
           <button onClick={() => router.push("/dashboard")} className="p-1.5 hover:bg-gray-100 rounded-full text-gray-600">
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">Recent Transactions</h1>
+          <h1 className="text-base font-bold text-gray-900">Recent Transactions</h1>
           <button onClick={() => setShowAddModal(true)} className="p-1.5 hover:bg-blue-50 rounded-full text-blue-600">
             <Plus size={20} />
           </button>
         </div>
 
         {/* Summary Cards - Modern Card Design */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-3 border border-blue-200">
+        <div className="grid grid-cols-3 gap-2">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-2 border border-blue-200">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
                 <TrendingUp size={12} className="text-white" />
               </div>
               <p className="text-xs text-gray-700 font-medium">Income</p>
             </div>
             <p className="text-sm font-bold text-gray-900">₦{totals.income.toLocaleString()}</p>
           </div>
-          <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-3 border border-red-200">
+          <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-2 border border-red-200">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
                 <TrendingDown size={12} className="text-white" />
               </div>
               <p className="text-xs text-gray-700 font-medium">Expenses</p>
             </div>
             <p className="text-sm font-bold text-gray-900">₦{totals.expenses.toLocaleString()}</p>
           </div>
-          <div className={`bg-gradient-to-br ${totals.net >= 0 ? "from-green-50 to-green-100" : "from-yellow-50 to-yellow-100"} rounded-2xl p-3 border ${totals.net >= 0 ? "border-green-200" : "border-yellow-200"}`}>
+          <div className={`bg-gradient-to-br ${totals.net >= 0 ? "from-green-50 to-green-100" : "from-yellow-50 to-yellow-100"} rounded-xl p-2 border ${totals.net >= 0 ? "border-green-200" : "border-yellow-200"}`}>
             <div className="flex items-center gap-1.5 mb-1">
-              <div className={`w-6 h-6 rounded-full ${totals.net >= 0 ? "bg-green-500" : "bg-yellow-500"} flex items-center justify-center`}>
+              <div className={`w-5 h-5 rounded-full ${totals.net >= 0 ? "bg-green-500" : "bg-yellow-500"} flex items-center justify-center`}>
                 <Wallet size={12} className="text-white" />
               </div>
               <p className="text-xs text-gray-700 font-medium">Net</p>
@@ -229,7 +229,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Search and Filter Bar */}
-      <div className="bg-white p-3 shadow-sm">
+      <div className="bg-white p-2 shadow-sm">
         <div className="flex gap-2 mb-2">
           <div className="flex-1 relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -286,7 +286,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Transactions List */}
-      <div className="p-4">
+      <div className="p-3">
         {filteredTransactions.length === 0 ? (
           <div className="bg-white rounded-2xl p-8 text-center mt-8">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -303,26 +303,26 @@ export default function TransactionsPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div key={transaction.id} className="bg-white rounded-xl p-2.5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-center gap-2 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
                         transaction.type === "income" ? "bg-green-100" : "bg-red-100"
                       }`}
                     >
                       {transaction.type === "income" ? (
-                        <ArrowDownRight className="text-green-600" size={20} />
+                        <ArrowDownRight className="text-green-600" size={16} />
                       ) : (
-                        <ArrowUpRight className="text-red-600" size={20} />
+                        <ArrowUpRight className="text-red-600" size={16} />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900 text-sm truncate">{transaction.description}</p>
                       <div className="flex items-center gap-2 flex-wrap mt-1">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700 font-medium">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] bg-gray-100 text-gray-700 font-medium">
                           {transaction.category}
                         </span>
                         {transaction.userName && (
@@ -336,7 +336,7 @@ export default function TransactionsPage() {
                   </div>
                   <div className="text-right flex-shrink-0 ml-4">
                     <p
-                      className={`text-base font-bold ${
+                      className={`text-sm font-bold ${
                         transaction.type === "income" ? "text-green-600" : "text-red-600"
                       }`}
                     >
