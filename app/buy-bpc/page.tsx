@@ -1,144 +1,42 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ArrowLeft } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ArrowLeft, Check, Info, Mail, UserRound } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { BLUEPAY_BPC_PURCHASE_AMOUNT } from "@/lib/bpc"
 
-const TypewriterText = ({ text, delay = 100, loop = false }: { text: string; delay?: number; loop?: boolean }) => {
-  const [displayedText, setDisplayedText] = useState("")
-  const [index, setIndex] = useState(0)
+const PURCHASE_AMOUNT = BLUEPAY_BPC_PURCHASE_AMOUNT
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (index < text.length) {
-        setDisplayedText(text.slice(0, index + 1))
-        setIndex(index + 1)
-      } else if (loop) {
-        setDisplayedText("")
-        setIndex(0)
-      }
-    }, delay)
-
-    return () => clearInterval(interval)
-  }, [index, text, delay, loop])
-
-  return <span>{displayedText}</span>
-}
-
-export default function BuyBPCPage() {
+export default function BuyBpcPage() {
   const router = useRouter()
-  const [userName, setUserName] = useState("User")
-  const [userEmail, setUserEmail] = useState("user@example.com")
-  const [amount] = useState("₦10,680.00")
-  const [isLoading, setIsLoading] = useState(false)
+  const [profile, setProfile] = useState<{ id?: string; fullName: string; email: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState("")
+  const [step, setStep] = useState<"intro" | "details">("intro")
 
   useEffect(() => {
-    const userData = localStorage.getItem("userData")
-    if (userData) {
-      const parsedData = JSON.parse(userData)
-      setUserName(parsedData.fullName || "User")
-      setUserEmail(parsedData.email || "user@example.com")
-    }
+    const stored = JSON.parse(localStorage.getItem("userData") || "null")
+    setProfile(stored ? { id: stored.id, fullName: stored.fullName || stored.name || "", email: stored.email || "" } : null)
+    setLoading(false)
   }, [])
 
-  const handlePay = async () => {
-    setIsLoading(true)
-
-    // Store payment data for confirmation page
-    const paymentData = {
-      userName,
-      userEmail,
-      amount,
+  function createAttempt() {
+    if (submitting || !profile) return
+    if (!profile.fullName.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
+      setError("Complete your name and email in your profile before continuing.")
+      return
     }
-    localStorage.setItem("paymentData", JSON.stringify(paymentData))
-
-    // Show loading for 3 seconds
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/payment-confirmation")
-    }, 3000)
+    setSubmitting(true)
+    setError("")
+    const id = crypto.randomUUID()
+    const attempt = { id, userId: profile.id || profile.email, reference: `BPM-PAY-${id.slice(0, 8).toUpperCase()}`, createdAt: new Date().toISOString(), status: "pending_verification", name: profile.fullName, email: profile.email, amount: PURCHASE_AMOUNT, receiptName: null }
+    localStorage.setItem(`bluepayPaymentAttempt:${id}`, JSON.stringify(attempt))
+    localStorage.setItem("paymentAttempt", JSON.stringify(attempt))
+    localStorage.setItem("paymentData", JSON.stringify({ userId: attempt.userId, userName: attempt.name, userEmail: attempt.email, amount: PURCHASE_AMOUNT, attemptId: id }))
+    router.push(`/payment?attemptId=${id}`)
   }
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="text-white" size={20} />
-        </button>
-        <h1 className="text-white text-xl font-bold">Buy BPC Code</h1>
-      </div>
-
-      <div className="p-4">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6 overflow-hidden">
-          <div className="flex items-center">
-            <span className="text-yellow-600 mr-2">⚠️</span>
-            <div className="flex-1 overflow-hidden">
-              <div className="animate-marquee whitespace-nowrap text-yellow-800 text-sm font-medium">
-                🚨 IMPORTANT: For instant payment verification, always use the SAME bank account you registered for
-                withdrawals when purchasing BPC codes! Our advanced payment detection system will automatically
-                recognize your transaction within seconds, ensuring faster processing and immediate code delivery. Don't
-                risk delays - use your verified withdrawal account for seamless BPC purchases! 💳✨
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Welcome Section */}
-        <div className="bg-white rounded-lg p-4 mb-6 border-l-4" style={{ borderLeftColor: "#0000FF" }}>
-          <p className="text-blue-600 mb-2">Welcome back, {userName}</p>
-          <p className="text-blue-600">Email: {userEmail}</p>
-        </div>
-
-        {/* Amount Field */}
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Amount</label>
-          <div className="bg-white rounded-lg border border-gray-300 p-4">
-            <p className="text-lg font-semibold text-gray-800">{amount}</p>
-          </div>
-        </div>
-
-        {/* Full Name Field */}
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
-          <div className="bg-white rounded-lg border border-gray-300 p-4">
-            <p className="text-gray-800">{userName}</p>
-          </div>
-        </div>
-
-        {/* Email Field */}
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Your Email Address</label>
-          <div className="bg-white rounded-lg border border-gray-300 p-4">
-            <p className="text-gray-800">{userEmail}</p>
-          </div>
-        </div>
-
-        {/* Pay Button */}
-        <button
-          onClick={handlePay}
-          disabled={isLoading}
-          className="w-full text-white py-4 rounded-lg font-semibold text-lg mb-6 disabled:opacity-50"
-          style={{ backgroundColor: "#0000FF" }}
-        >
-          {isLoading ? "Processing..." : "Pay"}
-        </button>
-
-        {/* Footer Text */}
-        <p className="text-center text-gray-600 text-sm">
-          Your BPC code will be displayed on the app once your payment is confirmed.
-        </p>
-      </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 100s linear infinite;
-        }
-      `}</style>
-    </div>
-  )
+  const firstName = profile?.fullName.trim().split(/\s+/)[0]
+  return <main className="min-h-screen bg-[#f5f7f4] text-[#17201b]"><header className="bg-[#0000ff] px-4 pb-4 pt-8 text-white"><div className="mx-auto flex max-w-lg items-center gap-2"><button onClick={() => step === "intro" ? router.back() : setStep("intro")} aria-label="Go back" className="rounded-full p-2"><ArrowLeft size={18} /></button><div><p className="text-[10px] uppercase tracking-wider text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-bold">Buy BPC</h1></div></div></header><section className="mx-auto max-w-lg space-y-3 px-4 py-4"><div className="flex gap-1.5" aria-label={`Step ${step === "intro" ? 1 : 2} of 2`}>{[1,2].map((item) => <span key={item} className={`h-1.5 flex-1 rounded-full ${item === 1 || step === "details" ? "bg-emerald-500" : "bg-slate-200"}`} />)}</div>{step === "intro" ? <><div className="pt-2"><p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Your purchase journey</p><h2 className="mt-1 text-2xl font-bold tracking-tight">{firstName ? `Welcome, ${firstName}` : "Welcome"}</h2><p className="mt-2 text-sm leading-6 text-slate-600">Follow three simple steps to complete your BPC purchase securely.</p></div><div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">{["Review your BPC purchase details.","Transfer the payment to the BLUEPAY bank account.","Upload your receipt and wait for verification."].map((text, index) => <div key={text} className="flex items-start gap-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">{index + 1}</span><p className="pt-1 text-sm text-slate-700">{text}</p></div>)}</div><button onClick={() => setStep("details")} className="h-11 w-full rounded-xl bg-[#18201b] text-sm font-bold text-white">Next</button></> : <><div className="rounded-2xl bg-[#0000ff] p-4 text-white shadow-lg"><p className="text-xs text-blue-100">BPC Code purchase</p><p className="mt-1 text-3xl font-bold">₦{PURCHASE_AMOUNT.toLocaleString("en-NG", { minimumFractionDigits: 2 })}</p><p className="mt-1 text-xs text-blue-100">Fixed amount • NGN</p></div><div className="flex gap-2 rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-blue-950"><Info size={16} className="mt-0.5 shrink-0 text-[#0000ff]" /><p>Payment remains pending until the submitted receipt is reviewed. BPC is not credited from a button tap alone.</p></div><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><p className="mb-3 text-sm font-bold">Customer details</p>{loading ? <div className="h-14 animate-pulse rounded-xl bg-slate-100" /> : profile ? <div className="space-y-2 text-sm"><div className="flex min-w-0 items-center gap-2"><UserRound size={15} className="shrink-0 text-slate-400" /><span className="break-words">{profile.fullName}</span><Check size={15} className="ml-auto shrink-0 text-emerald-600" /></div><div className="flex min-w-0 items-center gap-2"><Mail size={15} className="shrink-0 text-slate-400" /><span className="break-all">{profile.email}</span></div></div> : <p className="text-xs text-red-600">Sign in to continue with your saved customer details.</p>}</div>{error && <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{error}</p>}<button onClick={createAttempt} disabled={loading || !profile || submitting} className="h-11 w-full rounded-xl bg-[#18201b] text-sm font-bold text-white disabled:opacity-50">{submitting ? "Creating order..." : "Continue"}</button></>}</section></main>
 }

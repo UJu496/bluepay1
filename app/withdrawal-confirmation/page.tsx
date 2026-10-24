@@ -1,142 +1,52 @@
 "use client"
-import { useState, useEffect } from "react"
+
+import { useEffect, useState } from "react"
+import { ArrowLeft, Check, Landmark, LockKeyhole, ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
+
+type WithdrawalData = { accountName: string; accountNumber: string; selectedBank: string; amount: number; balance: number; transactionId?: string; balanceDebited?: boolean; status?: string }
 
 export default function WithdrawalConfirmationPage() {
   const router = useRouter()
-  const [withdrawalData, setWithdrawalData] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<WithdrawalData | null>(null)
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
-    const data = localStorage.getItem("withdrawalData")
-    if (data) {
-      setWithdrawalData(JSON.parse(data))
-    } else {
-      router.push("/withdraw")
-    }
+    const stored = localStorage.getItem("withdrawalData")
+    if (stored) setData(JSON.parse(stored))
+    else router.replace("/withdraw")
   }, [router])
 
-  const handleConfirm = () => {
-    setIsLoading(true)
+  const confirm = () => {
+    if (!data || processing) return
+    setProcessing(true)
 
-    // Show loading for 5 seconds
-    setTimeout(() => {
-      // Update balance
-      const newBalance = withdrawalData.balance - withdrawalData.amount
-      localStorage.setItem("userBalance", newBalance.toString())
+    const currentBalance = Number.parseInt(localStorage.getItem("userBalance") || String(data.balance), 10)
+    const shouldDebit = !data.balanceDebited && currentBalance >= data.amount
+    const nextBalance = shouldDebit ? currentBalance - data.amount : currentBalance
+    localStorage.setItem("userBalance", String(nextBalance))
 
-      // Navigate to success page
-      router.push("/withdrawal-success")
-    }, 5000)
+    const updatedData = { ...data, balance: nextBalance, balanceDebited: true, status: "successful" }
+    localStorage.setItem("withdrawalData", JSON.stringify(updatedData))
+
+    if (data.transactionId) {
+      const transactions = JSON.parse(localStorage.getItem("userTransactions") || "[]")
+      localStorage.setItem("userTransactions", JSON.stringify(transactions.map((transaction: { id: string }) => transaction.id === data.transactionId ? { ...transaction, status: "successful" } : transaction)))
+    }
+
+    router.push("/withdrawal-success")
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 flex flex-col items-center justify-center px-4">
-        <div className="text-center text-white">
-          {/* Animated Processing Card */}
-          <div className="mb-8">
-            <div className="relative w-24 h-24 mx-auto">
-              <div className="absolute inset-0 bg-white/20 rounded-full animate-ping" />
-              <div className="absolute inset-4 bg-white/30 rounded-full animate-pulse" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <div className="animate-spin">
-                      <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <h2 className="text-2xl font-bold mb-3">Processing Withdrawal</h2>
-          <p className="text-blue-100 text-lg mb-2">Please wait while we prepare</p>
-          <p className="text-blue-100 text-lg mb-8">your withdrawal results</p>
-          
-          {/* Status Steps */}
-          <div className="space-y-3 text-left max-w-xs">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
-                <span className="text-xs">✓</span>
-              </div>
-              <span className="text-sm">Verifying details</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-white/50 animate-pulse flex items-center justify-center">
-                <span className="text-xs">...</span>
-              </div>
-              <span className="text-sm">Submitting to bank</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-xs">→</span>
-              </div>
-              <span className="text-sm">Completing transaction</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  if (!data) return <main className="min-h-screen bg-[#f6f8fc]" />
+  const masked = `${data.accountNumber.slice(0, 3)} **** ${data.accountNumber.slice(-2)}`
 
-  if (!withdrawalData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <div className="flex items-center justify-center p-4 pt-12 relative" style={{ backgroundColor: "#0000FF" }}>
-        <button onClick={() => router.back()} className="absolute left-4 text-white">
-          <ArrowLeft size={20} />
-        </button>
-        <h1 className="text-white text-xl font-bold">Confirm Withdrawal</h1>
-      </div>
-
-      <div className="p-4">
-        <div className="bg-white rounded-xl p-4 shadow-lg">
-          <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">Confirm Your Details</h2>
-
-          <div className="space-y-4">
-            <div className="border-b border-gray-200 pb-4">
-              <p className="text-gray-600 text-sm">Account Name</p>
-              <p className="text-lg font-semibold text-gray-800">{withdrawalData.accountName}</p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-4">
-              <p className="text-gray-600 text-sm">Account Number</p>
-              <p className="text-lg font-semibold text-gray-800">{withdrawalData.accountNumber}</p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-4">
-              <p className="text-gray-600 text-sm">Bank</p>
-              <p className="text-lg font-semibold text-gray-800">{withdrawalData.selectedBank}</p>
-            </div>
-
-            <div className="border-b border-gray-200 pb-4">
-              <p className="text-gray-600 text-sm">Amount</p>
-              <p className="text-xl font-bold text-blue-600">₦{withdrawalData.amount.toLocaleString()}</p>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <button
-              onClick={handleConfirm}
-              className="w-full p-4 rounded-xl text-white font-bold text-lg"
-              style={{ backgroundColor: "#0000FF" }}
-            >
-              YES I CONFIRM
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  return <main className="min-h-screen bg-[#f6f8fc] text-slate-950">
+    <header className="bg-[#0000ff] px-4 pb-5 pt-12 text-white"><div className="mx-auto flex max-w-lg items-center gap-3"><button onClick={() => router.back()} aria-label="Go back" className="rounded-full p-2 hover:bg-white/10"><ArrowLeft size={19} /></button><div><p className="text-xs font-medium text-blue-100">BLUEPAY MOBILE</p><h1 className="text-lg font-semibold">Confirm Withdrawal</h1></div></div></header>
+    <section className="mx-auto max-w-lg space-y-4 px-4 py-5">
+      <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0000ff]">Review before sending</p><h2 className="mt-1 text-2xl font-bold tracking-tight">Confirm your details</h2><p className="mt-1 text-sm text-slate-500">Make sure the recipient information is correct.</p></div>
+      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_12px_35px_rgba(15,23,42,0.06)]"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#0000ff]"><Landmark size={21}/></div><div className="min-w-0"><p className="truncate font-semibold">{data.accountName}</p><p className="text-sm text-slate-500">{data.selectedBank} · {masked}</p></div><div className="ml-auto rounded-full bg-emerald-50 p-2 text-emerald-600"><Check size={15}/></div></div><div className="flex items-end justify-between pt-4"><div><p className="text-xs text-slate-500">Withdrawal amount</p><p className="mt-1 text-3xl font-bold tracking-tight">₦{data.amount.toLocaleString()}</p></div><p className="text-xs text-slate-500">Debit</p></div></div>
+      <div className="flex gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm text-blue-950"><ShieldCheck className="mt-0.5 shrink-0 text-[#0000ff]" size={18}/><p>Confirm only if the account name, bank, and amount match your intended recipient.</p></div>
+      <button onClick={confirm} disabled={processing} className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-[#0000ff] py-4 font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">{processing ? "Opening secure processing..." : "YES, I CONFIRM"}<LockKeyhole size={16}/></button><button onClick={() => router.back()} disabled={processing} className="w-full py-3 text-sm font-semibold text-slate-500">Cancel and go back</button>
+    </section>
+  </main>
 }
