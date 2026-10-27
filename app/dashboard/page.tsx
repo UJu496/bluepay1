@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { formatCurrency } from "@/lib/utils"
 import {
   Menu,
   Bell,
@@ -756,7 +757,7 @@ export default function DashboardPage() {
                   <span className="text-sm opacity-90">Monthly Earnings</span>
                   <DollarSign size={20} />
                 </div>
-                <div className="text-xl font-bold">₦{(balance * 0.15).toLocaleString()}</div>
+                <div className="text-xl font-bold">{formatCurrency(balance * 0.15)}</div>
               </div>
 
               <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-xl p-4 text-white">
@@ -837,7 +838,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="min-w-0">
             <p className="text-white/80 text-xs mb-1">Available Balance</p>
-            <p className="truncate text-[clamp(1.7rem,8vw,2.1rem)] font-bold tracking-tight">₦{balance.toLocaleString()}</p>
+            <p className="truncate text-[clamp(1.7rem,8vw,2.1rem)] font-bold tracking-tight">{formatCurrency(balance)}</p>
           </div>
           <button
             onClick={handleWithdraw}
@@ -1095,7 +1096,7 @@ export default function DashboardPage() {
               <ArrowUpRight className="text-green-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Income</p>
-            <p className="text-lg font-bold text-gray-800">₦{(monthlyIncome / 1000).toFixed(0)}k</p>
+            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlyIncome)}</p>
             <p className="text-xs text-green-500 mt-1">+12% this month</p>
           </div>
 
@@ -1105,7 +1106,7 @@ export default function DashboardPage() {
               <ArrowDownRight className="text-red-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Expenses</p>
-            <p className="text-lg font-bold text-gray-800">₦{(monthlyExpenses / 1000).toFixed(0)}k</p>
+            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlyExpenses)}</p>
             <p className="text-xs text-red-500 mt-1">+8% this month</p>
           </div>
 
@@ -1115,7 +1116,7 @@ export default function DashboardPage() {
               <Star className="text-yellow-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Savings</p>
-            <p className="text-lg font-bold text-gray-800">₦{(monthlySavings / 1000).toFixed(0)}k</p>
+            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlySavings)}</p>
             <p className="text-xs text-blue-500 mt-1">Goal: ₦200k</p>
           </div>
         </div>
@@ -1136,7 +1137,7 @@ export default function DashboardPage() {
                 <div key={item.category}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm text-gray-700">{item.category}</span>
-                    <span className="text-sm font-semibold text-gray-800">₦{item.amount.toLocaleString()}</span>
+                    <span className="text-sm font-semibold text-gray-800">{formatCurrency(item.amount)}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
@@ -1155,12 +1156,12 @@ export default function DashboardPage() {
           <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white">
             <Wallet className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">Total Balance</p>
-            <p className="text-xl font-bold">₦{balance.toLocaleString()}</p>
+            <p className="text-xl font-bold">{formatCurrency(balance)}</p>
           </div>
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 text-white">
             <Zap className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">This Month</p>
-            <p className="text-xl font-bold">₦{monthlyExpenses.toLocaleString()}</p>
+            <p className="text-xl font-bold">{formatCurrency(monthlyExpenses)}</p>
           </div>
         </div>
       </div>

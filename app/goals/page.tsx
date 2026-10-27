@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { formatCurrency } from "@/lib/utils"
 import {
   ArrowLeft,
   Plus,
@@ -271,7 +272,7 @@ export default function GoalsPage() {
             </div>
             <div className="text-right">
               <p className="text-sm opacity-90 mb-1">Total Target</p>
-              <p className="text-xl font-bold">₦{totalTargetAmount.toLocaleString()}</p>
+              <p className="text-xl font-bold">{formatCurrency(totalTargetAmount)}</p>
             </div>
           </div>
           <div className="w-full bg-white/20 rounded-full h-3">

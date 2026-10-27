@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, CheckCircle, Calendar, Clock, Hash, ArrowDownLeft, HelpCircle } from "lucide-react"
+import { formatCurrency } from "@/lib/utils"
 
 interface WithdrawalNotification {
   id: string
@@ -47,7 +48,7 @@ export default function NotificationsPage() {
   }, [])
 
   const formatAmount = (amount: number) => {
-    return `₦${amount.toLocaleString()}`
+    return formatCurrency(amount)
   }
 
   return (

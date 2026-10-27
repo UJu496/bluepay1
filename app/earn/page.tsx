@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { formatCurrency } from "@/lib/utils"
 import {
   ArrowLeft,
   Play,
@@ -1287,7 +1288,7 @@ export default function EarnPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100 text-sm mb-1">Total Earned Today</p>
-              <p className="text-2xl font-bold tracking-tight">₦{totalEarned.toLocaleString()}</p>
+              <p className="text-2xl font-bold tracking-tight">{formatCurrency(totalEarned)}</p>
               <p className="text-green-100 text-sm mt-1">{completedTasks.length} tasks completed</p>
             </div>
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
@@ -1371,7 +1372,7 @@ export default function EarnPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-green-600">₦{getTaskReward(task.id).toLocaleString()}</p>
+                      <p className="text-sm font-bold text-green-600">{formatCurrency(getTaskReward(task.id))}</p>
                     </div>
                   </div>
 
