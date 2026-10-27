@@ -1096,7 +1096,7 @@ export default function DashboardPage() {
               <ArrowUpRight className="text-green-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Income</p>
-            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlyIncome)}</p>
+            <p className="text-[11px] font-bold tracking-tight text-gray-800 whitespace-nowrap">{formatCurrency(monthlyIncome)}</p>
             <p className="text-xs text-green-500 mt-1">+12% this month</p>
           </div>
 
@@ -1106,7 +1106,7 @@ export default function DashboardPage() {
               <ArrowDownRight className="text-red-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Expenses</p>
-            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlyExpenses)}</p>
+            <p className="text-[11px] font-bold tracking-tight text-gray-800 whitespace-nowrap">{formatCurrency(monthlyExpenses)}</p>
             <p className="text-xs text-red-500 mt-1">+8% this month</p>
           </div>
 
@@ -1116,7 +1116,7 @@ export default function DashboardPage() {
               <Star className="text-yellow-500" size={16} />
             </div>
             <p className="text-xs text-gray-600 mb-1">Savings</p>
-            <p className="text-lg font-bold text-gray-800">{formatCurrency(monthlySavings)}</p>
+            <p className="text-[11px] font-bold tracking-tight text-gray-800 whitespace-nowrap">{formatCurrency(monthlySavings)}</p>
             <p className="text-xs text-blue-500 mt-1">Goal: ₦200k</p>
           </div>
         </div>
@@ -1137,7 +1137,7 @@ export default function DashboardPage() {
                 <div key={item.category}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm text-gray-700">{item.category}</span>
-                    <span className="text-sm font-semibold text-gray-800">{formatCurrency(item.amount)}</span>
+                    <span className="text-xs font-semibold tracking-tight text-gray-800 whitespace-nowrap">{formatCurrency(item.amount)}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
@@ -1156,12 +1156,12 @@ export default function DashboardPage() {
           <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white">
             <Wallet className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">Total Balance</p>
-            <p className="text-xl font-bold">{formatCurrency(balance)}</p>
+            <p className="text-base font-bold tracking-tight whitespace-nowrap">{formatCurrency(balance)}</p>
           </div>
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 text-white">
             <Zap className="mb-2" size={20} />
             <p className="text-xs opacity-90 mb-1">This Month</p>
-            <p className="text-xl font-bold">{formatCurrency(monthlyExpenses)}</p>
+            <p className="text-base font-bold tracking-tight whitespace-nowrap">{formatCurrency(monthlyExpenses)}</p>
           </div>
         </div>
       </div>
