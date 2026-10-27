@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { formatCurrency } from "@/lib/utils"
 import {
   ArrowLeft,
   Plus,
@@ -277,7 +278,7 @@ export default function BudgetsPage() {
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className={`text-sm font-semibold ${getStatusColor(budget.spent, budget.limit)}`}>
-                      ₦{budget.spent.toLocaleString()} / ₦{budget.limit.toLocaleString()}
+                      {formatCurrency(budget.spent)} / {formatCurrency(budget.limit)}
                     </span>
                     <span className="text-sm text-gray-600">
                       {getProgressPercentage(budget.spent, budget.limit).toFixed(1)}%

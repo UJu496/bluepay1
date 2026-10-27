@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, TrendingDown, Calendar } from "lucide-react"
 import { getTransactions } from "@/lib/transactions"
+import { formatCurrency } from "@/lib/utils"
 
 export default function SpendingBreakdownPage() {
   const router = useRouter()
@@ -99,7 +100,7 @@ export default function SpendingBreakdownPage() {
             <TrendingDown size={20} />
             <h2 className="text-lg font-semibold">Total Spending</h2>
           </div>
-          <p className="text-xl font-bold">₦{totalSpending.toLocaleString()}</p>
+          <p className="text-xl font-bold">{formatCurrency(totalSpending)}</p>
           <p className="text-sm opacity-90 mt-2">
             {selectedPeriod === "week"
               ? "Last 7 days"
@@ -126,7 +127,7 @@ export default function SpendingBreakdownPage() {
                     <p className="text-sm text-gray-500">{item.count} transactions</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-gray-800">₦{item.amount.toLocaleString()}</p>
+                    <p className="text-xl font-bold text-gray-800">{formatCurrency(item.amount)}</p>
                     <p className="text-sm text-gray-500">{item.percentage}% of total</p>
                   </div>
                 </div>
@@ -158,7 +159,7 @@ export default function SpendingBreakdownPage() {
                           })}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold text-red-600">-₦{transaction.amount.toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-red-600">-{formatCurrency(transaction.amount)}</p>
                     </div>
                   ))}
                 </div>

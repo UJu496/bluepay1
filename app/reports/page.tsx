@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { formatCurrency } from "@/lib/utils"
 import {
   ArrowLeft,
   TrendingUp,
@@ -345,7 +346,7 @@ export default function ReportsPage() {
                       <span className="text-sm font-medium text-gray-700">{cat.category}</span>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-gray-800">₦{cat.amount.toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-gray-800">{formatCurrency(cat.amount)}</p>
                       <p className="text-xs text-gray-600">{cat.percentage.toFixed(1)}%</p>
                     </div>
                   </div>
@@ -379,7 +380,7 @@ export default function ReportsPage() {
                       <span className="text-sm font-medium text-gray-700">{cat.category}</span>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-gray-800">₦{cat.amount.toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-gray-800">{formatCurrency(cat.amount)}</p>
                       <p className="text-xs text-gray-600">{cat.percentage.toFixed(1)}%</p>
                     </div>
                   </div>

@@ -17,6 +17,7 @@ import {
   Check,
 } from "lucide-react"
 import { getTransactions, saveTransaction } from "@/lib/transactions"
+import { formatCurrency } from "@/lib/utils"
 
 export default function TransactionsPage() {
   const router = useRouter()
@@ -203,7 +204,7 @@ export default function TransactionsPage() {
               </div>
               <p className="text-xs text-gray-700 font-medium">Income</p>
             </div>
-            <p className="text-sm font-bold text-gray-900">₦{totals.income.toLocaleString()}</p>
+            <p className="text-sm font-bold text-gray-900">{formatCurrency(totals.income)}</p>
           </div>
           <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-2 border border-red-200">
             <div className="flex items-center gap-1.5 mb-1">
@@ -212,7 +213,7 @@ export default function TransactionsPage() {
               </div>
               <p className="text-xs text-gray-700 font-medium">Expenses</p>
             </div>
-            <p className="text-sm font-bold text-gray-900">₦{totals.expenses.toLocaleString()}</p>
+            <p className="text-sm font-bold text-gray-900">{formatCurrency(totals.expenses)}</p>
           </div>
           <div className={`bg-gradient-to-br ${totals.net >= 0 ? "from-green-50 to-green-100" : "from-yellow-50 to-yellow-100"} rounded-xl p-2 border ${totals.net >= 0 ? "border-green-200" : "border-yellow-200"}`}>
             <div className="flex items-center gap-1.5 mb-1">
@@ -222,7 +223,7 @@ export default function TransactionsPage() {
               <p className="text-xs text-gray-700 font-medium">Net</p>
             </div>
             <p className={`text-sm font-bold ${totals.net >= 0 ? "text-green-700" : "text-yellow-700"}`}>
-              ₦{totals.net.toLocaleString()}
+              {formatCurrency(totals.net)}
             </p>
           </div>
         </div>
@@ -338,7 +339,7 @@ export default function TransactionsPage() {
                         transaction.type === "income" ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {transaction.type === "income" ? "+" : "-"}₦{transaction.amount.toLocaleString()}
+                      {transaction.type === "income" ? "+" : "-"}{formatCurrency(transaction.amount)}
                     </p>
                   </div>
                 </div>
