@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/Ch2OAkwb5heGibl75k17NG?s=cl&p=a&mlu=4&ilr=4"
+const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/C0xGT2DTKpmH82LJuAAKcW?s=cl&p=a&mlu=4&ilr=4"
 
 export function FloatingWhatsappLady() {
   return (
