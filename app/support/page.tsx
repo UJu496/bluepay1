@@ -106,15 +106,15 @@ export default function SupportPage() {
   }
 
   const handleWhatsAppSupport = () => {
-    window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
+    window.open("https://t.me/bluepay2", "_blank")
   }
 
   const handleCallSupport = () => {
-    window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
+    window.open("https://t.me/bluepay2", "_blank")
   }
 
   const handleJoinCommunity = () => {
-    window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
+    window.open("https://t.me/bluepay2", "_blank")
   }
 
   return (
@@ -244,13 +244,13 @@ export default function SupportPage() {
                 <MessageCircle className="text-green-600" size={20} />
               </div>
               <div className="flex-1 text-left">
-                <h3 className="font-semibold text-gray-800">WhatsApp Community</h3>
+                <h3 className="font-semibold text-gray-800">Telegram Community</h3>
                 <p className="text-sm text-gray-600">Join our group</p>
                 <p className="text-xs text-gray-500">Instant messaging support</p>
               </div>
             </button>
 
-            {/* Phone Support - Now redirects to WhatsApp Community */}
+            {/* Phone Support - Now redirects to Telegram Community */}
             <button
               onClick={handleCallSupport}
               className="w-full p-4 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow"
@@ -259,7 +259,7 @@ export default function SupportPage() {
                 <MessageCircle className="text-green-600" size={20} />
               </div>
               <div className="flex-1 text-left">
-                <h3 className="font-semibold text-gray-800">WhatsApp Group Support</h3>
+                <h3 className="font-semibold text-gray-800">Telegram Group Support</h3>
                 <p className="text-sm text-gray-600">Join our group</p>
                 <p className="text-xs text-gray-500">Available 24/7</p>
               </div>
