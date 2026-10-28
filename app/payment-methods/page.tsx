@@ -135,15 +135,7 @@ export default function PaymentMethodsPage() {
   ])
 
   const [savedBanks, setSavedBanks] = useState([
-    { id: 1, name: "Access Bank", accountNumber: "6711230988", accountName: "MOD...CHI...AGB.. (BLUEPAY MOBILE 2026 Agent)", isDefault: true },
-    {
-      id: 2,
-      name: "GTBank (Guaranty Trust Bank)",
-      accountNumber: "0987654321",
-      accountName: generateNigerianName(),
-      isDefault: false,
-    },
-    { id: 3, name: "OPay", accountNumber: "1234567890", accountName: generateNigerianName(), isDefault: false },
+    { id: 1, name: "Palmpay MFB", accountNumber: "8902575509", accountName: "M...I....C", isDefault: true },
   ])
 
   const [newCard, setNewCard] = useState({

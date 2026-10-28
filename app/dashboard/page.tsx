@@ -429,7 +429,7 @@ export default function DashboardPage() {
   }
 
   const handleGroup = () => {
-    window.open("https://chat.whatsapp.com/C0xGT2DTKpmH82LJuAAKcW?s=cl&p=a&mlu=4&ilr=4", "_blank")
+    window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
   }
 
   const handleEarn = () => {
@@ -611,7 +611,7 @@ export default function DashboardPage() {
           `}</style>
           <button
             onClick={() => {
-              window.open("https://chat.whatsapp.com/C0xGT2DTKpmH82LJuAAKcW?s=cl&p=a&mlu=4&ilr=4", "_blank")
+              window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
             }}
             className="relative h-14 w-14 overflow-hidden rounded-full border-4 border-white shadow-xl transition-transform hover:scale-105"
             style={{
@@ -711,7 +711,7 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => {
-                  window.open("https://chat.whatsapp.com/C0xGT2DTKpmH82LJuAAKcW?s=cl&p=a&mlu=4&ilr=4", "_blank")
+                  window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
                   setShowSocial(false)
                 }}
                 className="w-full flex items-center gap-4 p-4 text-white rounded-xl hover:opacity-90 transition-colors"
