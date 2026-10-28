@@ -210,8 +210,8 @@ const taskSets = [
     },
     {
       id: "join-whatsapp-group",
-      title: "Join WhatsApp Community",
-      description: "Join our active WhatsApp community for daily tips and support",
+      title: "Join Telegram Community",
+      description: "Join our active Telegram community for daily tips and support",
       reward: 1000,
       icon: <MessageSquare className="text-green-600" size={20} />,
       category: "Community",
@@ -1121,7 +1121,7 @@ export default function EarnPage() {
     } else if (taskId === "explore-features" || taskId === "explore-dashboard") {
       router.push("/features")
     } else if (taskId === "join-community-chat" || taskId === "join-whatsapp-group") {
-      window.open("https://chat.whatsapp.com/DPZZJcKR6kC6rc8MANyTa9?s=cl&p=a&mlu=4&ilr=4&iam=2", "_blank")
+      window.open("https://t.me/bluepay2", "_blank")
     } else if (taskId === "verify-account") {
       router.push("/verify-account")
     } else if (taskId === "setup-pin-security" || taskId === "enable-biometric-security") {
@@ -1236,8 +1236,8 @@ export default function EarnPage() {
     },
     {
       id: "join-whatsapp-group",
-      title: "Join WhatsApp Community",
-      description: "Join our active WhatsApp community for daily tips and support",
+      title: "Join Telegram Community",
+      description: "Join our active Telegram community for daily tips and support",
       reward: 1000,
       icon: <MessageSquare className="text-green-600" size={20} />,
       category: "Community",
