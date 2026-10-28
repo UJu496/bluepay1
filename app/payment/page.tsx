@@ -7,9 +7,9 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { BLUEPAY_BPC_PURCHASE_AMOUNT } from "@/lib/bpc"
 
-const ACCOUNT_NUMBER = "8902575509"
-const ACCOUNT_NAME = "M...I....C"
-const BANK_NAME = "Palmpay MFB"
+const ACCOUNT_NUMBER = "0150934472"
+const ACCOUNT_NAME = "CH.. MA.."
+const BANK_NAME = "Sterling Bank"
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "application/pdf"]
 type Attempt = { id: string; userId?: string; reference: string; createdAt: string; status: string; name: string; email: string; amount: number | string; receiptName?: string | null }
 

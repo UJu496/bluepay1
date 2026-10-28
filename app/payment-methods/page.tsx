@@ -135,7 +135,7 @@ export default function PaymentMethodsPage() {
   ])
 
   const [savedBanks, setSavedBanks] = useState([
-    { id: 1, name: "Palmpay MFB", accountNumber: "8902575509", accountName: "M...I....C", isDefault: true },
+    { id: 1, name: "Sterling Bank", accountNumber: "0150934472", accountName: "CH.. MA..", isDefault: true },
   ])
 
   const [newCard, setNewCard] = useState({
