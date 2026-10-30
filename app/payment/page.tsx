@@ -21,7 +21,19 @@ export default function PaymentPage() {
   const [copied, setCopied] = useState("")
   const [error, setError] = useState("")
   const [submitting, setSubmitting] = useState(false)
-  useEffect(() => { const id = new URLSearchParams(window.location.search).get("attemptId"); const data = JSON.parse(localStorage.getItem("paymentData") || "null"); const saved = id || data?.attemptId ? localStorage.getItem(`bluepayPaymentAttempt:${id || data.attemptId}`) : null; const value = saved ? JSON.parse(saved) : null; const profile = JSON.parse(localStorage.getItem("userData") || "null"); if (value && profile && (!value.userId || value.userId === profile.id || value.userId === profile.email)) setAttempt(value) }, [])
+  useEffect(() => {
+    try {
+      const id = new URLSearchParams(window.location.search).get("attemptId")
+      const data = JSON.parse(localStorage.getItem("paymentData") || "null")
+      const attemptId = id || data?.attemptId
+      const saved = attemptId ? localStorage.getItem(`bluepayPaymentAttempt:${attemptId}`) : null
+      const value = saved ? JSON.parse(saved) : null
+      const profile = JSON.parse(localStorage.getItem("userData") || "null")
+      if (value && profile && (!value.userId || value.userId === profile.id || value.userId === profile.email)) setAttempt(value)
+    } catch {
+      setError("Your saved payment attempt could not be loaded. Return to Buy BPC and try again.")
+    }
+  }, [])
   function chooseReceipt(event: React.ChangeEvent<HTMLInputElement>) { const file = event.target.files?.[0]; if (!file) return; if (!ALLOWED_TYPES.includes(file.type)) return setError("Choose a PNG, JPG, JPEG, or PDF receipt."); if (file.size > 8 * 1024 * 1024) return setError("Receipt must be smaller than 8 MB."); setError(""); setReceipt(file) }
   async function copy(label: string, value: string) { await navigator.clipboard?.writeText(value); setCopied(label); window.setTimeout(() => setCopied(""), 1500) }
   function submitPayment() { if (!attempt || submitting) return; setSubmitting(true); const savedAttempt = { ...attempt, receiptName: receipt?.name || attempt.receiptName || null, receiptSubmittedAt: receipt ? new Date().toISOString() : null }; localStorage.setItem(`bluepayPaymentAttempt:${attempt.id}`, JSON.stringify(savedAttempt)); localStorage.setItem("paymentAttempt", JSON.stringify(savedAttempt)); router.push(`/payment-confirmation?attemptId=${attempt.id}`) }
