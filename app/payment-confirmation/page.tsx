@@ -11,11 +11,15 @@ export default function PaymentConfirmationPage() {
   const [attempt, setAttempt] = useState<Attempt | null>(null)
   const [message, setMessage] = useState("")
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("attemptId")
-    const stored = id ? localStorage.getItem(`bluepayPaymentAttempt:${id}`) : localStorage.getItem("paymentAttempt")
-    const value = stored ? JSON.parse(stored) : null
-    const currentUser = JSON.parse(localStorage.getItem("userData") || "null")
-    if (value && currentUser && (!value.userId || value.userId === currentUser.id || value.userId === currentUser.email)) setAttempt(value)
+    try {
+      const id = new URLSearchParams(window.location.search).get("attemptId")
+      const stored = id ? localStorage.getItem(`bluepayPaymentAttempt:${id}`) : localStorage.getItem("paymentAttempt")
+      const value = stored ? JSON.parse(stored) : null
+      const currentUser = JSON.parse(localStorage.getItem("userData") || "null")
+      if (value && currentUser && (!value.userId || value.userId === currentUser.id || value.userId === currentUser.email)) setAttempt(value)
+    } catch {
+      setMessage("Your saved payment review could not be loaded. Return to Buy BPC and try again.")
+    }
   }, [])
   if (!attempt) return <main className="grid min-h-screen place-items-center bg-[#f6f8fc] p-5 text-center text-sm text-slate-500">No saved payment review was found for this account.</main>
   const date = attempt.createdAt ? new Date(attempt.createdAt).toLocaleString("en-NG", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded"
