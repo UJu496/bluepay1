@@ -21,7 +21,42 @@ export default function PaymentConfirmationPage() {
       setMessage("Your saved payment review could not be loaded. Return to Buy BPC and try again.")
     }
   }, [])
-  if (!attempt) return <main className="grid min-h-screen place-items-center bg-[#f6f8fc] p-5 text-center text-sm text-slate-500">No saved payment review was found for this account.</main>
+  if (!attempt) {
+    return (
+      <main className="min-h-screen bg-[#f6f8fc] text-slate-950">
+        <header className="bg-[#0000ff] px-3 pb-4 pt-7 text-white">
+          <div className="mx-auto flex max-w-lg items-center gap-2">
+            <button onClick={() => router.back()} aria-label="Go back" className="rounded-full p-1.5 transition hover:bg-white/10">
+              <ArrowLeft size={18} />
+            </button>
+            <div>
+              <p className="text-[10px] font-medium tracking-wide text-blue-100">BLUEPAY MOBILE</p>
+              <h1 className="text-base font-semibold">Payment review</h1>
+            </div>
+          </div>
+        </header>
+        <section className="mx-auto max-w-lg space-y-3 px-3 py-4">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-lg bg-white p-2 text-amber-600 shadow-sm"><Clock3 size={18} /></div>
+              <div>
+                <h2 className="text-sm font-semibold text-amber-950">Payment review unavailable</h2>
+                <p className="mt-1 text-xs leading-5 text-amber-900">We could not find the saved payment attempt on this device.</p>
+              </div>
+            </div>
+          </div>
+          {message && <p role="status" className="rounded-lg bg-blue-50 px-3 py-2.5 text-xs leading-5 text-blue-950">{message}</p>}
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-xs leading-5 text-slate-600">Return to the payment page and submit your payment details again. Keep your transfer receipt available for support review.</p>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <button onClick={() => router.push("/payment")} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0000ff] px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-blue-700"><RefreshCw size={14} /> Try payment again</button>
+              <button onClick={() => router.push("/dashboard")} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"><LayoutDashboard size={14} /> Go to dashboard</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
+  }
   const date = attempt.createdAt ? new Date(attempt.createdAt).toLocaleString("en-NG", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded"
   const amount = formatCurrency(Number(String(attempt.amount).replace(/[^0-9.]/g, "")) || 0)
   function recheck() { setMessage("Automatic bank payment verification is unavailable. This attempt remains awaiting review.") }
