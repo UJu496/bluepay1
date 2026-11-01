@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
     images: [
       {
-        url: "https://www-bluepaymobile2026.vercel.app/og-image.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "BLUEPAY MOBILE",
