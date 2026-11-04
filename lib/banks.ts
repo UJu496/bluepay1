@@ -7,11 +7,10 @@ export type Bank = {
 }
 
 const names = [
-  "Access Bank", "Access Bank (Diamond)", "Ecobank", "Fidelity Bank", "First Bank of Nigeria", "FCMB",
-  "Globus Bank", "Guaranty Trust Bank (GTBank)", "Keystone Bank", "Kuda", "Moniepoint", "Opay",
-  "Palmpay", "Parallex Bank", "Polaris Bank", "PremiumTrust Bank", "Providus Bank", "Stanbic IBTC Bank",
-  "Standard Chartered Bank", "Sterling Bank", "SunTrust Bank", "TajBank", "Union Bank of Nigeria",
-  "United Bank for Africa (UBA)", "Unity Bank", "VFD Microfinance Bank", "Wema Bank", "Zenith Bank",
+  "Access Bank", "First Bank", "UBA", "GTBank", "Zenith Bank", "FCMB", "Fidelity Bank", "Wema Bank",
+  "Polaris Bank", "Stanbic IBTC", "Sterling Bank", "Union Bank", "Ecobank", "Keystone Bank", "Unity Bank",
+  "Jaiz Bank", "Globus Bank", "Providus Bank", "Premium Trust Bank", "Parallex Bank", "Lotus Bank", "TAJBank",
+  "OPay", "PalmPay", "Kuda MFB", "Moniepoint MFB", "VFD MFB", "FirstMonie", "Paga", "FairMoney", "Sparkle", "Rubies",
 ]
 
 export const localBanks: Bank[] = names.map((name) => ({
