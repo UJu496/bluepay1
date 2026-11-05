@@ -8,12 +8,37 @@ import { formatCurrency } from "@/lib/utils"
 import { BLUEPAY_BPC_CODE } from "@/lib/bpc"
 import type { Bank } from "@/lib/banks"
 
-function BankLogo({ bank, size = "md" }: { bank: Bank; size?: "sm" | "md" }) {
-  const initials = bank.name.split(/\\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
-  const dimensions = size === "sm" ? "h-8 w-8 text-[10px]" : "h-10 w-10 text-xs"
+const bankLogoDomains: Record<string, string> = {
+  "Access Bank": "accessbankplc.com",
+  "First Bank": "firstbanknigeria.com",
+  UBA: "ubagroup.com",
+  GTBank: "gtbank.com",
+  "Zenith Bank": "zenithbank.com",
+  FCMB: "fcmb.com",
+  "Fidelity Bank": "fidelitybank.ng",
+  "Wema Bank": "wemabank.com",
+  "Polaris Bank": "polarisbanklimited.com",
+  "Stanbic IBTC": "stanbicibtcbank.com",
+  "Sterling Bank": "sterling.ng",
+  "Union Bank": "unionbankng.com",
+  Ecobank: "ecobank.com",
+  "OPay": "opayweb.com",
+  PalmPay: "palmpay.com",
+  "Kuda MFB": "kuda.com",
+  "Moniepoint MFB": "moniepoint.com",
+  "VFD MFB": "vbank.ng",
+  FirstMonie: "firstbanknigeria.com",
+}
 
-  return <span className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-blue-100 bg-blue-50 font-bold text-[#0000ff] ${dimensions}`}>
-    {bank.logo ? <img src={bank.logo} alt={`${bank.name} logo`} className="h-full w-full object-contain p-1" onError={(event) => { event.currentTarget.style.display = "none" }} /> : initials}
+function BankLogo({ bank, size = "md" }: { bank: Bank; size?: "sm" | "md" }) {
+  const initials = bank.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
+  const logoUrl = bank.logo || (bankLogoDomains[bank.name] ? `https://logo.clearbit.com/${bankLogoDomains[bank.name]}` : null)
+  const dimensions = size === "sm" ? "h-9 w-9 text-[10px]" : "h-14 w-14 text-xs"
+
+  return <span className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-white font-bold text-[#0000ff] shadow-sm ${dimensions}`}>
+    <span aria-hidden="true">{initials}</span>
+    {logoUrl && <img src={logoUrl} alt={`${bank.name} logo`} className="absolute inset-0 h-full w-full bg-white object-contain p-1.5" onError={(event) => { event.currentTarget.style.display = "none" }} />}
+    <span className="sr-only">{bank.name}</span>
   </span>
 }
 
