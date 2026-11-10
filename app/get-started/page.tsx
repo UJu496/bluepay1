@@ -6,6 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { GoogleAuthButton } from "@/components/google-auth-button"
 
 export default function GetStartedPage() {
   const router = useRouter()
@@ -103,6 +104,8 @@ export default function GetStartedPage() {
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
+          <GoogleAuthButton />
+
           {/* Full Name Input with White Border */}
           <div>
             <input
