@@ -43,8 +43,9 @@ export function GoogleAuthButton() {
       await signInWithGoogle()
       router.push("/dashboard")
     } catch (authError) {
-      const code = authError instanceof FirebaseError ? authError.code : ""
-      setError(code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : "Google sign-in is unavailable right now. Please try email login.")
+      const code = authError instanceof FirebaseError ? authError.code : "unknown"
+      console.error("[v0] Firebase Google sign-in failed", authError)
+      setError(code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : `Google sign-in failed (${code}). Check Firebase Authorized Domains and Google provider settings.`)
       setIsLoading(false)
     }
   }
