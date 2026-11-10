@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { signOut as signOutFirebase } from "@/lib/firebase"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -18,7 +19,8 @@ export default function ProfilePage() {
     }
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutFirebase().catch(() => undefined)
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")

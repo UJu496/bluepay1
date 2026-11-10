@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { formatCurrency } from "@/lib/utils"
+import { signOut as signOutFirebase } from "@/lib/firebase"
 import {
   Menu,
   Bell,
@@ -444,7 +445,8 @@ export default function DashboardPage() {
     router.push("/profile")
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutFirebase().catch(() => undefined)
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")

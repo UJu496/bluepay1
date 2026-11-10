@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { createAuthClient } from "@neondatabase/auth"
-
-const authClient = createAuthClient(process.env.NEXT_PUBLIC_NEON_AUTH_URL ?? "")
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { FirebaseError } from "firebase/app"
+import { monitorAuthState, signInWithGoogle } from "@/lib/firebase"
 
 function GoogleMark() {
   return (
@@ -17,20 +17,24 @@ function GoogleMark() {
 }
 
 export function GoogleAuthButton() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  useEffect(() => monitorAuthState((user) => {
+    if (user) router.push("/dashboard")
+  }), [router])
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     setError("")
 
-    const result = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    })
-
-    if (result.error) {
-      setError("Google sign-in is unavailable right now. Please try email login.")
+    try {
+      await signInWithGoogle()
+      router.push("/dashboard")
+    } catch (authError) {
+      const code = authError instanceof FirebaseError ? authError.code : ""
+      setError(code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : "Google sign-in is unavailable right now. Please try email login.")
       setIsLoading(false)
     }
   }
