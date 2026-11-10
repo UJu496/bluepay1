@@ -1,8 +1,20 @@
 import { getApp, getApps, initializeApp } from "firebase/app"
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, setPersistence, browserLocalPersistence, signInWithPopup, signOut as firebaseSignOut, type Auth, type User } from "firebase/auth"
+import {
+  browserLocalPersistence,
+  getAuth,
+  getRedirectResult,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut as firebaseSignOut,
+  type Auth,
+  type User,
+} from "firebase/auth"
 
 let auth: Auth | undefined
-let persistenceConfigured = false
+let persistencePromise: Promise<void> | undefined
 
 function getFirebaseAuth() {
   if (typeof window === "undefined") throw new Error("Firebase Authentication is browser-only")
@@ -18,16 +30,29 @@ function getFirebaseAuth() {
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
     auth = getAuth(app)
   }
-  if (!persistenceConfigured) {
-    persistenceConfigured = true
-    void setPersistence(auth, browserLocalPersistence)
-  }
+  persistencePromise ??= setPersistence(auth, browserLocalPersistence)
   return auth
 }
 
 export async function signInWithGoogle() {
+  const firebaseAuth = getFirebaseAuth()
+  await (persistencePromise ?? setPersistence(firebaseAuth, browserLocalPersistence))
   const provider = new GoogleAuthProvider()
-  return signInWithPopup(getFirebaseAuth(), provider)
+
+  try {
+    return await signInWithPopup(firebaseAuth, provider)
+  } catch (error) {
+    const code = error instanceof Error && "code" in error ? String(error.code) : ""
+    if (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment") {
+      await signInWithRedirect(firebaseAuth, provider)
+      return null
+    }
+    throw error
+  }
+}
+
+export function completeGoogleRedirect() {
+  return getRedirectResult(getFirebaseAuth())
 }
 
 export function monitorAuthState(callback: (user: User | null) => void) {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FirebaseError } from "firebase/app"
-import { monitorAuthState, signInWithGoogle } from "@/lib/firebase"
+import { completeGoogleRedirect, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
 
 function GoogleMark() {
   return (
@@ -21,9 +21,19 @@ export function GoogleAuthButton() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
-  useEffect(() => monitorAuthState((user) => {
-    if (user) router.push("/dashboard")
-  }), [router])
+  useEffect(() => {
+    let active = true
+    void completeGoogleRedirect().then((result) => {
+      if (active && result?.user) router.push("/dashboard")
+    }).catch(() => undefined)
+    const unsubscribe = monitorAuthState((user) => {
+      if (active && user) router.push("/dashboard")
+    })
+    return () => {
+      active = false
+      unsubscribe()
+    }
+  }, [router])
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
