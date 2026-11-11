@@ -5,6 +5,16 @@ import { useRouter } from "next/navigation"
 import { FirebaseError } from "firebase/app"
 import { completeGoogleRedirect, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
 
+function describeGoogleAuthError(error: unknown, phase: string) {
+  if (error instanceof FirebaseError) {
+    return `${phase} — Firebase error ${error.code}: ${error.message}`
+  }
+  if (error instanceof Error) {
+    return `${phase} — application error ${error.name}: ${error.message}`
+  }
+  return `${phase} — unknown error: ${String(error)}`
+}
+
 function GoogleMark() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
@@ -40,17 +50,29 @@ export function GoogleAuthButton() {
   useEffect(() => {
     let active = true
     void completeGoogleRedirect().then((result) => {
-      if (active && result?.user) completeLogin(result.user)
+      if (!active || !result?.user) return
+      try {
+        completeLogin(result.user)
+      } catch (handoffError) {
+        setError(describeGoogleAuthError(handoffError, "Google redirect dashboard handoff"))
+      }
     }).catch((redirectError) => {
       if (!active) return
-      const code = redirectError instanceof FirebaseError ? redirectError.code : "unknown"
+      const code = redirectError instanceof FirebaseError ? redirectError.code : ""
       if (code !== "auth/no-auth-event") {
         console.error("[v0] Firebase Google redirect failed", redirectError)
-        setError(`Google sign-in could not be completed (${code}). Please try again.`)
+        setError(describeGoogleAuthError(redirectError, "Google OAuth redirect callback"))
       }
     })
     const unsubscribe = monitorAuthState((user) => {
-      if (active && user) completeLogin(user)
+      if (!active || !user) return
+      try {
+        completeLogin(user)
+      } catch (handoffError) {
+        setError(describeGoogleAuthError(handoffError, "Google auth-state dashboard handoff"))
+      }
+    }, (authStateError) => {
+      if (active) setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
     })
     return () => {
       active = false
@@ -62,14 +84,23 @@ export function GoogleAuthButton() {
     setIsLoading(true)
     setError("")
 
+    let result
     try {
-      const result = await signInWithGoogle()
-      if (result?.user) completeLogin(result.user)
+      result = await signInWithGoogle()
     } catch (authError) {
-      const code = authError instanceof FirebaseError ? authError.code : "unknown"
-      console.error("[v0] Firebase Google sign-in failed", authError)
-      setError(code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : `Google sign-in failed (${code}). Check Firebase Authorized Domains and Google provider settings.`)
+      console.error("[v0] Google popup sign-in failed", authError)
+      setError(describeGoogleAuthError(authError, "Google popup sign-in"))
       setIsLoading(false)
+      return
+    }
+
+    if (result?.user) {
+      try {
+        completeLogin(result.user)
+      } catch (handoffError) {
+        setError(describeGoogleAuthError(handoffError, "Google sign-in dashboard handoff"))
+        setIsLoading(false)
+      }
     }
   }
 
@@ -84,7 +115,7 @@ export function GoogleAuthButton() {
         <GoogleMark />
         {isLoading ? "Connecting..." : "Continue with Google"}
       </button>
-      {error && <p className="text-center text-xs text-red-100">{error}</p>}
+      {error && <p role="alert" aria-live="assertive" className="break-words rounded-lg border border-red-300/40 bg-red-950/30 p-3 text-left text-xs leading-relaxed text-red-100">{error}</p>}
       <div className="flex items-center gap-3 py-1 text-white/90" aria-label="or">
         <span className="h-px flex-1 bg-white/50" />
         <span className="text-xs font-semibold">OR</span>

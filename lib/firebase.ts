@@ -82,8 +82,11 @@ export function completeGoogleRedirect() {
   return getRedirectResult(getFirebaseAuth())
 }
 
-export function monitorAuthState(callback: (user: User | null) => void) {
-  return onAuthStateChanged(getFirebaseAuth(), callback)
+export function monitorAuthState(
+  callback: (user: User | null) => void,
+  onError?: (error: Error) => void,
+) {
+  return onAuthStateChanged(getFirebaseAuth(), callback, onError)
 }
 
 export function signOut() {
