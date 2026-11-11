@@ -15,6 +15,35 @@ function describeGoogleAuthError(error: unknown, phase: string) {
   return `${phase} — unknown error: ${String(error)}`
 }
 
+function getSafeGoogleErrorDetails(error: unknown) {
+  const value = error && typeof error === "object" ? error as Record<string, unknown> : {}
+  const customData = value.customData && typeof value.customData === "object"
+    ? value.customData as Record<string, unknown>
+    : undefined
+  const safeCustomData = customData
+    ? Object.fromEntries(Object.entries(customData).map(([key, item]) => [
+        key,
+        /token|credential|password|secret|email|code/i.test(key)
+          ? "[redacted]"
+          : item && typeof item === "object"
+            ? `[object keys: ${Object.keys(item).join(", ")}]`
+            : item,
+      ]))
+    : undefined
+
+  return {
+    name: error instanceof Error ? error.name : typeof error,
+    code: typeof value.code === "string" ? value.code : null,
+    message: error instanceof Error ? error.message : String(error),
+    customDataKeys: customData ? Object.keys(customData) : [],
+    customData: safeCustomData,
+    href: window.location.href,
+    hostname: window.location.hostname,
+    origin: window.location.origin,
+    isTopFrame: window.self === window.top,
+  }
+}
+
 function GoogleMark() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
@@ -60,7 +89,7 @@ export function GoogleAuthButton() {
       if (!active) return
       const code = redirectError instanceof FirebaseError ? redirectError.code : ""
       if (code !== "auth/no-auth-event") {
-        console.error("[v0] Firebase Google redirect failed", redirectError)
+        console.error("[v0] Google redirect callback error", JSON.stringify(getSafeGoogleErrorDetails(redirectError)))
         setError(describeGoogleAuthError(redirectError, "Google OAuth redirect callback"))
       }
     })
@@ -72,7 +101,10 @@ export function GoogleAuthButton() {
         setError(describeGoogleAuthError(handoffError, "Google auth-state dashboard handoff"))
       }
     }, (authStateError) => {
-      if (active) setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
+      if (active) {
+        console.error("[v0] Google auth-state observer error", JSON.stringify(getSafeGoogleErrorDetails(authStateError)))
+        setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
+      }
     })
     return () => {
       active = false
@@ -88,7 +120,7 @@ export function GoogleAuthButton() {
     try {
       result = await signInWithGoogle()
     } catch (authError) {
-      console.error("[v0] Google popup sign-in failed", authError)
+      console.error("[v0] Google popup sign-in error", JSON.stringify(getSafeGoogleErrorDetails(authError)))
       setError(describeGoogleAuthError(authError, "Google popup sign-in"))
       setIsLoading(false)
       return
