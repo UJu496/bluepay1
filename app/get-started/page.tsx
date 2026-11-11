@@ -21,7 +21,6 @@ export default function GetStartedPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [showEmailForm, setShowEmailForm] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -108,7 +107,8 @@ export default function GetStartedPage() {
       <div className="flex-1 flex flex-col items-center justify-center">
         {/* Welcome Section */}
         <div className="text-center mb-4 w-full max-w-md">
-          <h1 className="text-white text-xl font-bold mb-4">Welcome!</h1>
+          <p className="text-white text-lg font-bold tracking-[0.18em] mb-2">BLUEPAY</p>
+          <h1 className="text-white text-xl font-bold mb-4">Create Account</h1>
           <p className="text-white text-sm leading-relaxed">
             Get your account ready and instantly start buying, selling airtime and data online and start paying all your bills in cheaper price.
           </p>
@@ -116,9 +116,7 @@ export default function GetStartedPage() {
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-          <GoogleAuthButton onContinueWithEmail={() => setShowEmailForm(true)} emailFormOpen={showEmailForm} />
-
-          {showEmailForm && <>
+          <GoogleAuthButton />
           {/* Full Name Input with White Border */}
           <div>
             <input
@@ -135,8 +133,9 @@ export default function GetStartedPage() {
 
           {/* Email Input */}
           <div>
-            <label className="block text-white text-xs mb-1">Your Email</label>
+            <label className="block text-white text-xs mb-1" htmlFor="signup-email">Email Address</label>
             <input
+              id="signup-email"
               type="email"
               name="email"
               placeholder="Enter your email"
@@ -149,9 +148,10 @@ export default function GetStartedPage() {
 
           {/* Password Input */}
           <div>
-            <label className="block text-white text-xs mb-1">Password</label>
+            <label className="block text-white text-xs mb-1" htmlFor="signup-password">Password</label>
             <div className="relative">
               <input
+                id="signup-password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Enter your password"
@@ -212,7 +212,6 @@ export default function GetStartedPage() {
           >
             {isLoading ? "Creating..." : "Create Account"}
           </button>
-          </>}
         </form>
 
         {/* Sign In Link */}
@@ -220,7 +219,7 @@ export default function GetStartedPage() {
           <span className="text-white text-sm">
             Already have an account?{" "}
             <Link href="/login" className="underline hover:text-white/80">
-              Sign in
+              Sign In
             </Link>
           </span>
         </div>

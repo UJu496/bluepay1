@@ -16,7 +16,7 @@ function GoogleMark() {
   )
 }
 
-export function GoogleAuthButton({ onContinueWithEmail, emailFormOpen = false }: { onContinueWithEmail?: () => void; emailFormOpen?: boolean }) {
+export function GoogleAuthButton() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -90,11 +90,6 @@ export function GoogleAuthButton({ onContinueWithEmail, emailFormOpen = false }:
         <span className="text-xs font-semibold">OR</span>
         <span className="h-px flex-1 bg-white/50" />
       </div>
-      {!emailFormOpen && onContinueWithEmail && (
-        <button type="button" onClick={onContinueWithEmail} className="w-full rounded-full border border-white/70 bg-transparent px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10">
-          Continue with Email
-        </button>
-      )}
     </div>
   )
 }

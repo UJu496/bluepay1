@@ -20,7 +20,6 @@ export default function LoginPage() {
   const [welcomeUser, setWelcomeUser] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [showEmailForm, setShowEmailForm] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -117,25 +116,23 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col items-center justify-center">
         <div className="text-center mb-6">
           <h1 className="text-white text-xl font-bold mb-2">BLUEPAY</h1>
-          <h2 className="text-white text-xl font-bold mb-3">Sign In</h2>
+          <h2 className="text-white text-xl font-bold mb-3">Welcome Back</h2>
           <p className="text-white text-sm leading-relaxed mb-6 max-w-md">
             Welcome back! Sign in to access your account and continue managing your transactions.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-          <GoogleAuthButton onContinueWithEmail={() => setShowEmailForm(true)} emailFormOpen={showEmailForm} />
-
-          {showEmailForm && <>
+          <GoogleAuthButton />
           <div>
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              aria-label="Email Address"
+              placeholder="Email Address"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full rounded-xl border border-white/35 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/70 outline-none transition focus:border-white focus:ring-2 focus:ring-white/25"
               required
             />
           </div>
@@ -147,8 +144,7 @@ export default function LoginPage() {
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 pr-10 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full rounded-xl border border-white/35 bg-white/10 px-4 py-3 pr-10 text-sm text-white placeholder-white/70 outline-none transition focus:border-white focus:ring-2 focus:ring-white/25"
               required
             />
             <button
@@ -158,6 +154,10 @@ export default function LoginPage() {
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
+          </div>
+
+          <div className="text-right">
+            <Link href="/forgot-password" className="text-white underline text-sm">Forgot Password?</Link>
           </div>
 
           {errorMessage && (
@@ -174,20 +174,13 @@ export default function LoginPage() {
           >
             {isLoading ? "Signing In..." : "Login"}
           </button>
-          </>}
         </form>
-
-        {showEmailForm && <div className="mt-4 text-center">
-          <Link href="/forgot-password" className="text-white underline text-sm">
-            Forgot Password?
-          </Link>
-        </div>}
 
         <div className="mt-3 text-center">
           <span className="text-white text-sm">
             Don't have an account?{" "}
             <Link href="/get-started" className="underline">
-              Create account
+              Create Account
             </Link>
           </span>
         </div>
