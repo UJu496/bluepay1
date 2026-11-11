@@ -6,8 +6,12 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
+  createUserWithEmailAndPassword,
+  updateProfile,
   signOut as firebaseSignOut,
   type Auth,
   type User,
@@ -38,6 +42,11 @@ export async function signInWithGoogle() {
   const firebaseAuth = getFirebaseAuth()
   await (persistencePromise ?? setPersistence(firebaseAuth, browserLocalPersistence))
   const provider = new GoogleAuthProvider()
+  const isMobileBrowser = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(pointer: coarse)").matches
+  if (isMobileBrowser) {
+    await signInWithRedirect(firebaseAuth, provider)
+    return null
+  }
 
   try {
     return await signInWithPopup(firebaseAuth, provider)
@@ -49,6 +58,24 @@ export async function signInWithGoogle() {
     }
     throw error
   }
+}
+
+export async function signInWithEmail(email: string, password: string) {
+  const firebaseAuth = getFirebaseAuth()
+  await (persistencePromise ?? setPersistence(firebaseAuth, browserLocalPersistence))
+  return signInWithEmailAndPassword(firebaseAuth, email.trim(), password)
+}
+
+export async function registerWithEmail(name: string, email: string, password: string) {
+  const firebaseAuth = getFirebaseAuth()
+  await (persistencePromise ?? setPersistence(firebaseAuth, browserLocalPersistence))
+  const credential = await createUserWithEmailAndPassword(firebaseAuth, email.trim(), password)
+  await updateProfile(credential.user, { displayName: name.trim() })
+  return credential
+}
+
+export function requestPasswordReset(email: string) {
+  return sendPasswordResetEmail(getFirebaseAuth(), email.trim())
 }
 
 export function completeGoogleRedirect() {

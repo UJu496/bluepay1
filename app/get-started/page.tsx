@@ -7,6 +7,8 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { GoogleAuthButton } from "@/components/google-auth-button"
+import { registerWithEmail } from "@/lib/firebase"
+import { FirebaseError } from "firebase/app"
 
 export default function GetStartedPage() {
   const router = useRouter()
@@ -18,6 +20,8 @@ export default function GetStartedPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [showEmailForm, setShowEmailForm] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -41,33 +45,41 @@ export default function GetStartedPage() {
       ])
     }
 
-    setIsLoading(true)
-
-    const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]")
-    const existingUser = registeredUsers.find((user: any) => user.email === formData.email)
-
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-
-    if (existingUser) {
-      setErrorMessage("EMAIL and NAME Already Registered")
-      setIsLoading(false)
-      setTimeout(() => {
-        router.push("/login")
-      }, 2000)
+    setErrorMessage("")
+    if (formData.password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.")
       return
     }
 
-    const newUser = {
-      ...formData,
-      registeredAt: new Date().toISOString(),
-      hasCompletedOnboarding: true,
+    setIsLoading(true)
+    try {
+      const credential = await registerWithEmail(formData.fullName, formData.email, formData.password)
+      const user = credential.user
+      const userData = {
+        fullName: user.displayName || formData.fullName.trim(),
+        email: user.email || formData.email.trim(),
+        photoURL: user.photoURL || "",
+        uid: user.uid,
+        registeredAt: new Date().toISOString(),
+        hasCompletedOnboarding: true,
+      }
+      localStorage.setItem("userData", JSON.stringify(userData))
+      setIsLoading(false)
+      router.replace("/create-pin")
+    } catch (error) {
+      const code = error instanceof FirebaseError ? error.code : "unknown"
+      const message = code === "auth/email-already-in-use"
+        ? "An account with this email already exists. Please sign in."
+        : code === "auth/weak-password"
+          ? "Choose a stronger password with at least 6 characters."
+        : code === "auth/invalid-email"
+          ? "Enter a valid email address."
+          : code === "auth/operation-not-allowed"
+            ? "Email and password registration is not enabled for this Firebase project. Enable the Email/Password provider in Firebase Authentication settings."
+            : `Unable to create account (${code}). Please try again.`
+      setErrorMessage(message)
+      setIsLoading(false)
     }
-    registeredUsers.push(newUser)
-    localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers))
-    localStorage.setItem("userData", JSON.stringify(newUser))
-
-    setIsLoading(false)
-    router.push("/create-pin")
   }
 
   if (isLoading) {
@@ -104,8 +116,9 @@ export default function GetStartedPage() {
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-          <GoogleAuthButton />
+          <GoogleAuthButton onContinueWithEmail={() => setShowEmailForm(true)} emailFormOpen={showEmailForm} />
 
+          {showEmailForm && <>
           {/* Full Name Input with White Border */}
           <div>
             <input
@@ -157,6 +170,23 @@ export default function GetStartedPage() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-white text-xs mb-1" htmlFor="confirm-password">Confirm Password</label>
+            <input
+              id="confirm-password"
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(event) => {
+                setConfirmPassword(event.target.value)
+                if (errorMessage) setErrorMessage("")
+              }}
+              className="w-full px-5 py-3 rounded-lg border border-white/30 text-white placeholder-white/50 bg-white/5 transition-all focus:outline-none focus:ring-2 focus:ring-white/30 text-sm"
+              required
+            />
+          </div>
+
           {/* Terms & Conditions */}
           <p className="text-white text-xs leading-relaxed pt-1">
             Any further actions indicates that you agree with our{" "}
@@ -170,7 +200,6 @@ export default function GetStartedPage() {
           {errorMessage && (
             <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 text-center">
               <p className="text-white font-semibold text-xs">{errorMessage}</p>
-              <p className="text-white/80 text-xs mt-1">Redirecting to login...</p>
             </div>
           )}
 
@@ -181,8 +210,9 @@ export default function GetStartedPage() {
             className="w-full py-3 rounded-full bg-white font-bold text-base disabled:opacity-50 transition-all hover:shadow-lg"
             style={{ color: "#0000FF" }}
           >
-            {isLoading ? "Creating..." : "Create account"}
+            {isLoading ? "Creating..." : "Create Account"}
           </button>
+          </>}
         </form>
 
         {/* Sign In Link */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FirebaseError } from "firebase/app"
 import { completeGoogleRedirect, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
@@ -16,18 +16,41 @@ function GoogleMark() {
   )
 }
 
-export function GoogleAuthButton() {
+export function GoogleAuthButton({ onContinueWithEmail, emailFormOpen = false }: { onContinueWithEmail?: () => void; emailFormOpen?: boolean }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const navigationStarted = useRef(false)
+
+  const completeLogin = (user: import("firebase/auth").User) => {
+    const previous = JSON.parse(localStorage.getItem("userData") || "{}")
+    localStorage.setItem("userData", JSON.stringify({
+      ...previous,
+      fullName: user.displayName || previous.fullName || "Account holder",
+      email: user.email || previous.email || "",
+      photoURL: user.photoURL || previous.photoURL || "",
+      uid: user.uid,
+    }))
+    if (!navigationStarted.current) {
+      navigationStarted.current = true
+      router.replace("/dashboard")
+    }
+  }
 
   useEffect(() => {
     let active = true
     void completeGoogleRedirect().then((result) => {
-      if (active && result?.user) router.push("/dashboard")
-    }).catch(() => undefined)
+      if (active && result?.user) completeLogin(result.user)
+    }).catch((redirectError) => {
+      if (!active) return
+      const code = redirectError instanceof FirebaseError ? redirectError.code : "unknown"
+      if (code !== "auth/no-auth-event") {
+        console.error("[v0] Firebase Google redirect failed", redirectError)
+        setError(`Google sign-in could not be completed (${code}). Please try again.`)
+      }
+    })
     const unsubscribe = monitorAuthState((user) => {
-      if (active && user) router.push("/dashboard")
+      if (active && user) completeLogin(user)
     })
     return () => {
       active = false
@@ -40,8 +63,8 @@ export function GoogleAuthButton() {
     setError("")
 
     try {
-      await signInWithGoogle()
-      router.push("/dashboard")
+      const result = await signInWithGoogle()
+      if (result?.user) completeLogin(result.user)
     } catch (authError) {
       const code = authError instanceof FirebaseError ? authError.code : "unknown"
       console.error("[v0] Firebase Google sign-in failed", authError)
@@ -67,6 +90,11 @@ export function GoogleAuthButton() {
         <span className="text-xs font-semibold">OR</span>
         <span className="h-px flex-1 bg-white/50" />
       </div>
+      {!emailFormOpen && onContinueWithEmail && (
+        <button type="button" onClick={onContinueWithEmail} className="w-full rounded-full border border-white/70 bg-transparent px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10">
+          Continue with Email
+        </button>
+      )}
     </div>
   )
 }
