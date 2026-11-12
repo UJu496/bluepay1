@@ -7,11 +7,13 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { GoogleAuthButton } from "@/components/google-auth-button"
-import { registerWithEmail } from "@/lib/firebase"
+import { getOrCreateBluePayProfile, registerWithEmail } from "@/lib/firebase"
+import { useAuthEntryGuard } from "@/lib/use-auth-entry-guard"
 import { FirebaseError } from "firebase/app"
 
 export default function GetStartedPage() {
   const router = useRouter()
+  const authEntryReady = useAuthEntryGuard()
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -54,15 +56,11 @@ export default function GetStartedPage() {
     try {
       const credential = await registerWithEmail(formData.fullName, formData.email, formData.password)
       const user = credential.user
-      const userData = {
-        fullName: user.displayName || formData.fullName.trim(),
-        email: user.email || formData.email.trim(),
-        photoURL: user.photoURL || "",
-        uid: user.uid,
+      getOrCreateBluePayProfile(user, {
+        fullName: formData.fullName.trim(),
         registeredAt: new Date().toISOString(),
         hasCompletedOnboarding: true,
-      }
-      localStorage.setItem("userData", JSON.stringify(userData))
+      })
       setIsLoading(false)
       router.replace("/create-pin")
     } catch (error) {
@@ -81,7 +79,7 @@ export default function GetStartedPage() {
     }
   }
 
-  if (isLoading) {
+  if (!authEntryReady || isLoading) {
     return (
       <div
         className="min-h-screen px-5 py-4 flex flex-col items-center justify-center"
@@ -89,7 +87,7 @@ export default function GetStartedPage() {
       >
         <div className="text-center">
           <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-white mb-3 mx-auto"></div>
-          <p className="text-white text-lg">Creating your account...</p>
+          <p className="text-white text-lg">{isLoading ? "Creating your account..." : "Checking your session..."}</p>
         </div>
       </div>
     )

@@ -6,11 +6,13 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { GoogleAuthButton } from "@/components/google-auth-button"
-import { signInWithEmail } from "@/lib/firebase"
+import { getOrCreateBluePayProfile, signInWithEmail } from "@/lib/firebase"
+import { useAuthEntryGuard } from "@/lib/use-auth-entry-guard"
 import { FirebaseError } from "firebase/app"
 
 export default function LoginPage() {
   const router = useRouter()
+  const authEntryReady = useAuthEntryGuard()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -48,13 +50,7 @@ export default function LoginPage() {
     try {
       const credential = await signInWithEmail(formData.email, formData.password)
       const user = credential.user
-      const userData = {
-        fullName: user.displayName || user.email?.split("@")[0] || "Account holder",
-        email: user.email || formData.email,
-        photoURL: user.photoURL || "",
-        uid: user.uid,
-      }
-      localStorage.setItem("userData", JSON.stringify(userData))
+      const userData = getOrCreateBluePayProfile(user)
       setWelcomeUser(userData.fullName)
       setShowWelcome(true)
       window.setTimeout(() => router.replace("/dashboard"), 800)
@@ -90,7 +86,7 @@ export default function LoginPage() {
     )
   }
 
-  if (isLoading) {
+  if (!authEntryReady || isLoading) {
     return (
       <div
         className="min-h-screen px-5 py-4 flex flex-col items-center justify-center"
@@ -98,7 +94,7 @@ export default function LoginPage() {
       >
         <div className="text-center">
           <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-white mb-3 mx-auto"></div>
-          <p className="text-white text-lg">Signing you in...</p>
+          <p className="text-white text-lg">{isLoading ? "Signing you in..." : "Checking your session..."}</p>
         </div>
       </div>
     )
