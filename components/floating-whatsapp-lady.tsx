@@ -1,8 +1,24 @@
+"use client"
+
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 const TELEGRAM_GROUP_URL = "https://t.me/bluepay2"
+const WITHDRAWAL_ROUTES = new Set(["/withdraw", "/withdrawal-confirmation", "/withdrawal-success"])
 
 export function FloatingWhatsappLady() {
+  const pathname = usePathname()
+  if (WITHDRAWAL_ROUTES.has(pathname)) {
+    return (
+      <a href={TELEGRAM_GROUP_URL} target="_blank" rel="noopener noreferrer" className="mx-auto flex w-full max-w-md items-center gap-3 px-4 py-4 text-xs text-slate-600">
+        <span className="relative block size-8 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-blue-100">
+          <Image src="/support-lady.png" alt="" fill sizes="32px" className="object-cover object-top" />
+        </span>
+        <span className="font-semibold text-[#0000ff]">Join the BluePay Telegram group</span>
+      </a>
+    )
+  }
+
   return (
     <a
       href={TELEGRAM_GROUP_URL}

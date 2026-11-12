@@ -1,16 +1,26 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { ArrowLeft, CheckCircle2, Clock3, Copy, FileText, Flag, Landmark, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
-
-type Data = { accountName: string; accountNumber: string; selectedBank: string; amount: number; status?: string; reference?: string; transactionId?: string; trackingId?: string; createdAt?: string }
+import { AlertTriangle, ArrowLeft, Landmark } from "lucide-react"
 
 export default function WithdrawalSuccessPage() {
-  const router = useRouter(); const [data, setData] = useState<Data | null>(null)
-  useEffect(() => { const raw = localStorage.getItem("withdrawalData"); if (raw) setData(JSON.parse(raw)) }, [])
-  if (!data) return <main className="grid min-h-screen place-items-center bg-[#f6f8fc] text-xs text-slate-500">No saved transaction found.</main>
-  const status = data.status?.toLowerCase() || "initiated"; const successful = status === "successful"; const failed = status === "failed"; const StatusIcon = successful ? CheckCircle2 : failed ? XCircle : Clock3; const tone = successful ? "emerald" : failed ? "red" : "amber"; const masked = `${data.accountNumber.slice(0, 3)} **** ${data.accountNumber.slice(-2)}`; const createdAt = data.createdAt ? new Date(data.createdAt) : null; const dateLabel = createdAt && !Number.isNaN(createdAt.getTime()) ? createdAt.toLocaleString("en-NG", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded"; const copy = (value: string) => navigator.clipboard?.writeText(value)
-  return <main className="min-h-screen bg-[#f6f8fc] text-slate-950"><header className="bg-[#0000ff] px-3 pb-3 pt-7 text-white"><div className="mx-auto flex max-w-lg items-center gap-2"><button onClick={() => router.push("/dashboard")} aria-label="Back to dashboard" className="rounded-full p-1.5"><ArrowLeft size={17}/></button><div><p className="text-[10px] text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-semibold">Transaction result</h1></div></div></header><section className="mx-auto max-w-lg space-y-2.5 px-3 py-3"><div className={`rounded-2xl border bg-white p-3 shadow-sm ${tone === "emerald" ? "border-emerald-100" : tone === "red" ? "border-red-100" : "border-amber-100"}`}><div className="flex items-center gap-3"><div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${tone === "emerald" ? "bg-emerald-50 text-emerald-600" : tone === "red" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"}`}><StatusIcon size={20}/></div><div className="min-w-0"><div className="flex items-center gap-2"><span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{status}</span><span className="text-xl font-bold">₦{data.amount.toLocaleString("en-NG", { minimumFractionDigits: 2 })}</span></div><p className="truncate text-xs text-slate-500">Transfer to {data.accountName}</p></div></div><p className="mt-2 text-[11px] leading-4 text-slate-600">{successful ? "Withdrawal processed successfully." : failed ? "The withdrawal could not be confirmed." : "Your withdrawal request has been recorded and is awaiting confirmation."}</p></div><div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"><div className="mb-2 flex items-center gap-2"><div className="rounded-lg bg-blue-50 p-2 text-[#0000ff]"><Landmark size={15}/></div><div><p className="text-xs font-semibold">Transaction details</p><p className="text-[11px] text-slate-500">{data.selectedBank} · {masked}</p></div></div><div className="space-y-1.5 text-[11px]"><Row label="Recipient" value={data.accountName}/><Row label="Created" value={dateLabel}/><Row label="BLUEPAY reference" value={data.reference || "Unavailable"} copy={data.reference ? () => copy(data.reference!) : undefined}/><Row label="BLUEPAY transaction ID" value={data.transactionId || "Unavailable"} copy={data.transactionId ? () => copy(data.transactionId!) : undefined}/><Row label="BLUEPAY tracking ID" value={data.trackingId || "Unavailable"}/></div></div><div className="grid grid-cols-3 gap-2"><button onClick={() => window.print()} className="flex h-9 items-center justify-center gap-1 rounded-lg bg-[#0000ff] text-[11px] font-semibold text-white"><FileText size={13}/>Receipt</button><button onClick={() => router.push("/support")} className="flex h-9 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold"><Flag size={13}/>Report</button><button onClick={() => router.push("/dashboard")} className="flex h-9 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold">Dashboard</button></div></section></main>
+  const router = useRouter()
+
+  return (
+    <main className="min-h-screen bg-[#f6f8fc] text-slate-950">
+      <header className="bg-[#0000ff] px-4 pb-5 pt-12 text-white">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <button type="button" onClick={() => router.push("/dashboard")} aria-label="Back to dashboard" className="rounded-full p-2 hover:bg-white/10"><ArrowLeft size={19} /></button>
+          <div><p className="text-xs font-medium text-blue-100">BLUEPAY MOBILE</p><h1 className="text-lg font-semibold">Payout status</h1></div>
+        </div>
+      </header>
+      <section className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-6">
+        <div className="flex size-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-700"><Landmark size={25} /></div>
+        <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">Not sent</p><h2 className="mt-1 text-2xl font-bold tracking-tight">No bank payout was made</h2><p className="mt-2 text-sm leading-6 text-slate-600">The current BLUEPAY withdrawal flow is destination-form only. A local status or saved preview is not proof of a bank transfer.</p></div>
+        <div role="alert" className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-5 text-amber-950"><AlertTriangle aria-hidden="true" className="mt-0.5 shrink-0 text-amber-700" size={18} /><p>No payout provider is connected. No funds were sent or debited by this screen.</p></div>
+        <button type="button" onClick={() => router.replace("/withdraw")} className="h-12 rounded-xl bg-[#0000ff] text-sm font-semibold text-white">Return to destination form</button>
+        <button type="button" onClick={() => router.push("/dashboard")} className="h-11 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700">Go to dashboard</button>
+      </section>
+    </main>
+  )
 }
-function Row({ label, value, copy }: { label: string; value: string; copy?: () => void }) { return <div className="grid grid-cols-[auto_1fr] gap-3 border-b border-slate-100 pb-1.5 last:border-0 last:pb-0"><span className="text-slate-500">{label}</span><span className="flex min-w-0 items-center justify-end gap-1 break-all text-right font-medium">{value}{copy && <button onClick={copy} aria-label={`Copy ${label}`}><Copy size={12} className="shrink-0 text-[#0000ff]"/></button>}</span></div> }
