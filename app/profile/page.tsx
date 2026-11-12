@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
+import { getOrCreateBluePayProfile, monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -16,16 +16,7 @@ export default function ProfilePage() {
     if (storedUserData) setUserData(JSON.parse(storedUserData))
     return monitorAuthState((firebaseUser) => {
       if (!firebaseUser) return
-      const current = JSON.parse(localStorage.getItem("userData") || "{}")
-      const nextUser = {
-        ...current,
-        fullName: firebaseUser.displayName || current.fullName || "Account holder",
-        email: firebaseUser.email || current.email || "",
-        photoURL: firebaseUser.photoURL || current.photoURL || "",
-        uid: firebaseUser.uid,
-      }
-      localStorage.setItem("userData", JSON.stringify(nextUser))
-      setUserData(nextUser)
+      setUserData(getOrCreateBluePayProfile(firebaseUser))
     })
   }, [])
 

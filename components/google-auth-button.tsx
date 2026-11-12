@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FirebaseError } from "firebase/app"
-import { completeGoogleRedirect, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
+import { completeGoogleRedirect, getOrCreateBluePayProfile, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
+import type { User } from "firebase/auth"
 
 function describeGoogleAuthError(error: unknown, phase: string) {
   if (error instanceof FirebaseError) {
@@ -58,33 +59,37 @@ function GoogleMark() {
 export function GoogleAuthButton() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isCompletingRedirect, setIsCompletingRedirect] = useState(true)
   const [error, setError] = useState("")
   const navigationStarted = useRef(false)
 
-  const completeLogin = (user: import("firebase/auth").User) => {
-    const previous = JSON.parse(localStorage.getItem("userData") || "{}")
-    localStorage.setItem("userData", JSON.stringify({
-      ...previous,
-      fullName: user.displayName || previous.fullName || "Account holder",
-      email: user.email || previous.email || "",
-      photoURL: user.photoURL || previous.photoURL || "",
-      uid: user.uid,
-    }))
+  const completeLogin = useCallback((user: User) => {
+    getOrCreateBluePayProfile(user)
     if (!navigationStarted.current) {
       navigationStarted.current = true
       router.replace("/dashboard")
     }
-  }
+  }, [router])
 
   useEffect(() => {
     let active = true
-    void completeGoogleRedirect().then((result) => {
-      if (!active || !result?.user) return
+    let redirectSettled = false
+    let initialAuthStateSettled = false
+
+    const finishInitialChecks = () => {
+      if (active && redirectSettled && initialAuthStateSettled) setIsCompletingRedirect(false)
+    }
+
+    const handoffUser = (user: User, phase: string) => {
       try {
-        completeLogin(result.user)
+        completeLogin(user)
       } catch (handoffError) {
-        setError(describeGoogleAuthError(handoffError, "Google redirect dashboard handoff"))
+        setError(describeGoogleAuthError(handoffError, phase))
       }
+    }
+
+    void completeGoogleRedirect().then((result) => {
+      if (active && result?.user) handoffUser(result.user, "Google redirect dashboard handoff")
     }).catch((redirectError) => {
       if (!active) return
       const code = redirectError instanceof FirebaseError ? redirectError.code : ""
@@ -92,25 +97,29 @@ export function GoogleAuthButton() {
         console.error("[v0] Google redirect callback error", JSON.stringify(getSafeGoogleErrorDetails(redirectError)))
         setError(describeGoogleAuthError(redirectError, "Google OAuth redirect callback"))
       }
+    }).finally(() => {
+      redirectSettled = true
+      finishInitialChecks()
     })
+
     const unsubscribe = monitorAuthState((user) => {
-      if (!active || !user) return
-      try {
-        completeLogin(user)
-      } catch (handoffError) {
-        setError(describeGoogleAuthError(handoffError, "Google auth-state dashboard handoff"))
-      }
+      if (!active || initialAuthStateSettled) return
+      initialAuthStateSettled = true
+      if (user) handoffUser(user, "Google auth-state dashboard handoff")
+      else finishInitialChecks()
     }, (authStateError) => {
-      if (active) {
-        console.error("[v0] Google auth-state observer error", JSON.stringify(getSafeGoogleErrorDetails(authStateError)))
-        setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
-      }
+      if (!active) return
+      initialAuthStateSettled = true
+      console.error("[v0] Google auth-state observer error", JSON.stringify(getSafeGoogleErrorDetails(authStateError)))
+      setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
+      finishInitialChecks()
     })
+
     return () => {
       active = false
       unsubscribe()
     }
-  }, [router])
+  }, [completeLogin])
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
@@ -141,11 +150,11 @@ export function GoogleAuthButton() {
       <button
         type="button"
         onClick={handleGoogleSignIn}
-        disabled={isLoading}
+        disabled={isLoading || isCompletingRedirect}
         className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-colors hover:bg-slate-50 disabled:opacity-60"
       >
         <GoogleMark />
-        {isLoading ? "Connecting..." : "Continue with Google"}
+        {isLoading ? "Connecting..." : isCompletingRedirect ? "Checking Google sign-in..." : "Continue with Google"}
       </button>
       {error && <p role="alert" aria-live="assertive" className="break-words rounded-lg border border-red-300/40 bg-red-950/30 p-3 text-left text-xs leading-relaxed text-red-100">{error}</p>}
       <div className="flex items-center gap-3 py-1 text-white/90" aria-label="or">
