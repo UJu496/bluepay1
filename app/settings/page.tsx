@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { signOut as signOutFirebase } from "@/lib/firebase"
 import {
   ArrowLeft,
   Palette,
@@ -139,8 +140,9 @@ export default function SettingsPage() {
     router.push("/dashboard")
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("userData")
+const handleLogout = async () => {
+  await signOutFirebase().catch(() => undefined)
+  localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")

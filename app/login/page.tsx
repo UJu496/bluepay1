@@ -5,6 +5,9 @@ import Link from "next/link"
 import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { GoogleAuthButton } from "@/components/google-auth-button"
+import { signInWithEmail } from "@/lib/firebase"
+import { FirebaseError } from "firebase/app"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -40,29 +43,33 @@ export default function LoginPage() {
     }
 
     setIsLoading(true)
+    setErrorMessage("")
 
-    const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]")
-    const user = registeredUsers.find((u: any) => u.email === formData.email)
-
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    if (!user) {
-      setErrorMessage("Invalid email or password")
+    try {
+      const credential = await signInWithEmail(formData.email, formData.password)
+      const user = credential.user
+      const userData = {
+        fullName: user.displayName || user.email?.split("@")[0] || "Account holder",
+        email: user.email || formData.email,
+        photoURL: user.photoURL || "",
+        uid: user.uid,
+      }
+      localStorage.setItem("userData", JSON.stringify(userData))
+      setWelcomeUser(userData.fullName)
+      setShowWelcome(true)
+      window.setTimeout(() => router.replace("/dashboard"), 800)
+    } catch (error) {
+      const code = error instanceof FirebaseError ? error.code : "unknown"
+      const message = code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found"
+        ? "Email or password is incorrect."
+        : code === "auth/too-many-requests"
+          ? "Too many attempts. Please wait and try again."
+          : code === "auth/operation-not-allowed"
+            ? "Email and password sign-in is not enabled for this Firebase project. Enable the Email/Password provider in Firebase Authentication settings."
+            : `Unable to sign in (${code}). Please try again.`
+      setErrorMessage(message)
       setIsLoading(false)
-      return
     }
-
-    if (user.password !== formData.password) {
-      setErrorMessage("Wrong password. Please try again.")
-      setIsLoading(false)
-      return
-    }
-
-    localStorage.setItem("userData", JSON.stringify(user))
-    setWelcomeUser(user.fullName)
-    setIsLoading(false)
-
-    router.push("/verify-pin")
   }
 
   if (showWelcome) {
@@ -109,22 +116,23 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col items-center justify-center">
         <div className="text-center mb-6">
           <h1 className="text-white text-xl font-bold mb-2">BLUEPAY</h1>
-          <h2 className="text-white text-xl font-bold mb-3">Sign In</h2>
+          <h2 className="text-white text-xl font-bold mb-3">Welcome Back</h2>
           <p className="text-white text-sm leading-relaxed mb-6 max-w-md">
             Welcome back! Sign in to access your account and continue managing your transactions.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
+          <GoogleAuthButton />
           <div>
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              aria-label="Email Address"
+              placeholder="Email Address"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full rounded-xl border border-white/35 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/70 outline-none transition focus:border-white focus:ring-2 focus:ring-white/25"
               required
             />
           </div>
@@ -136,8 +144,7 @@ export default function LoginPage() {
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 pr-10 rounded-lg border-2 text-white placeholder-white/70 bg-transparent text-sm"
-              style={{ borderColor: "#0000FF" }}
+              className="w-full rounded-xl border border-white/35 bg-white/10 px-4 py-3 pr-10 text-sm text-white placeholder-white/70 outline-none transition focus:border-white focus:ring-2 focus:ring-white/25"
               required
             />
             <button
@@ -147,6 +154,10 @@ export default function LoginPage() {
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
+          </div>
+
+          <div className="text-right">
+            <Link href="/forgot-password" className="text-white underline text-sm">Forgot Password?</Link>
           </div>
 
           {errorMessage && (
@@ -165,17 +176,11 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <Link href="/forgot-password" className="text-white underline text-sm">
-            Forgot Password?
-          </Link>
-        </div>
-
         <div className="mt-3 text-center">
           <span className="text-white text-sm">
             Don't have an account?{" "}
             <Link href="/get-started" className="underline">
-              Create account
+              Create Account
             </Link>
           </span>
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -12,13 +13,24 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) {
-      const user = JSON.parse(storedUserData)
-      setUserData(user)
-    }
+    if (storedUserData) setUserData(JSON.parse(storedUserData))
+    return monitorAuthState((firebaseUser) => {
+      if (!firebaseUser) return
+      const current = JSON.parse(localStorage.getItem("userData") || "{}")
+      const nextUser = {
+        ...current,
+        fullName: firebaseUser.displayName || current.fullName || "Account holder",
+        email: firebaseUser.email || current.email || "",
+        photoURL: firebaseUser.photoURL || current.photoURL || "",
+        uid: firebaseUser.uid,
+      }
+      localStorage.setItem("userData", JSON.stringify(nextUser))
+      setUserData(nextUser)
+    })
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutFirebase().catch(() => undefined)
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
@@ -65,7 +77,7 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center mb-6">
               <div className="relative mb-4">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
-                  <User size={40} className="text-white" />
+                  {userData.photoURL ? <img src={userData.photoURL} alt="Google profile" className="h-full w-full rounded-full object-cover" /> : <User size={40} className="text-white" />}
                 </div>
                 <button 
                   onClick={() => setIsEditing(!isEditing)}

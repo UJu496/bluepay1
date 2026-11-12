@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { formatCurrency } from "@/lib/utils"
+import { monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
 import {
   Menu,
   Bell,
@@ -248,6 +249,21 @@ export default function DashboardPage() {
       setUserProfilePhoto(savedPhoto)
     }
 
+    const unsubscribe = monitorAuthState((firebaseUser) => {
+      if (!firebaseUser) return
+      const current = JSON.parse(localStorage.getItem("userData") || "{}")
+      const nextUser = {
+        ...current,
+        fullName: firebaseUser.displayName || current.fullName || "Account holder",
+        email: firebaseUser.email || current.email || "",
+        photoURL: firebaseUser.photoURL || current.photoURL || "",
+        uid: firebaseUser.uid,
+      }
+      localStorage.setItem("userData", JSON.stringify(nextUser))
+      setUserName(nextUser.fullName)
+      if (nextUser.photoURL) setUserProfilePhoto(nextUser.photoURL)
+    })
+
     const loadBalance = () => {
   const savedBalance = localStorage.getItem("userBalance")
   const authoritativeBalance = savedBalance ? Number.parseInt(savedBalance, 10) : 200000
@@ -310,6 +326,7 @@ export default function DashboardPage() {
     document.addEventListener("visibilitychange", handleVisibilityChange)
 
     return () => {
+      unsubscribe()
       window.removeEventListener("storage", handleStorageChange)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
@@ -444,7 +461,8 @@ export default function DashboardPage() {
     router.push("/profile")
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutFirebase().catch(() => undefined)
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
