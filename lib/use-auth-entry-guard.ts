@@ -11,10 +11,10 @@ export function useAuthEntryGuard() {
   useEffect(() => {
     let active = true
 
-    void resolveInitialFirebaseUser().then((user) => {
+    void resolveInitialFirebaseUser().then(({ user, isNewUser }) => {
       if (!active) return
       if (user) {
-        router.replace("/dashboard")
+        router.replace(isNewUser ? "/create-pin" : "/dashboard")
         return
       }
       setReadyForAnonymousUser(true)

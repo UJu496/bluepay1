@@ -3,11 +3,20 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FirebaseError } from "firebase/app"
-import { completeGoogleRedirect, getOrCreateBluePayProfile, monitorAuthState, signInWithGoogle } from "@/lib/firebase"
-import type { User } from "firebase/auth"
+import { completeGoogleRedirect, getOrCreateBluePayProfile, signInWithGoogle } from "@/lib/firebase"
+import { getAdditionalUserInfo, type User } from "firebase/auth"
 
 function describeGoogleAuthError(error: unknown, phase: string) {
   if (error instanceof FirebaseError) {
+    if (error.code === "auth/popup-blocked") {
+      return `${phase} — Your browser blocked the Google sign-in window. Allow pop-ups for BLUEPAY MOBILE and try again.`
+    }
+    if (error.code === "auth/operation-not-supported-in-this-environment") {
+      return `${phase} — Google sign-in is not supported in this browser. Open BLUEPAY MOBILE in Safari or Chrome and try again.`
+    }
+    if (error.code === "auth/unauthorized-domain") {
+      return `${phase} — This website is not configured for Google sign-in. Please contact BLUEPAY support.`
+    }
     return `${phase} — Firebase error ${error.code}: ${error.message}`
   }
   if (error instanceof Error) {
@@ -63,33 +72,25 @@ export function GoogleAuthButton() {
   const [error, setError] = useState("")
   const navigationStarted = useRef(false)
 
-  const completeLogin = useCallback((user: User) => {
-    getOrCreateBluePayProfile(user)
+  const completeLogin = useCallback((user: User, isNewUser = false) => {
+    getOrCreateBluePayProfile(user, isNewUser ? { hasCompletedOnboarding: false } : {})
     if (!navigationStarted.current) {
       navigationStarted.current = true
-      router.replace("/dashboard")
+      router.replace(isNewUser ? "/create-pin" : "/dashboard")
     }
   }, [router])
 
   useEffect(() => {
     let active = true
-    let redirectSettled = false
-    let initialAuthStateSettled = false
-
-    const finishInitialChecks = () => {
-      if (active && redirectSettled && initialAuthStateSettled) setIsCompletingRedirect(false)
-    }
-
-    const handoffUser = (user: User, phase: string) => {
-      try {
-        completeLogin(user)
-      } catch (handoffError) {
-        setError(describeGoogleAuthError(handoffError, phase))
-      }
-    }
 
     void completeGoogleRedirect().then((result) => {
-      if (active && result?.user) handoffUser(result.user, "Google redirect dashboard handoff")
+      if (!active || !result?.user) return
+      const isNewUser = getAdditionalUserInfo(result)?.isNewUser === true
+      try {
+        completeLogin(result.user, isNewUser)
+      } catch (handoffError) {
+        setError(describeGoogleAuthError(handoffError, "Google redirect dashboard handoff"))
+      }
     }).catch((redirectError) => {
       if (!active) return
       const code = redirectError instanceof FirebaseError ? redirectError.code : ""
@@ -98,26 +99,11 @@ export function GoogleAuthButton() {
         setError(describeGoogleAuthError(redirectError, "Google OAuth redirect callback"))
       }
     }).finally(() => {
-      redirectSettled = true
-      finishInitialChecks()
-    })
-
-    const unsubscribe = monitorAuthState((user) => {
-      if (!active || initialAuthStateSettled) return
-      initialAuthStateSettled = true
-      if (user) handoffUser(user, "Google auth-state dashboard handoff")
-      else finishInitialChecks()
-    }, (authStateError) => {
-      if (!active) return
-      initialAuthStateSettled = true
-      console.error("[v0] Google auth-state observer error", JSON.stringify(getSafeGoogleErrorDetails(authStateError)))
-      setError(describeGoogleAuthError(authStateError, "Firebase auth-state observer"))
-      finishInitialChecks()
+      if (active) setIsCompletingRedirect(false)
     })
 
     return () => {
       active = false
-      unsubscribe()
     }
   }, [completeLogin])
 
@@ -137,7 +123,7 @@ export function GoogleAuthButton() {
 
     if (result?.user) {
       try {
-        completeLogin(result.user)
+        completeLogin(result.user, getAdditionalUserInfo(result)?.isNewUser === true)
       } catch (handoffError) {
         setError(describeGoogleAuthError(handoffError, "Google sign-in dashboard handoff"))
         setIsLoading(false)

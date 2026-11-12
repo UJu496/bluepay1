@@ -3,13 +3,13 @@ import {
   browserLocalPersistence,
   getAuth,
   getRedirectResult,
+  getAdditionalUserInfo,
   GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   createUserWithEmailAndPassword,
   updateProfile,
   signOut as firebaseSignOut,
@@ -50,23 +50,7 @@ async function getReadyFirebaseAuth() {
 
 export async function signInWithGoogle() {
   const firebaseAuth = await getReadyFirebaseAuth()
-  const provider = new GoogleAuthProvider()
-  const isMobileBrowser = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia("(pointer: coarse)").matches
-  if (isMobileBrowser) {
-    await signInWithRedirect(firebaseAuth, provider)
-    return null
-  }
-
-  try {
-    return await signInWithPopup(firebaseAuth, provider)
-  } catch (error) {
-    const code = error instanceof Error && "code" in error ? String(error.code) : ""
-    if (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment") {
-      await signInWithRedirect(firebaseAuth, provider)
-      return null
-    }
-    throw error
-  }
+  return signInWithPopup(firebaseAuth, new GoogleAuthProvider())
 }
 
 export async function signInWithEmail(email: string, password: string) {
@@ -157,7 +141,10 @@ export async function resolveInitialFirebaseUser() {
     }),
     authStatePromise,
   ])
-  return redirectResult?.user ?? initialUser
+  return {
+    user: redirectResult?.user ?? firebaseAuth.currentUser ?? initialUser,
+    isNewUser: redirectResult ? getAdditionalUserInfo(redirectResult)?.isNewUser === true : false,
+  }
 }
 
 export function monitorAuthState(

@@ -153,8 +153,8 @@ export default function CreatePinPage() {
       {/* PIN Entry Section */}
       <div className="flex-1 px-5 flex flex-col justify-center">
         <div className="text-center mb-4">
-          <h2 className="text-white text-xl font-bold mb-2">Choose Your Security Method</h2>
-          <p className="text-white/80">Create a 4-digit PIN or use fingerprint authentication</p>
+          <h2 className="text-white text-xl font-bold mb-2">Account created successfully</h2>
+          <p className="text-white/80">Welcome to BLUEPAY MOBILE. Create a 4-digit PIN or choose fingerprint authentication to secure your account.</p>
         </div>
 
         {/* PIN Indicators */}
