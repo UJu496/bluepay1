@@ -240,12 +240,12 @@ export function WithdrawalDestinationForm() {
         <div className="rounded-2xl bg-[#101a43] p-4 text-white shadow-md">
           <div className="flex items-center gap-2 text-xs text-blue-100"><WalletCards aria-hidden="true" /> Local display balance</div>
           <p className="mt-2 text-2xl font-bold">NGN {balance.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-          <p className="mt-1 text-[11px] leading-4 text-blue-100">Device-stored preview only. This amount is not checked against a server or available for payout.</p>
+          <p className="mt-1 text-[11px] leading-4 text-blue-100">BLUEPAY MOBILE is expanding across Africa. Nigeria, Ghana, and Cameroon are listed here, with more countries coming soon.</p>
         </div>
 
-        <div role="note" className="flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-sm text-blue-950">
-          <Info aria-hidden="true" className="mt-0.5 shrink-0 text-[#0000ff]" size={18} />
-          <p><strong>Set up your preferred destination.</strong> Add your bank or mobile money details as they appear on your account. This form checks formatting only; live withdrawals will be available once BLUEPAY payout processing is enabled. Your details stay on this page and are not saved or sent.</p>
+        <div role="note" className="flex items-start gap-2 rounded-xl border border-blue-100 bg-blue-50 p-2 text-[11px] leading-4 text-blue-950">
+          <Info aria-hidden="true" className="mt-0.5 shrink-0 text-[#0000ff]" size={15} />
+          <p><strong>Choose a supported bank or wallet.</strong> We check the format only; live withdrawals will follow as payout coverage expands. Your details are not saved or sent.</p>
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-3 rounded-2xl border border-[#e7eaf2] bg-white p-4 shadow-sm">
