@@ -18,15 +18,18 @@ export async function GET() {
   } catch {
     return NextResponse.json({ banks: localBanks, source: "local" })
   }
-  if (!response.ok || !payload.status) {
+  if (!response.ok || !payload.status || !Array.isArray(payload.data)) {
     return NextResponse.json({ banks: localBanks, source: "local" })
   }
 
   const banks = payload.data.map((bank: { id: number; name: string; code: string; logo?: string }) => ({
-    id: String(bank.id),
+    id: `ng-${bank.id}`,
     name: bank.name,
     code: bank.code,
     logo: bank.logo ?? null,
+    providerSupported: false as const,
+    category: "Commercial bank" as const,
+    identifier: "bank-account" as const,
   }))
   return NextResponse.json({ banks })
 }
