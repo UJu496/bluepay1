@@ -3,7 +3,6 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { getOrCreateBluePayProfile, monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -13,15 +12,13 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) setUserData(JSON.parse(storedUserData))
-    return monitorAuthState((firebaseUser) => {
-      if (!firebaseUser) return
-      setUserData(getOrCreateBluePayProfile(firebaseUser))
-    })
+    if (storedUserData) {
+      const user = JSON.parse(storedUserData)
+      setUserData(user)
+    }
   }, [])
 
-  const handleLogout = async () => {
-    await signOutFirebase().catch(() => undefined)
+  const handleLogout = () => {
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
@@ -68,7 +65,7 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center mb-6">
               <div className="relative mb-4">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
-                  {userData.photoURL ? <img src={userData.photoURL} alt="Google profile" className="h-full w-full rounded-full object-cover" /> : <User size={40} className="text-white" />}
+                  <User size={40} className="text-white" />
                 </div>
                 <button 
                   onClick={() => setIsEditing(!isEditing)}

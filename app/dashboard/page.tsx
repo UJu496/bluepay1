@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { formatCurrency } from "@/lib/utils"
-import { getOrCreateBluePayProfile, monitorAuthState, signOut as signOutFirebase } from "@/lib/firebase"
 import {
   Menu,
   Bell,
@@ -249,13 +248,6 @@ export default function DashboardPage() {
       setUserProfilePhoto(savedPhoto)
     }
 
-    const unsubscribe = monitorAuthState((firebaseUser) => {
-      if (!firebaseUser) return
-      const nextUser = getOrCreateBluePayProfile(firebaseUser)
-      setUserName(nextUser.fullName)
-      if (nextUser.photoURL) setUserProfilePhoto(nextUser.photoURL)
-    })
-
     const loadBalance = () => {
   const savedBalance = localStorage.getItem("userBalance")
   const authoritativeBalance = savedBalance ? Number.parseInt(savedBalance, 10) : 200000
@@ -318,7 +310,6 @@ export default function DashboardPage() {
     document.addEventListener("visibilitychange", handleVisibilityChange)
 
     return () => {
-      unsubscribe()
       window.removeEventListener("storage", handleStorageChange)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
@@ -453,8 +444,7 @@ export default function DashboardPage() {
     router.push("/profile")
   }
 
-  const handleLogout = async () => {
-    await signOutFirebase().catch(() => undefined)
+  const handleLogout = () => {
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
