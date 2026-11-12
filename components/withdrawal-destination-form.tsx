@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import type { FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { AlertTriangle, ArrowLeft, Check, ChevronDown, Info, Landmark, Search, UserRound, WalletCards } from "lucide-react"
+import { ArrowLeft, Check, ChevronDown, Info, Landmark, Search, UserRound, WalletCards } from "lucide-react"
 import { BLUEPAY_BPC_CODE } from "@/lib/bpc"
 import { africanCountries, getAccountNumberGuidance, getAccountNumberMaxLength, getBanksForCountry, isValidAccountNumber } from "@/lib/banks"
 import type { Bank } from "@/lib/banks"
@@ -243,9 +243,9 @@ export function WithdrawalDestinationForm() {
           <p className="mt-1 text-[11px] leading-4 text-blue-100">Device-stored preview only. This amount is not checked against a server or available for payout.</p>
         </div>
 
-        <div role="note" className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
-          <AlertTriangle aria-hidden="true" className="mt-0.5 shrink-0 text-amber-700" size={18} />
-          <p><strong>Destination form only.</strong> BLUEPAY payouts are not connected. This page will not send money, create a withdrawal, or debit your balance.</p>
+        <div role="note" className="flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-sm text-blue-950">
+          <Info aria-hidden="true" className="mt-0.5 shrink-0 text-[#0000ff]" size={18} />
+          <p><strong>Set up your preferred destination.</strong> Add your bank or mobile money details as they appear on your account. This form checks formatting only; live withdrawals will be available once BLUEPAY payout processing is enabled. Your details stay on this page and are not saved or sent.</p>
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-3 rounded-2xl border border-[#e7eaf2] bg-white p-4 shadow-sm">
