@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Phone, ChevronDown } from "lucide-react"
 import { saveTransaction } from "@/lib/transactions"
-import { BLUEPAY_BPC_CODE } from "@/lib/bpc"
+import { isValidBpcCode } from "@/lib/bpc"
 
 export default function AirtimePage() {
   const router = useRouter()
@@ -33,7 +33,7 @@ export default function AirtimePage() {
       return
     }
 
-    if (bpcCode !== BLUEPAY_BPC_CODE) {
+    if (!isValidBpcCode(bpcCode)) {
       setMessage("Invalid BPC CODE kindly purchase a valid BPC CODE directly from BLUEPAY2026 platform")
       setMessageType("error")
       return
