@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { formatCurrency } from "@/lib/utils"
+import { saveTransaction } from "@/lib/transactions"
 import {
   ArrowLeft,
   Play,
@@ -1145,6 +1146,18 @@ export default function EarnPage() {
         : [...completedTasks.filter((id) => id !== taskId), taskId]
       setCompletedTasks(newCompletedTasks)
       const taskReward = getTaskReward(taskId)
+      const completedTask = tasks.find((task) => task.id === taskId)
+      if (completedTask) {
+        saveTransaction({
+          type: "income",
+          category: "Earn Money",
+          description: `Reward: ${completedTask.title}`,
+          amount: taskReward,
+          date: new Date().toISOString().slice(0, 10),
+          status: "successful",
+          channel: "BLUEPAY MOBILE rewards",
+        })
+      }
       setTotalEarned((prev) => prev + taskReward)
 
       if (isRecurringTask) {
