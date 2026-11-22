@@ -6,6 +6,7 @@ import { ArrowLeft, Check, ChevronDown, Landmark, Search, ShieldCheck, UserRound
 import { saveTransaction } from "@/lib/transactions"
 import { formatCurrency } from "@/lib/utils"
 import { isValidBpcCode } from "@/lib/bpc"
+import { getCurrentUserBankDetails } from "@/lib/user-bank-details"
 import type { Bank } from "@/lib/banks"
 
 const bankLogoDomains: Record<string, string> = {
@@ -77,6 +78,13 @@ export default function WithdrawPage() {
         const data = await response.json()
         if (!response.ok) throw new Error(data.error || "Unable to load banks")
         setBanks(data.banks)
+        const savedDetails = getCurrentUserBankDetails()
+        if (savedDetails) {
+          const matchingBank = data.banks.find((bank: Bank) => bank.name === savedDetails.bankName)
+          if (matchingBank) setSelectedBank(matchingBank)
+          setAccountNumber(savedDetails.accountNumber)
+          setAccountName(savedDetails.accountName)
+        }
       })
       .catch(() => setError("Bank list is temporarily unavailable. Please try again."))
       .finally(() => setBanksLoading(false))
@@ -108,7 +116,7 @@ export default function WithdrawPage() {
         <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Select bank</label><button type="button" onClick={() => setOpenBanks(!openBanks)} className="flex h-12 w-full items-center justify-between rounded-xl border border-[#e7eaf2] px-3 text-left text-sm"><span className="flex min-w-0 items-center gap-2">{selectedBank ? <BankLogo bank={selectedBank} size="sm" /> : <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#0000ff]"><Landmark size={16} /></span>}<span className={selectedBank ? "truncate font-semibold" : "text-[#788196]"}>{selectedBank?.name || (banksLoading ? "Loading supported banks..." : "Choose destination bank")}</span></span><ChevronDown /></button></div>
         {openBanks && <div className="fixed inset-0 z-50 flex items-end bg-[#101a43]/35 p-3" role="dialog" aria-modal="true" aria-label="Select destination bank" onClick={() => setOpenBanks(false)}><div className="mx-auto w-full max-w-md rounded-[28px] bg-white p-4 shadow-2xl" onClick={(event) => event.stopPropagation()}><div className="mb-3 flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#788196]">Transfer to bank</p><h2 className="text-lg font-bold text-[#172033]">Select destination</h2></div><button type="button" aria-label="Close bank selector" onClick={() => setOpenBanks(false)} className="rounded-full px-3 py-1 text-xl text-[#788196]">×</button></div><div className="flex items-center gap-2 rounded-xl bg-[#f5f7fc] px-3"><Search className="text-[#788196]" size={18} /><input autoFocus value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search banks and fintechs" className="h-11 w-full bg-transparent text-sm outline-none" /></div><div className="mt-3 max-h-[52vh] overflow-y-auto">{filteredBanks.map((bank) => <button type="button" key={bank.id} onClick={() => { setSelectedBank(bank); setAccountName(""); setOpenBanks(false); setSearch("") }} className="flex w-full items-center justify-between rounded-xl px-2 py-2.5 text-left text-sm hover:bg-blue-50"><span className="flex items-center gap-3"><BankLogo bank={bank} size="sm" /><span className="font-medium">{bank.name}</span></span>{selectedBank?.id === bank.id && <Check className="text-[#0000ff]" size={18} />}</button>)}</div></div></div>}
         <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Account number</label><input inputMode="numeric" maxLength={10} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ""))} placeholder="10-digit account number" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /></div>
-        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Account name</label><div className="relative"><UserRound className="absolute left-3 top-3.5 text-[#788196]" /><input value={accountName} onChange={(e) => setAccountName(e.target.value)} placeholder="Verified recipient name" className="h-12 w-full rounded-xl border border-[#e7eaf2] pl-10 pr-3 text-sm outline-none focus:border-[#0000ff]" /></div><p className="mt-1 text-[11px] text-[#788196]">Enter the name returned by your provider&apos;s account enquiry.</p></div>
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Account name</label><div className="relative"><UserRound className="absolute left-3 top-3.5 text-[#788196]" /><input value={accountName} onChange={(e) => setAccountName(e.target.value)} placeholder="Enter account name" className="h-12 w-full rounded-xl border border-[#e7eaf2] pl-10 pr-3 text-sm outline-none focus:border-[#0000ff]" /></div><p className="mt-1 text-[11px] text-[#788196]">Enter the name yourself. BLUEPAY does not verify account names with a bank.</p></div>
         <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Amount</label><input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))} placeholder="₦0" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /></div>
         <div><label className="mb-1 block text-xs font-semibold text-[#788196]">BPC code</label><input value={bpcCode} onChange={(e) => setBpcCode(e.target.value)} placeholder="Enter your valid BPC code" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /><button type="button" onClick={() => router.push("/buy-bpc")} className="mt-1 text-xs font-semibold text-[#0000ff]">Buy BPC code</button></div>
         {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">{error}</p>}
