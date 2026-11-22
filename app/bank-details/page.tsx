@@ -47,11 +47,11 @@ export default function BankDetailsPage() {
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm">
             <div className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-blue-50 text-[#0000ff]"><Landmark size={20} /></div>
-            <h2 className="text-sm font-semibold">No bank account linked</h2>
-            <p className="mt-1 text-xs text-slate-500">Add your bank account details to use them on transfers.</p>
+            <h2 className="text-sm font-semibold">No bank account added yet.</h2>
+            <p className="mt-1 text-xs text-slate-500">Add a preferred bank account to use it on transfers.</p>
           </div>
         )}
-        <button type="button" onClick={() => router.push("/bank-details/edit")} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0000ff] text-sm font-bold text-white shadow-sm hover:bg-blue-700"><PencilLine size={16} /> EDIT BANK DETAILS</button>
+        <button type="button" onClick={() => router.push("/bank-details/edit")} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0000ff] text-sm font-bold text-white shadow-sm hover:bg-blue-700"><PencilLine size={16} /> {hasDetails ? "CHANGE ACCOUNT DETAILS" : "+ ADD BANK ACCOUNT"}</button>
       </section>
     </main>
   )

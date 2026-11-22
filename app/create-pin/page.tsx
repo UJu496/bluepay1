@@ -2,9 +2,10 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, User, Fingerprint, X, Camera, Upload } from "lucide-react"
+import { ArrowLeft, User, X, Camera, Upload } from "lucide-react"
+import { getCurrentUserPin, hasUnassignedLegacyPin, saveCurrentUserPin } from "@/lib/user-pin"
 
 export default function CreatePinPage() {
   const router = useRouter()
@@ -12,7 +13,10 @@ export default function CreatePinPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
-  const [showResetModal, setShowResetModal] = useState(false)
+
+  useEffect(() => {
+    if (getCurrentUserPin() || hasUnassignedLegacyPin()) router.replace("/change-pin")
+  }, [router])
 
   const handleNumberClick = (number: string) => {
     if (currentIndex < 4) {
@@ -23,7 +27,7 @@ export default function CreatePinPage() {
 
       if (currentIndex === 3) {
         const completedPin = [...pin, number].join("")
-        localStorage.setItem("userPin", completedPin)
+        if (!saveCurrentUserPin(completedPin)) return
         setShowSuccess(true)
         setTimeout(() => {
           router.push("/dashboard")
@@ -41,17 +45,6 @@ export default function CreatePinPage() {
     }
   }
 
-  const handleFingerprint = () => {
-    setShowSuccess(true)
-    setTimeout(() => {
-      router.push("/dashboard")
-    }, 5000)
-  }
-
-  const handleResetPasscode = () => {
-    setShowResetModal(true)
-  }
-
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -63,15 +56,6 @@ export default function CreatePinPage() {
       }
       reader.readAsDataURL(file)
     }
-  }
-
-  const handleConfirmReset = () => {
-    // Clear PIN and reset state
-    setPin(["", "", "", ""])
-    setCurrentIndex(0)
-    setShowResetModal(false)
-    // Navigate back to registration
-    router.push("/get-started")
   }
 
   return (
@@ -88,32 +72,6 @@ export default function CreatePinPage() {
                 ></div>
                 <div className="absolute inset-4 rounded-full bg-blue-600 animate-pulse"></div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showResetModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-4 max-w-sm w-full text-center">
-            <h3 className="text-lg font-semibold mb-4">Reset Password</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to reset your password? This will clear your current PIN and redirect you to create
-              a new account.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowResetModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmReset}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                Reset
-              </button>
             </div>
           </div>
         </div>
@@ -153,8 +111,8 @@ export default function CreatePinPage() {
       {/* PIN Entry Section */}
       <div className="flex-1 px-5 flex flex-col justify-center">
         <div className="text-center mb-4">
-          <h2 className="text-white text-xl font-bold mb-2">Choose Your Security Method</h2>
-          <p className="text-white/80">Create a 4-digit PIN or use fingerprint authentication</p>
+          <h2 className="text-white text-xl font-bold mb-2">Create your BLUEPAY PIN</h2>
+          <p className="text-white/80">Set a 4-digit PIN to protect your account</p>
         </div>
 
         {/* PIN Indicators */}
@@ -183,6 +141,7 @@ export default function CreatePinPage() {
         </div>
 
         <div className="flex justify-center items-center gap-4 max-w-xs mx-auto mb-4">
+          <span aria-hidden="true" className="w-16" />
           <button
             onClick={() => handleNumberClick("0")}
             className="w-16 h-16 flex items-center justify-center text-white text-xl font-semibold hover:bg-white/10 rounded-full transition-colors"
@@ -190,13 +149,8 @@ export default function CreatePinPage() {
             0
           </button>
           <button
-            onClick={handleFingerprint}
-            className="w-16 h-16 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
-          >
-            <Fingerprint size={20} style={{ color: "#0000FF" }} />
-          </button>
-          <button
             onClick={handleBackspace}
+            aria-label="Delete last digit"
             className="w-16 h-16 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
           >
             <X size={20} style={{ color: "#0000FF" }} />
@@ -205,20 +159,10 @@ export default function CreatePinPage() {
 
         {/* Clear instructions for both authentication methods */}
         <div className="text-center mb-6">
-          <p className="text-white/90 text-sm mb-2">
-            Enter 4 digits above OR tap the fingerprint icon for quick access
-          </p>
+          <p className="text-white/90 text-sm mb-2">Use the keypad to enter your 4-digit PIN.</p>
         </div>
 
-        <div className="text-center">
-          <p className="text-white text-lg mb-2">Forgotten your passcode?</p>
-          <button
-            onClick={handleResetPasscode}
-            className="text-white text-lg font-semibold underline hover:text-white/80 transition-colors"
-          >
-            Reset passcode
-          </button>
-        </div>
+        <p className="mx-auto max-w-xs text-center text-xs leading-relaxed text-white/75">PIN recovery is unavailable because no secure recovery service is connected.</p>
       </div>
     </div>
   )
