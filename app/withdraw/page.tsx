@@ -23,7 +23,7 @@ export default function WithdrawPage() {
   useEffect(() => {
     const loadBalance = () => {
       const stored = localStorage.getItem("userBalance")
-      const authoritativeBalance = stored ? Number.parseInt(stored, 10) : 151
+      const authoritativeBalance = stored ? Number.parseInt(stored, 10) : 200000
       if (!stored) localStorage.setItem("userBalance", String(authoritativeBalance))
       setBalance(authoritativeBalance)
     }
