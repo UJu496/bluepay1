@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, type FormEvent } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ArrowLeft, Check, Landmark, ShieldAlert } from "lucide-react"
 import { localBanks } from "@/lib/banks"
 import { getCurrentUserBankDetails, getCurrentUserProfile, saveCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
@@ -13,6 +13,9 @@ type Step = "edit" | "review" | "saved"
 
 export default function EditBankDetailsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnTo = searchParams.get("returnTo")
+  const origin = returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/bank-details"
   const [step, setStep] = useState<Step>("edit")
   const [details, setDetails] = useState<UserBankDetails>({ bankName: "", accountNumber: "", accountName: "" })
   const [pin, setPin] = useState("")
@@ -54,7 +57,7 @@ export default function EditBankDetailsPage() {
   return (
     <main className="min-h-screen bg-[#f5f7fc] text-[#172033]">
       <header className="sticky top-0 z-10 flex h-16 items-center gap-3 bg-[#0000ff] px-4 text-white shadow-sm">
-        <button type="button" aria-label="Go back" onClick={() => step === "review" ? setStep("edit") : router.push("/bank-details")} className="rounded-full p-2 hover:bg-white/15"><ArrowLeft size={19} /></button>
+        <button type="button" aria-label="Go back" onClick={() => step === "review" ? setStep("edit") : router.push(`/bank-details?returnTo=${encodeURIComponent(origin)}`)} className="rounded-full p-2 hover:bg-white/15"><ArrowLeft size={19} /></button>
         <div><p className="text-[10px] font-medium tracking-wide text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-semibold">{step === "review" ? "Confirm bank details" : step === "saved" ? "Update complete" : "Edit bank details"}</h1></div>
       </header>
       <section className="mx-auto w-full max-w-md p-4">
@@ -82,7 +85,7 @@ export default function EditBankDetailsPage() {
           <button type="button" onClick={() => { setError(""); setStep("edit") }} className="h-10 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700">Edit details</button>
         </form>}
 
-        {step === "saved" && <div role="status" className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"><div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-blue-50 text-[#0000ff]"><Check size={22} /></div><h2 className="text-base font-bold text-[#101a43]">Bank details updated</h2><p className="mt-1 text-xs text-slate-500">Your current device profile has been updated.</p><button type="button" onClick={() => router.replace("/bank-details")} className="mt-4 h-11 w-full rounded-xl bg-[#0000ff] text-sm font-bold text-white">View bank details</button></div>}
+        {step === "saved" && <div role="status" className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"><div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-blue-50 text-[#0000ff]"><Check size={22} /></div><h2 className="text-base font-bold text-[#101a43]">Bank details updated</h2><p className="mt-1 text-xs text-slate-500">Your current device profile has been updated.</p><button type="button" onClick={() => router.replace(origin)} className="mt-4 h-11 w-full rounded-xl bg-[#0000ff] text-sm font-bold text-white">View bank details</button></div>}
       </section>
     </main>
   )

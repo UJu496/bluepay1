@@ -5,6 +5,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, User, X, Camera, Upload } from "lucide-react"
+import Link from "next/link"
 import { getCurrentUserPin, hasUnassignedLegacyPin, saveCurrentUserPin } from "@/lib/user-pin"
 
 export default function CreatePinPage() {
@@ -162,7 +163,7 @@ export default function CreatePinPage() {
           <p className="text-white/90 text-sm mb-2">Use the keypad to enter your 4-digit PIN.</p>
         </div>
 
-        <p className="mx-auto max-w-xs text-center text-xs leading-relaxed text-white/75">PIN recovery is unavailable because no secure recovery service is connected.</p>
+        <Link href="/forgot-pin" className="mx-auto mt-2 rounded-md px-3 py-2 text-center text-sm font-bold text-white underline underline-offset-4">FORGOT PIN?</Link>
       </div>
     </div>
   )

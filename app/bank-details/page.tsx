@@ -1,12 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Eye, EyeOff, Landmark, PencilLine } from "lucide-react"
 import { getCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
 
 export default function BankDetailsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnTo = searchParams.get("returnTo")
+  const backRoute = returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/settings"
   const [details, setDetails] = useState<UserBankDetails | null>(null)
   const [accountVisible, setAccountVisible] = useState(false)
 
@@ -25,7 +29,7 @@ export default function BankDetailsPage() {
   return (
     <main className="min-h-screen bg-[#f5f7fc] text-[#172033]">
       <header className="sticky top-0 z-10 flex h-16 items-center gap-3 bg-[#0000ff] px-4 text-white shadow-sm">
-        <button type="button" aria-label="Go back" onClick={() => router.push("/settings")} className="rounded-full p-2 hover:bg-white/15"><ArrowLeft size={19} /></button>
+        <button type="button" aria-label="Go back" onClick={() => router.push(backRoute)} className="rounded-full p-2 hover:bg-white/15"><ArrowLeft size={19} /></button>
         <div><p className="text-[10px] font-medium tracking-wide text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-semibold">Bank Account Details</h1></div>
       </header>
       <section className="mx-auto flex w-full max-w-md flex-col gap-4 p-4">
@@ -51,7 +55,7 @@ export default function BankDetailsPage() {
             <p className="mt-1 text-xs text-slate-500">Add a preferred bank account to use it on transfers.</p>
           </div>
         )}
-        <button type="button" onClick={() => router.push("/bank-details/edit")} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0000ff] text-sm font-bold text-white shadow-sm hover:bg-blue-700"><PencilLine size={16} /> {hasDetails ? "CHANGE ACCOUNT DETAILS" : "+ ADD BANK ACCOUNT"}</button>
+        <button type="button" onClick={() => router.push(`/bank-details/edit?returnTo=${encodeURIComponent(backRoute)}`)} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#0000ff] text-sm font-bold text-white shadow-sm hover:bg-blue-700"><PencilLine size={16} /> {hasDetails ? "CHANGE ACCOUNT DETAILS" : "+ ADD BANK ACCOUNT"}</button>
       </section>
     </main>
   )

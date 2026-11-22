@@ -50,7 +50,7 @@ export default function VerifyPinPage() {
           <button type="button" onClick={() => enterDigit("0")} aria-label="Enter 0" className="flex size-16 items-center justify-center rounded-full text-xl font-semibold transition hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">0</button>
           <button type="button" onClick={() => { setPin((value) => value.slice(0, -1)); setError("") }} aria-label="Delete last digit" className="flex size-16 items-center justify-center rounded-full text-xl transition hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"><Delete size={20} /></button>
         </div>
-        <Link href="/change-pin" className="mx-auto mt-7 rounded-md px-3 py-2 text-center text-sm font-semibold underline underline-offset-4 hover:text-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CHANGE BLUEPAY PIN</Link>
+        <div className="mt-6 flex flex-col items-center gap-3"><Link href="/forgot-pin" className="rounded-md px-3 py-2 text-center text-sm font-bold underline underline-offset-4 hover:text-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">FORGOT PIN?</Link><Link href="/change-pin" className="rounded-md px-3 py-2 text-center text-xs font-semibold underline underline-offset-4 hover:text-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">CHANGE BLUEPAY PIN</Link></div>
       </>}
     </section>
   </main>
