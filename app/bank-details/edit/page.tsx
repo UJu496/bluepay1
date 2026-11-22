@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type FormEvent } from "react"
+import { Suspense, useEffect, useState, type FormEvent } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ArrowLeft, Check, Landmark, ShieldAlert } from "lucide-react"
 import { localBanks } from "@/lib/banks"
@@ -11,7 +11,7 @@ import type { Bank } from "@/lib/banks"
 
 type Step = "edit" | "review" | "saved"
 
-export default function EditBankDetailsPage() {
+function EditBankDetailsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnTo = searchParams.get("returnTo")
@@ -89,4 +89,8 @@ export default function EditBankDetailsPage() {
       </section>
     </main>
   )
+}
+
+export default function EditBankDetailsPage() {
+  return <Suspense fallback={<main className="min-h-screen bg-[#f5f7fc]" aria-label="Loading bank details" />}><EditBankDetailsContent /></Suspense>
 }

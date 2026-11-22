@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Eye, EyeOff, Landmark, PencilLine } from "lucide-react"
 import { getCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
 
-export default function BankDetailsPage() {
+function BankDetailsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnTo = searchParams.get("returnTo")
@@ -59,4 +59,8 @@ export default function BankDetailsPage() {
       </section>
     </main>
   )
+}
+
+export default function BankDetailsPage() {
+  return <Suspense fallback={<main className="min-h-screen bg-[#f5f7fc]" aria-label="Loading bank details" />}><BankDetailsContent /></Suspense>
 }
