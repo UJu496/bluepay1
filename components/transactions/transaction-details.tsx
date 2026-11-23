@@ -8,15 +8,22 @@ import {
   ArrowUpRight,
   BadgeCheck,
   Building2,
+  Check,
   Clock3,
   Copy,
   Download,
   FileText,
+  Gift,
+  Landmark,
+  Phone,
   Receipt,
   RefreshCw,
   Share2,
+  ShieldCheck,
   Wallet,
+  Wifi,
   XCircle,
+  Zap,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import {
@@ -104,92 +111,101 @@ export function TransactionDetails({ id, returnTo }: { id: string; returnTo: str
 
   const status = getTransactionStatusPresentation(transaction.status)
   const StatusIcon = getStatusIcon(status.key)
+  const TypeIcon = getTransactionIcon(transaction)
   const typeLabel = getTransactionTypeLabel(transaction)
   const statusColor = getStatusColor(status.key)
   const amountPrefix = transaction.type === "income" ? "+" : "−"
   const reference = typeof transaction.reference === "string" && transaction.reference.trim() ? transaction.reference : null
 
   return (
-    <main className="min-h-screen bg-[#f4f7fc] pb-3 text-slate-950">
-      <header className="bg-[#0000ff] px-3 py-2 text-white shadow-sm">
-        <div className="mx-auto flex max-w-lg items-center gap-2">
-          <button type="button" onClick={goBack} aria-label="Back to recent transactions" className="grid size-8 place-items-center rounded-full transition hover:bg-white/10"><ArrowLeft size={18} /></button>
-          <div className="min-w-0"><p className="text-[9px] font-bold uppercase tracking-[0.14em] text-blue-100">BLUEPAY MOBILE</p><h1 className="truncate text-sm font-bold">Transaction details</h1></div>
+    <main className="min-h-screen bg-[#f4f7fc] pb-8 text-slate-950">
+      <header className="bg-[#0000ff] px-4 pb-4 pt-7 text-white shadow-sm">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <button type="button" onClick={goBack} aria-label="Back to recent transactions" className="grid size-9 place-items-center rounded-full transition hover:bg-white/10"><ArrowLeft size={19} /></button>
+          <div className="min-w-0"><p className="text-[9px] font-bold uppercase tracking-[0.17em] text-blue-100">BLUEPAY MOBILE</p><h1 className="truncate text-base font-bold">Transaction details</h1></div>
         </div>
       </header>
 
-      <section className="mx-auto flex max-w-lg flex-col gap-2 px-3 py-2">
-        <article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <section className="mx-auto flex max-w-lg flex-col gap-3 px-4 py-4">
+        <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_28px_rgba(15,23,42,0.06)]">
           <div className="h-1 bg-[#0000ff]" />
-          <div className="px-3 py-2.5 text-center">
-            <h2 className="mb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Transaction summary</h2>
-            <div className={`mx-auto grid size-8 place-items-center rounded-xl ${statusColor.icon}`}><StatusIcon size={18} aria-hidden="true" /></div>
-            <p className={`mt-1.5 text-[10px] font-bold uppercase tracking-[0.12em] ${statusColor.text}`}>{getStatusHeading(transaction.status, status.key)}</p>
-            <p className={`mt-0.5 text-[24px] font-extrabold tracking-tight tabular-nums ${transaction.type === "income" ? "text-emerald-700" : "text-slate-950"}`}>{amountPrefix}{formatTransactionCurrency(Math.abs(transaction.amount))}</p>
-            <p className="mx-auto max-w-sm truncate text-xs leading-4 text-slate-600">{transaction.description || typeLabel}</p>
-            <p className="mt-1 text-[11px] text-slate-500">{formatTransactionDate(transaction)}{formatTransactionTime(transaction) ? ` · ${formatTransactionTime(transaction)}` : ""}</p>
+          <div className="px-4 pb-4 pt-5 text-center">
+            <div className={`mx-auto grid size-12 place-items-center rounded-2xl ${statusColor.icon}`}><StatusIcon size={24} aria-hidden="true" /></div>
+            <p className={`mt-3 text-[10px] font-bold uppercase tracking-[0.16em] ${statusColor.text}`}>{getStatusHeading(transaction.status, status.key)}</p>
+            <p className="mt-2 text-[11px] font-medium text-slate-500">{typeLabel}</p>
+            <p className={`mt-1 text-[28px] font-extrabold tracking-tight tabular-nums ${transaction.type === "income" ? "text-emerald-700" : "text-slate-950"}`}>{amountPrefix}{formatTransactionCurrency(Math.abs(transaction.amount))}</p>
+            <p className="mx-auto mt-1 max-w-sm text-xs leading-5 text-slate-600">{transaction.description || typeLabel}</p>
+            <span className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold ${statusColor.badge}`}><span className={`size-1.5 rounded-full ${statusColor.dot}`} />{status.label}</span>
           </div>
+          <div className="mx-4 border-t border-dashed border-slate-200" />
+          <div className="flex items-center gap-2 px-4 py-3 text-[10px] text-slate-500"><TypeIcon size={14} className="text-[#0000ff]"/><span>BLUEPAY ENTERPRISES LLC</span><span className="ml-auto">{formatTransactionDate(transaction)}</span></div>
         </article>
 
-        <article className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
-          <CompactSection icon={FileText} title="Transaction details" rows={[
-            { label: "Type", value: typeLabel },
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <SectionHeading icon={FileText} title="Transaction overview" />
+          <DetailRows rows={[
+            { label: "Transaction type", value: typeLabel },
             { label: "Category", value: transaction.category || undefined },
+            { label: "Description", value: transaction.description || undefined },
+            { label: "Date", value: formatTransactionDate(transaction) },
+            { label: "Time", value: formatTransactionTime(transaction) || undefined },
             { label: "Transaction ID", value: transaction.id },
             { label: "BLUEPAY reference", value: reference || undefined },
             { label: "BLUEPAY tracking ID", value: typeof transaction.trackingId === "string" ? transaction.trackingId : undefined },
           ]} />
-          {getRecipientRows(transaction, typeLabel).length > 0 && <CompactSection icon={ArrowUpRight} title="Recipient details" rows={getRecipientRows(transaction, typeLabel).map((row) => ({ label: row.label === "Full name" ? "Recipient" : row.label, value: row.value }))} />}
-          <CompactSection icon={Wallet} title="Payment details" rows={[
+        </div>
+
+        {(getSenderRows(transaction).length > 0 || getRecipientRows(transaction, typeLabel).length > 0) && (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {getSenderRows(transaction).length > 0 && <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><SectionHeading icon={ArrowDownRight} title="Sender information"/><DetailRows rows={getSenderRows(transaction)} /></div>}
+            {getRecipientRows(transaction, typeLabel).length > 0 && <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><SectionHeading icon={ArrowUpRight} title="Recipient information"/><DetailRows rows={getRecipientRows(transaction, typeLabel)} /></div>}
+          </div>
+        )}
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <SectionHeading icon={Wallet} title="Payment information" />
+          <DetailRows rows={[
             { label: "Transaction amount", value: formatTransactionCurrency(transaction.amount) },
             { label: "Transaction fee", value: formatOptionalMoney(transaction.fee) },
             { label: "Total amount debited", value: getTotalDebited(transaction) },
+            { label: "Payment method", value: stringValue(transaction.paymentMethod) },
             { label: "Narration", value: stringValue(transaction.narration) || transaction.description || undefined },
+            { label: "Channel", value: stringValue(transaction.channel) },
+            { label: "Processing time", value: formatOptionalDateTime(transaction.processingAt) },
+            { label: "Completion time", value: formatOptionalDateTime(transaction.completedAt) },
+            { label: "BPC code", value: typeof transaction.bpcCode === "string" ? maskCode(transaction.bpcCode) : undefined },
           ]} />
-          <details className="group border-t border-slate-100 pt-1.5">
-            <summary className="flex cursor-pointer list-none items-center justify-between py-1 text-xs font-bold text-[#0000ff]">More details<span className="text-[10px] text-slate-500 group-open:hidden">Show</span><span className="hidden text-[10px] text-slate-500 group-open:inline">Hide</span></summary>
-            <CompactSection icon={ArrowDownRight} title="Sender details" rows={getSenderRows(transaction)} />
-            <CompactSection icon={Clock3} title="Payment metadata" rows={[
-              { label: "Date", value: formatTransactionDate(transaction) },
-              { label: "Time", value: formatTransactionTime(transaction) || undefined },
-              { label: "Payment method", value: stringValue(transaction.paymentMethod) },
-              { label: "Channel", value: stringValue(transaction.channel) },
-              { label: "Processing time", value: formatOptionalDateTime(transaction.processingAt) },
-              { label: "Completion time", value: formatOptionalDateTime(transaction.completedAt) },
-              { label: "BPC code", value: typeof transaction.bpcCode === "string" ? maskCode(transaction.bpcCode) : undefined },
-            ]} />
-            {getServiceRows(transaction).length > 0 && <CompactSection icon={Building2} title="Service details" rows={getServiceRows(transaction)} />}
-            {getAdditionalRows(transaction).length > 0 && <CompactSection icon={Receipt} title="Additional information" rows={getAdditionalRows(transaction)} />}
-          </details>
-        </article>
+        </div>
 
-        <div className="grid grid-cols-3 gap-1.5">
+        {getServiceRows(transaction).length > 0 && <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><SectionHeading icon={Building2} title="Service details"/><DetailRows rows={getServiceRows(transaction)} /></div>}
+        {getAdditionalRows(transaction).length > 0 && <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><SectionHeading icon={Receipt} title="Additional information"/><DetailRows rows={getAdditionalRows(transaction)} /></div>}
+
+        <div className="grid grid-cols-3 gap-2">
           <ActionButton icon={Download} label="Download receipt" onClick={downloadReceipt} />
           <ActionButton icon={Share2} label="Share receipt" onClick={shareReceipt} />
-          <ActionButton icon={Copy} label="Copy reference" onClick={() => reference && void copyText(reference, "Transaction reference")} disabled={!reference} />
+          <ActionButton icon={Copy} label={reference ? "Copy reference" : "Reference unavailable"} onClick={() => reference && void copyText(reference, "Transaction reference")} disabled={!reference} />
         </div>
-        {feedback && <p role="status" aria-live="polite" className="rounded-lg border border-blue-100 bg-blue-50 px-2 py-1.5 text-center text-xs text-blue-900">{feedback}</p>}
-        <p className="text-center text-[10px] leading-4 text-slate-500">Receipt reflects the saved BLUEPAY transaction record.</p>
+        {feedback && <p role="status" aria-live="polite" className="rounded-xl border border-blue-100 bg-blue-50 px-3 py-2 text-center text-xs text-blue-900">{feedback}</p>}
+        <div className="flex items-start gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2.5 text-[10px] leading-4 text-slate-500"><ShieldCheck size={14} className="mt-0.5 shrink-0 text-[#0000ff]"/><p>Details shown here come from the saved BLUEPAY transaction record. No external bank verification is implied.</p></div>
       </section>
     </main>
   )
 }
 
-function CompactSection({ icon: Icon, title, rows }: { icon: LucideIcon; title: string; rows: Array<{ label: string; value?: string }> }) {
-  if (!rows.some((row) => Boolean(row.value))) return null
-  return <section className="border-b border-slate-100 py-1.5 last:border-b-0"><h2 className="mb-0.5 flex items-center gap-1.5 text-xs font-bold text-slate-900"><Icon size={13} aria-hidden="true" className="text-[#0000ff]" />{title}</h2><DetailRows rows={rows} /></section>
+function SectionHeading({ icon: Icon, title }: { icon: LucideIcon; title: string }) {
+  return <h2 className="mb-3 flex items-center gap-2 text-xs font-bold text-slate-900"><span className="grid size-7 place-items-center rounded-lg bg-blue-50 text-[#0000ff]"><Icon size={15} aria-hidden="true" /></span>{title}</h2>
 }
 
 function DetailRows({ rows }: { rows: Array<{ label: string; value?: string }> }) {
   const visibleRows = rows.filter((row): row is { label: string; value: string } => Boolean(row.value))
   if (!visibleRows.length) return null
   return <dl className="flex flex-col divide-y divide-slate-100">
-    {visibleRows.map((row) => <div key={row.label} className="grid grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-2 py-1 first:pt-0 last:pb-0"><dt className="text-xs leading-4 text-slate-500">{row.label}</dt><dd className="min-w-0 break-words text-right text-xs font-semibold leading-4 text-slate-800 [overflow-wrap:anywhere]">{row.value}</dd></div>)}
+    {visibleRows.map((row) => <div key={row.label} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3 py-2 first:pt-0 last:pb-0"><dt className="text-[11px] leading-4 text-slate-500">{row.label}</dt><dd className="min-w-0 break-words text-right text-[11px] font-semibold leading-4 text-slate-800 [overflow-wrap:anywhere]">{row.value}</dd></div>)}
   </dl>
 }
 
 function ActionButton({ icon: Icon, label, onClick, disabled = false }: { icon: LucideIcon; label: string; onClick: () => void; disabled?: boolean }) {
-  return <button type="button" onClick={onClick} disabled={disabled} className="flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-lg border border-slate-200 bg-white px-1 py-1.5 text-center text-xs font-semibold leading-3 text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-50"><Icon size={14} aria-hidden="true" />{label}</button>
+  return <button type="button" onClick={onClick} disabled={disabled} className="flex min-h-[62px] flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-1.5 py-2 text-center text-[10px] font-semibold leading-3 text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-50"><Icon size={16} aria-hidden="true" />{label}</button>
 }
 
 function getStatusIcon(key: TransactionStatusKey): LucideIcon {
@@ -215,6 +231,18 @@ function getStatusHeading(status: string | undefined, key: TransactionStatusKey)
   if (key === "completed") return "TRANSACTION COMPLETED"
   if (key === "other") return "TRANSACTION STATUS RECORDED"
   return "STATUS NOT RECORDED"
+}
+
+function getTransactionIcon(transaction: Transaction): LucideIcon {
+  const type = getTransactionTypeLabel(transaction).toLowerCase()
+  if (type.includes("airtime")) return Phone
+  if (type.includes("data")) return Wifi
+  if (type.includes("transfer")) return Landmark
+  if (type.includes("bpc")) return Zap
+  if (type.includes("bill")) return Receipt
+  if (type.includes("earn")) return Gift
+  if (type.includes("wallet")) return Wallet
+  return transaction.type === "income" ? ArrowDownRight : ArrowUpRight
 }
 
 function getSenderRows(transaction: Transaction) {
@@ -328,7 +356,6 @@ function getReceiptFields(transaction: Transaction) {
     { label: "Time", value: formatTransactionTime(transaction) || undefined },
     { label: "Transaction ID", value: transaction.id },
     { label: "BLUEPAY reference", value: stringValue(transaction.reference) },
-    { label: "BLUEPAY tracking ID", value: stringValue(transaction.trackingId) },
     { label: "Sender", value: stringValue(transaction.senderName) },
     { label: "Recipient", value: stringValue(transaction.recipientName) || (typeLabel === "Bank transfer" ? stringValue(transaction.userName) : undefined) },
     { label: "Bank", value: stringValue(transaction.bankName) },
@@ -352,7 +379,7 @@ function getReceiptFields(transaction: Transaction) {
 function buildReceiptText(transaction: Transaction) {
   const status = getTransactionStatusPresentation(transaction.status)
   return [
-    "BLUEPAY MOBILE",
+    "BLUEPAY ENTERPRISES LLC",
     "BLUEPAY MOBILE TRANSACTION RECEIPT",
     "",
     `${getStatusHeading(transaction.status, status.key)} · ${status.label}`,
@@ -360,7 +387,7 @@ function buildReceiptText(transaction: Transaction) {
     "",
     ...getReceiptFields(transaction).map((row) => `${row.label}: ${row.value}`),
     "",
-    "BLUEPAY MOBILE · This receipt reflects the saved transaction record. It is not a bank confirmation.",
+    "This receipt reflects the saved BLUEPAY transaction record. It is not a bank confirmation.",
   ].join("\n")
 }
 
@@ -369,7 +396,7 @@ function buildReceiptHtml(transaction: Transaction) {
   const rows = getReceiptFields(transaction).map((row) => `<div class="row"><span>${escapeHtml(row.label)}</span><strong>${escapeHtml(row.value)}</strong></div>`).join("")
   const title = getStatusHeading(transaction.status, status.key)
   const amount = `${transaction.type === "income" ? "+" : "−"}${formatTransactionCurrency(Math.abs(transaction.amount))}`
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLUEPAY MOBILE Transaction Receipt</title><style>*{box-sizing:border-box}body{margin:0;background:#f1f5fb;color:#10203a;font-family:Arial,sans-serif;padding:32px 16px}.receipt{max-width:520px;margin:0 auto;background:#fff;border:1px solid #dce4ef;border-radius:22px;overflow:hidden;box-shadow:0 16px 44px rgba(15,35,68,.1)}.brand{height:7px;background:#0000ff}.content{padding:30px}.eyebrow{color:#0000ff;font-size:11px;font-weight:700;letter-spacing:2px}.title{margin:22px 0 8px;color:#0f172a;font-size:13px;letter-spacing:1px}.amount{margin:8px 0;font-size:34px;font-weight:800;letter-spacing:-1px}.status{display:inline-block;margin-top:8px;padding:7px 11px;border-radius:999px;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:700}.divider{margin:22px 0;border:0;border-top:1px dashed #cbd5e1}.row{display:grid;grid-template-columns:40% 60%;gap:14px;border-bottom:1px solid #edf1f6;padding:11px 0;font-size:12px;line-height:1.5}.row span{color:#64748b}.row strong{text-align:right;overflow-wrap:anywhere;color:#1e293b}.note{margin-top:22px;color:#64748b;font-size:10px;line-height:1.6}@media print{body{padding:0;background:#fff}.receipt{max-width:none;border:0;box-shadow:none;border-radius:0}.content{padding:24px}}</style></head><body><main class="receipt"><div class="brand"></div><section class="content"><div class="eyebrow">BLUEPAY MOBILE</div><div class="title">${escapeHtml(title)}</div><div class="amount">${escapeHtml(amount)}</div><div class="status">${escapeHtml(status.label)}</div><hr class="divider">${rows}<p class="note">BLUEPAY MOBILE · This receipt reflects the saved transaction record. It is not a bank confirmation.</p></section></main></body></html>`
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLUEPAY Transaction Receipt</title><style>*{box-sizing:border-box}body{margin:0;background:#f1f5fb;color:#10203a;font-family:Arial,sans-serif;padding:32px 16px}.receipt{max-width:520px;margin:0 auto;background:#fff;border:1px solid #dce4ef;border-radius:22px;overflow:hidden;box-shadow:0 16px 44px rgba(15,35,68,.1)}.brand{height:7px;background:#0000ff}.content{padding:30px}.eyebrow{color:#0000ff;font-size:11px;font-weight:700;letter-spacing:2px}.title{margin:22px 0 8px;color:#0f172a;font-size:13px;letter-spacing:1px}.amount{margin:8px 0;font-size:34px;font-weight:800;letter-spacing:-1px}.status{display:inline-block;margin-top:8px;padding:7px 11px;border-radius:999px;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:700}.divider{margin:22px 0;border:0;border-top:1px dashed #cbd5e1}.row{display:grid;grid-template-columns:40% 60%;gap:14px;border-bottom:1px solid #edf1f6;padding:11px 0;font-size:12px;line-height:1.5}.row span{color:#64748b}.row strong{text-align:right;overflow-wrap:anywhere;color:#1e293b}.note{margin-top:22px;color:#64748b;font-size:10px;line-height:1.6}@media print{body{padding:0;background:#fff}.receipt{max-width:none;border:0;box-shadow:none;border-radius:0}.content{padding:24px}}</style></head><body><main class="receipt"><div class="brand"></div><section class="content"><div class="eyebrow">BLUEPAY ENTERPRISES LLC</div><div class="title">${escapeHtml(title)}</div><div class="amount">${escapeHtml(amount)}</div><div class="status">${escapeHtml(status.label)}</div><hr class="divider">${rows}<p class="note">This receipt reflects the saved BLUEPAY transaction record. It is not a bank confirmation.</p></section></main></body></html>`
 }
 
 function escapeHtml(value: string) {
