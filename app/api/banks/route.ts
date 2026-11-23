@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { localBanks } from "@/lib/banks"
+import { getBankCategory, localBanks } from "@/lib/banks"
 
 export async function GET() {
   const secret = process.env.PAYSTACK_SECRET_KEY
@@ -18,7 +18,7 @@ export async function GET() {
   } catch {
     return NextResponse.json({ banks: localBanks, source: "local" })
   }
-  if (!response.ok || !payload.status) {
+  if (!response.ok || !payload.status || !Array.isArray(payload.data) || payload.data.length === 0) {
     return NextResponse.json({ banks: localBanks, source: "local" })
   }
 
@@ -27,6 +27,8 @@ export async function GET() {
     name: bank.name,
     code: bank.code,
     logo: bank.logo ?? null,
+    providerSupported: true,
+    category: getBankCategory(bank.name),
   }))
   return NextResponse.json({ banks })
 }
