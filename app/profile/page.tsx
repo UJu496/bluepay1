@@ -77,9 +77,8 @@ export default function ProfilePage() {
 
               {/* Name and status */}
               <h2 className="text-2xl font-bold text-gray-900 text-center">{userData.fullName}</h2>
-              <div className="flex items-center gap-2 mt-2 bg-green-50 px-3 py-1 rounded-full">
-                <CheckCircle size={16} className="text-green-600" />
-                <span className="text-sm font-semibold text-green-600">Account Verified</span>
+              <div className="mt-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                BLUEPAY profile
               </div>
             </div>
 
