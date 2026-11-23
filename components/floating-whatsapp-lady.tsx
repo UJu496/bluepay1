@@ -1,14 +1,8 @@
-"use client"
-
 import Image from "next/image"
-import { usePathname } from "next/navigation"
 
 const TELEGRAM_GROUP_URL = "https://t.me/bluepay2"
 
 export function FloatingWhatsappLady() {
-  const pathname = usePathname()
-  if (pathname === "/transactions" || pathname.startsWith("/transactions/")) return null
-
   return (
     <a
       href={TELEGRAM_GROUP_URL}

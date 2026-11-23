@@ -64,8 +64,6 @@ export default function DataPage() {
         date: new Date().toISOString().split("T")[0],
         phoneNumber,
         network: selectedNetworkName,
-        plan: selectedPlanDetails?.size,
-        validity: selectedPlanDetails?.validity,
       })
 
       const transactionData = {
