@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { FloatingWhatsappLady } from "@/components/floating-whatsapp-lady"
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
+const geistSans = Geist({ subsets: ["latin"] })
+const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bluepaymobile2026.vercel.app"),
