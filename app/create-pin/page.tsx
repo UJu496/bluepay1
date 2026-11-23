@@ -1,170 +1,107 @@
 "use client"
 
 import type React from "react"
-
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, User, X, Camera, Upload } from "lucide-react"
+import { ArrowLeft, Camera, Upload, User, X } from "lucide-react"
 import Link from "next/link"
-import { getCurrentUserPin, hasUnassignedLegacyPin, saveCurrentUserPin } from "@/lib/user-pin"
 
 export default function CreatePinPage() {
   const router = useRouter()
   const [pin, setPin] = useState(["", "", "", ""])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [error, setError] = useState("")
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (getCurrentUserPin() || hasUnassignedLegacyPin()) router.replace("/change-pin")
-  }, [router])
+  const handleNumberClick = async (number: string) => {
+    if (currentIndex >= 4 || isSaving || showSuccess) return
+    const nextPin = [...pin]
+    nextPin[currentIndex] = number
+    setPin(nextPin)
+    setCurrentIndex(currentIndex + 1)
+    setError("")
+    if (currentIndex !== 3) return
 
-  const handleNumberClick = (number: string) => {
-    if (currentIndex < 4) {
-      const newPin = [...pin]
-      newPin[currentIndex] = number
-      setPin(newPin)
-      setCurrentIndex(currentIndex + 1)
-
-      if (currentIndex === 3) {
-        const completedPin = [...pin, number].join("")
-        if (!saveCurrentUserPin(completedPin)) return
-        setShowSuccess(true)
-        setTimeout(() => {
-          router.push("/dashboard")
-        }, 2000)
+    setIsSaving(true)
+    try {
+      const response = await fetch("/api/pin/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: [...pin, number].join("") }),
+      })
+      const result = await response.json().catch(() => ({}))
+      if (response.status === 409) {
+        router.replace("/change-pin")
+        return
       }
+      if (!response.ok) throw new Error(result.error || "Unable to save your PIN. Please try again.")
+      setShowSuccess(true)
+      window.setTimeout(() => {
+        router.replace("/dashboard")
+        router.refresh()
+      }, 500)
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Unable to save your PIN. Please try again.")
+      setPin(["", "", "", ""])
+      setCurrentIndex(0)
+    } finally {
+      setIsSaving(false)
     }
   }
 
   const handleBackspace = () => {
-    if (currentIndex > 0) {
-      const newPin = [...pin]
-      newPin[currentIndex - 1] = ""
-      setPin(newPin)
-      setCurrentIndex(currentIndex - 1)
-    }
+    if (isSaving || currentIndex === 0) return
+    const nextPin = [...pin]
+    nextPin[currentIndex - 1] = ""
+    setPin(nextPin)
+    setCurrentIndex(currentIndex - 1)
   }
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const photoData = e.target?.result as string
-        setProfilePhoto(photoData)
-        localStorage.setItem("userProfilePhoto", photoData)
-      }
-      reader.readAsDataURL(file)
+    if (!file || !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) return
+    const reader = new FileReader()
+    reader.onload = (loadEvent) => {
+      const photoData = loadEvent.target?.result
+      if (typeof photoData !== "string") return
+      setProfilePhoto(photoData)
+      localStorage.setItem("userProfilePhoto", photoData)
     }
+    reader.readAsDataURL(file)
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#0000FF" }}>
-      {showSuccess && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-5 text-center">
-            <div className="flex justify-center items-center">
-              <div className="relative w-16 h-16">
-                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 border-r-blue-600 animate-spin"></div>
-                <div
-                  className="absolute inset-2 rounded-full border-4 border-transparent border-b-blue-400 animate-spin"
-                  style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
-                ></div>
-                <div className="absolute inset-4 rounded-full bg-blue-600 animate-pulse"></div>
-              </div>
-            </div>
-          </div>
+    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "#0000FF" }}>
+      {showSuccess && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"><div role="status" className="rounded-2xl bg-white p-6 text-center text-sm font-semibold text-[#101a43]">Your PIN is protected. Opening your dashboard...</div></div>}
+      <header className="flex items-center justify-between p-4 pt-12">
+        <button type="button" aria-label="Go back" onClick={() => router.back()} className="text-white"><ArrowLeft size={20} /></button>
+        <h1 className="text-xl font-semibold text-white">Create PIN</h1>
+        <User size={20} className="text-white" aria-hidden="true" />
+      </header>
+      <section className="mb-4 px-5">
+        <div className="flex justify-center"><div className="relative">
+          <div className="flex size-24 items-center justify-center overflow-hidden rounded-full bg-white/20">{profilePhoto ? <img src={profilePhoto} alt="Selected profile" className="size-full object-cover" /> : <Camera size={20} className="text-white" />}</div>
+          <label className="absolute -bottom-2 -right-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-white hover:bg-gray-100"><span className="sr-only">Upload an optional profile photo</span><Upload size={16} style={{ color: "#0000FF" }} /><input type="file" accept="image/*" onChange={handlePhotoUpload} className="sr-only" /></label>
+        </div></div>
+        <p className="mt-2 text-center text-sm text-white/70">Upload photo (optional)</p>
+      </section>
+      <section className="flex flex-1 flex-col justify-center px-5">
+        <div className="mb-4 text-center"><h2 className="mb-2 text-xl font-bold text-white">Create your BLUEPAY PIN</h2><p className="text-white/80">Set a 4-digit PIN to protect your account.</p></div>
+        <div className="mb-10 flex justify-center gap-4" aria-label={`${currentIndex} of 4 PIN digits entered`}>
+          {pin.map((digit, index) => <span key={index} aria-hidden="true" className="flex size-14 items-center justify-center rounded-full border-2 border-white/50">{digit && <span className="size-3.5 rounded-full bg-white" />}</span>)}
         </div>
-      )}
-
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12">
-        <button onClick={() => router.back()} className="text-white">
-          <ArrowLeft size={20} />
-        </button>
-        <h1 className="text-white text-xl font-semibold">Create PIN</h1>
-        <div className="text-white">
-          <User size={20} />
+        {error && <p role="alert" className="mx-auto mb-4 max-w-xs rounded-lg border border-white/30 bg-red-500/20 px-3 py-2 text-center text-sm text-white">{error}</p>}
+        <div className="mx-auto grid max-w-xs grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => <button key={number} type="button" disabled={isSaving} aria-label={`Enter ${number}`} onClick={() => void handleNumberClick(String(number))} className="flex size-16 items-center justify-center rounded-full text-xl font-semibold text-white transition hover:bg-white/10 disabled:opacity-50">{number}</button>)}
+          <span aria-hidden="true" />
+          <button type="button" disabled={isSaving} aria-label="Enter 0" onClick={() => void handleNumberClick("0")} className="flex size-16 items-center justify-center rounded-full text-xl font-semibold text-white transition hover:bg-white/10 disabled:opacity-50">0</button>
+          <button type="button" disabled={isSaving} aria-label="Delete last digit" onClick={handleBackspace} className="flex size-16 items-center justify-center rounded-full bg-white transition hover:bg-white/90 disabled:opacity-50"><X size={20} style={{ color: "#0000FF" }} /></button>
         </div>
-      </div>
-
-      {/* Photo Upload Section */}
-      <div className="px-5 mb-4">
-        <div className="flex justify-center">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
-              {profilePhoto ? (
-                <img src={profilePhoto || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <Camera size={20} className="text-white" />
-              )}
-            </div>
-            <label className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
-              <Upload size={16} style={{ color: "#0000FF" }} />
-              <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-            </label>
-          </div>
-        </div>
-        <p className="text-white/70 text-sm text-center mt-2">Upload photo (optional)</p>
-      </div>
-
-      {/* PIN Entry Section */}
-      <div className="flex-1 px-5 flex flex-col justify-center">
-        <div className="text-center mb-4">
-          <h2 className="text-white text-xl font-bold mb-2">Create your BLUEPAY PIN</h2>
-          <p className="text-white/80">Set a 4-digit PIN to protect your account</p>
-        </div>
-
-        {/* PIN Indicators */}
-        <div className="flex justify-center gap-4 mb-20">
-          {pin.map((digit, index) => (
-            <div
-              key={index}
-              className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center"
-            >
-              {digit && <div className="w-4 h-4 rounded-full bg-white"></div>}
-            </div>
-          ))}
-        </div>
-
-        {/* Numeric Keypad */}
-        <div className="grid grid-cols-3 gap-4 max-w-xs mx-auto mb-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
-            <button
-              key={number}
-              onClick={() => handleNumberClick(number.toString())}
-              className="w-16 h-16 flex items-center justify-center text-white text-xl font-semibold hover:bg-white/10 rounded-full transition-colors"
-            >
-              {number}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex justify-center items-center gap-4 max-w-xs mx-auto mb-4">
-          <span aria-hidden="true" className="w-16" />
-          <button
-            onClick={() => handleNumberClick("0")}
-            className="w-16 h-16 flex items-center justify-center text-white text-xl font-semibold hover:bg-white/10 rounded-full transition-colors"
-          >
-            0
-          </button>
-          <button
-            onClick={handleBackspace}
-            aria-label="Delete last digit"
-            className="w-16 h-16 rounded-full bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
-          >
-            <X size={20} style={{ color: "#0000FF" }} />
-          </button>
-        </div>
-
-        {/* Clear instructions for both authentication methods */}
-        <div className="text-center mb-6">
-          <p className="text-white/90 text-sm mb-2">Use the keypad to enter your 4-digit PIN.</p>
-        </div>
-
+        <p className="mb-3 mt-5 text-center text-sm text-white/90">Your PIN is encrypted and stored securely.</p>
         <Link href="/forgot-pin" className="mx-auto mt-2 rounded-md px-3 py-2 text-center text-sm font-bold text-white underline underline-offset-4">FORGOT PIN?</Link>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }

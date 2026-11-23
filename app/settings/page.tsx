@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { signOutAndClearPinProof } from "@/lib/auth-client"
 import {
   ArrowLeft,
   Palette,
@@ -140,16 +141,16 @@ export default function SettingsPage() {
     router.push("/dashboard")
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutAndClearPinProof()
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")
-    localStorage.removeItem("registeredUsers")
     localStorage.removeItem("userProfilePhoto")
     localStorage.removeItem("userTheme")
     localStorage.removeItem("darkMode")
-    router.push("/get-started")
+    router.replace("/login")
   }
 
   return (

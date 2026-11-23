@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { FloatingWhatsappLady } from "@/components/floating-whatsapp-lady"
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  title: "BLUEPAY MOBILE",
-  description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
+  title: "BLUEPAY MOBILE | Secure Payments",
+  description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
   verification: {
     google: [
       "eR5tw2Q3nzT2G97TOSqYtRxLED76aXC2xnRwI16Iv0M",
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "BLUEPAY MOBILE",
-    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
+    title: "BLUEPAY MOBILE | Secure Payments",
+    description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
     images: [
       {
         url: "/og-image.jpg",
@@ -36,10 +36,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BLUEPAY MOBILE",
-    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
+    title: "BLUEPAY MOBILE | Secure Payments",
+    description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
     images: ["https://www-bluepaymobile2026.vercel.app/og-image.jpg"],
   },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  userScalable: true,
+  themeColor: "#0000ff",
 }
 
 export default function RootLayout({

@@ -4,10 +4,20 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 
 const TELEGRAM_GROUP_URL = "https://t.me/bluepay2"
+const HIDDEN_PATHS = new Set([
+  "/get-started",
+  "/login",
+  "/forgot-password",
+  "/forgot-pin",
+  "/create-pin",
+  "/verify-pin",
+  "/change-pin",
+  "/security-pin",
+])
 
 export function FloatingWhatsappLady() {
   const pathname = usePathname()
-  if (pathname === "/transactions" || pathname.startsWith("/transactions/")) return null
+  if (HIDDEN_PATHS.has(pathname) || pathname === "/transactions" || pathname.startsWith("/transactions/")) return null
 
   return (
     <a

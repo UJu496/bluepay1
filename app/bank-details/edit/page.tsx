@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { ArrowLeft, Check, Landmark, ShieldAlert } from "lucide-react"
 import { localBanks } from "@/lib/banks"
 import { getCurrentUserBankDetails, getCurrentUserProfile, saveCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
-import { validateCurrentUserPin } from "@/lib/user-pin"
 import { BankPicker } from "@/components/bank-picker"
 import type { Bank } from "@/lib/banks"
 
@@ -45,10 +44,16 @@ function EditBankDetailsContent() {
     setStep("review")
   }
 
-  function saveChanges(event: FormEvent<HTMLFormElement>) {
+  async function saveChanges(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError("")
-    if (!validateCurrentUserPin(pin)) return setError("Incorrect BLUEPAY PIN. Please enter your correct 4-digit PIN.")
+    const response = await fetch("/api/pin/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin }),
+    })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok) return setError(result.error || "PIN verification failed. Please try again.")
     const saved = saveCurrentUserBankDetails({ ...details, accountName: details.accountName.trim() })
     if (!saved) return setError("We couldn't save these changes. Please try again.")
     setStep("saved")
@@ -79,7 +84,7 @@ function EditBankDetailsContent() {
           <div><h2 className="text-sm font-bold text-[#101a43]">Review new bank details</h2><p className="mt-1 text-xs text-slate-500">Check the information carefully before confirming.</p></div>
           <div className="rounded-xl bg-[#f0f5ff] p-3.5"><dl className="flex flex-col gap-3"><div><dt className="text-[11px] text-slate-500">Bank name</dt><dd className="mt-0.5 flex items-center gap-2 text-sm font-semibold"><Landmark size={15} className="text-[#0000ff]" />{details.bankName}</dd></div><div><dt className="text-[11px] text-slate-500">Account number</dt><dd className="mt-0.5 font-mono text-sm font-semibold">{details.accountNumber}</dd></div><div><dt className="text-[11px] text-slate-500">Account name</dt><dd className="mt-0.5 text-sm font-semibold">{details.accountName.trim()}</dd></div></dl></div>
           <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[11px] leading-relaxed text-amber-900"><ShieldAlert size={16} className="mt-0.5 shrink-0" />These details have not been verified with a bank. Confirm they are correct before saving.</div>
-          <label className="flex flex-col gap-1.5 text-xs font-semibold text-[#344269]" htmlFor="pin">Your existing 4-digit BLUEPAY PIN <span className="font-normal text-slate-500">Checked against this device profile</span><input id="pin" required inputMode="numeric" autoComplete="off" type="password" pattern="[0-9]{4}" maxLength={4} value={pin} onChange={(event) => setPin(event.target.value.replace(/\D/g, "").slice(0, 4))} placeholder="Enter PIN" className="h-11 rounded-xl border border-blue-100 bg-[#f0f5ff] px-3 text-sm font-normal tracking-[0.3em] text-[#172033] outline-none focus:border-[#0000ff]" /></label>
+          <label className="flex flex-col gap-1.5 text-xs font-semibold text-[#344269]" htmlFor="pin">Your 4-digit BLUEPAY PIN <span className="font-normal text-slate-500">Verified securely with your account</span><input id="pin" required inputMode="numeric" autoComplete="off" type="password" pattern="[0-9]{4}" maxLength={4} value={pin} onChange={(event) => setPin(event.target.value.replace(/\D/g, "").slice(0, 4))} placeholder="Enter PIN" className="h-11 rounded-xl border border-blue-100 bg-[#f0f5ff] px-3 text-sm font-normal tracking-[0.3em] text-[#172033] outline-none focus:border-[#0000ff]" /></label>
           {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-700">{error}</p>}
           <button type="submit" className="h-11 rounded-xl bg-[#0000ff] text-sm font-bold text-white hover:bg-blue-700">Confirm and save</button>
           <button type="button" onClick={() => { setError(""); setStep("edit") }} className="h-10 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700">Edit details</button>

@@ -1,0 +1,10 @@
+"use client"
+
+import { createAuthClient } from "better-auth/react"
+
+export const authClient = createAuthClient()
+
+export async function signOutAndClearPinProof() {
+  await authClient.signOut()
+  await fetch("/api/pin/clear", { method: "POST", credentials: "same-origin" })
+}

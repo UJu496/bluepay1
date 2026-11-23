@@ -3,28 +3,28 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { authClient, signOutAndClearPinProof } from "@/lib/auth-client"
 
 export default function ProfilePage() {
   const router = useRouter()
   const [userData, setUserData] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [copied, setCopied] = useState(false)
+  const { data: authSession } = authClient.useSession()
+  const sessionUser = authSession?.user
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) {
-      const user = JSON.parse(storedUserData)
-      setUserData(user)
-    }
-  }, [])
+    if (!sessionUser) return
+    setUserData({ id: sessionUser.id, fullName: sessionUser.name, email: sessionUser.email })
+  }, [sessionUser])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOutAndClearPinProof()
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")
-    localStorage.removeItem("registeredUsers")
-    router.push("/get-started")
+    router.replace("/login")
   }
 
   const handleCopyPhone = () => {
