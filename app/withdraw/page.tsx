@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, ShieldCheck, UserRound, WalletCards } from "lucide-react"
+import { ArrowLeft, CheckCircle2, CircleAlert, ShieldCheck, UserRound, WalletCards } from "lucide-react"
 import { getCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
 import { localBanks, type Bank } from "@/lib/banks"
 import { BankPicker } from "@/components/bank-picker"
@@ -68,6 +68,7 @@ export default function WithdrawPage() {
       .finally(() => setBanksLoading(false))
   }, [])
 
+  const hasPreferredAccount = Boolean(preferredAccount?.bankName && preferredAccount.accountNumber.length === 10 && preferredAccount.accountName.trim())
   const canContinue = Boolean(selectedBank?.name && accountNumber.length === 10 && accountName.trim() && Number(amount) > 0 && bpcCode.trim())
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -82,7 +83,7 @@ export default function WithdrawPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-[#f5f7fc] text-[#172033]">
+    <main className="min-h-dvh bg-white text-[#172033]">
       <header className="transfer-header flex h-14 items-center gap-3 bg-[#0000ff] px-3.5 text-white shadow-sm">
         <button type="button" aria-label="Go back" onClick={() => router.back()} className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
           <ArrowLeft size={21} />
@@ -94,7 +95,7 @@ export default function WithdrawPage() {
       </header>
 
       <section className="transfer-content mx-auto flex w-full max-w-md flex-col gap-2.5 px-3 pb-4 pt-3 sm:px-4">
-        <section aria-label="Available balance" className="transfer-balance rounded-2xl bg-[#101a43] px-4 py-3 text-white shadow-sm">
+        <section aria-label="Available balance" className="transfer-balance rounded-2xl bg-[#0000ff] px-4 py-3 text-white shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-blue-100">Available balance</p>
@@ -102,15 +103,21 @@ export default function WithdrawPage() {
             </div>
             <WalletCards size={24} aria-hidden="true" className="text-blue-100" />
           </div>
-          <p className="transfer-payout-note mt-2 flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.07] px-2.5 py-1.5 text-[11px] leading-tight text-blue-50">
-            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-blue-300" />
-            Bank payout service is not connected.
-          </p>
+          <div className="mt-2 grid gap-1">
+            <p role="status" aria-live="polite" className={`flex min-h-6 items-center gap-1.5 rounded-lg px-2 py-1 text-[10px] font-medium leading-tight ${hasPreferredAccount ? "bg-emerald-50 text-emerald-800" : "bg-white/15 text-blue-50"}`}>
+              {hasPreferredAccount ? <CheckCircle2 aria-hidden="true" size={14} className="shrink-0 text-emerald-600" /> : <CircleAlert aria-hidden="true" size={14} className="shrink-0 text-blue-100" />}
+              {hasPreferredAccount ? "Preferred Bank Account Successfully Added." : "Add a preferred bank account to continue."}
+            </p>
+            <p aria-label="Live bank payout status" className="flex items-center gap-1.5 px-1 text-[10px] leading-tight text-blue-50">
+              <CircleAlert aria-hidden="true" size={13} className="shrink-0 text-blue-100" />
+              Bank payout service is not connected.
+            </p>
+          </div>
         </section>
 
         <section aria-labelledby="preferred-account-heading" className="transfer-preferred flex items-center justify-between gap-2 rounded-2xl border border-[#e2e7ef] bg-white p-3 shadow-sm">
           <div className="min-w-0">
-            <h2 id="preferred-account-heading" className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#0000ff]">Preferred bank account</h2>
+            <h2 id="preferred-account-heading" className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#0000ff]">Your preferred bank account</h2>
             {preferredAccount?.bankName ? (
               <>
                 <p className="mt-1 truncate text-[13px] font-semibold text-[#101a43]">{preferredAccount.bankName}</p>
@@ -136,31 +143,31 @@ export default function WithdrawPage() {
 
           <div className="min-w-0">
             <label htmlFor="account-number" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Account number</label>
-            <input id="account-number" inputMode="numeric" autoComplete="off" maxLength={10} value={accountNumber} onChange={(event) => setAccountNumber(event.target.value.replace(/\D/g, ""))} placeholder="10-digit account number" className="h-11 w-full rounded-xl border border-[#e2e7ef] bg-white px-2.5 text-[12px] outline-none placeholder:text-[11px] placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
+            <input id="account-number" inputMode="numeric" autoComplete="off" maxLength={10} value={accountNumber} onChange={(event) => setAccountNumber(event.target.value.replace(/\D/g, ""))} placeholder="10-digit account number" className="h-10 w-full rounded-lg border border-[#dbe3ef] bg-[#f8faff] px-2 text-[11px] font-normal text-[#172033] outline-none placeholder:text-[10px] placeholder:font-normal placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
           </div>
 
           <div className="min-w-0">
             <label htmlFor="account-name" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Account name</label>
             <div className="relative">
               <UserRound aria-hidden="true" size={16} className="absolute left-2.5 top-3 text-[#788196]" />
-              <input id="account-name" autoComplete="off" value={accountName} onChange={(event) => setAccountName(event.target.value)} placeholder="Enter account name" className="h-11 w-full rounded-xl border border-[#e2e7ef] bg-white pl-8 pr-2 text-[12px] outline-none placeholder:text-[11px] placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
+              <input id="account-name" autoComplete="off" value={accountName} onChange={(event) => setAccountName(event.target.value)} placeholder="Enter account name" className="h-10 w-full rounded-lg border border-[#dbe3ef] bg-[#f8faff] pl-8 pr-2 text-[11px] font-normal text-[#172033] outline-none placeholder:text-[10px] placeholder:font-normal placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
             </div>
             <p className="mt-1 text-[10px] leading-tight text-[#788196]">Account names are not verified by BLUEPAY.</p>
           </div>
 
           <div className="min-w-0">
             <label htmlFor="transfer-amount" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Amount</label>
-            <div className="flex h-11 items-center rounded-xl border border-[#e2e7ef] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
+            <div className="transfer-control flex h-10 items-center rounded-lg border border-[#dbe3ef] bg-[#f8faff] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
               <span className="pl-2.5"><NairaSymbol className="h-4 w-3.5 text-[#788196]" /></span>
-              <input id="transfer-amount" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value.replace(/[^0-9]/g, ""))} placeholder="0" className="h-full w-full min-w-0 rounded-r-xl bg-transparent px-1.5 text-[13px] outline-none placeholder:text-slate-400" />
+              <input id="transfer-amount" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value.replace(/[^0-9]/g, ""))} placeholder="0" className="h-full w-full min-w-0 rounded-r-lg bg-transparent px-1.5 text-[12px] font-normal text-[#172033] outline-none placeholder:font-normal placeholder:text-slate-400" />
             </div>
           </div>
 
           <div className="min-w-0">
             <label htmlFor="bpc-code" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">BPC code</label>
-            <div className="flex h-11 min-w-0 items-center rounded-xl border border-[#e2e7ef] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
-              <input id="bpc-code" value={bpcCode} onChange={(event) => setBpcCode(event.target.value)} placeholder="Enter your valid BPC code" className="h-full min-w-0 flex-1 rounded-l-xl bg-transparent px-2 text-[11px] outline-none placeholder:text-[9px] placeholder:text-slate-400" />
-              <button type="button" onClick={() => router.push("/buy-bpc")} className="h-full shrink-0 rounded-r-xl border-l border-[#e2e7ef] px-1.5 text-[9px] font-bold text-[#0000ff] hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0000ff]">BUY BPC CODE</button>
+            <div className="transfer-control flex h-10 min-w-0 items-center rounded-lg border border-[#dbe3ef] bg-[#f8faff] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
+              <input id="bpc-code" value={bpcCode} onChange={(event) => setBpcCode(event.target.value)} placeholder="Enter code" className="h-full min-w-0 flex-1 rounded-l-lg bg-transparent px-1.5 text-[10px] font-normal text-[#172033] outline-none placeholder:text-[9px] placeholder:font-normal placeholder:text-slate-400" />
+              <button type="button" onClick={() => router.push("/buy-bpc")} className="h-full shrink-0 rounded-r-lg border-l border-[#dbe3ef] px-1 text-[8px] font-bold text-[#0000ff] hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0000ff]">BUY BPC CODE</button>
             </div>
           </div>
 
