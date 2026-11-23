@@ -243,15 +243,13 @@
     padding: 8px 12px !important;
   }
 
-  .transfer-payout-note {
-    margin-top: 4px !important;
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
-    font-size: 10px !important;
-  }
-
   .transfer-preferred {
     padding: 8px !important;
+  }
+
+  .transfer-preferred h2 {
+    font-size: 9px !important;
+    letter-spacing: 0.04em !important;
   }
 
   .transfer-preferred-action {
