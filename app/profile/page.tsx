@@ -3,28 +3,28 @@ import Link from "next/link"
 import { ArrowLeft, User, Settings, LogOut, Bell, Shield, Download, MapPin, Phone, Mail, Edit2, Copy, CheckCircle, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { authClient, signOutAndClearPinProof } from "@/lib/auth-client"
 
 export default function ProfilePage() {
   const router = useRouter()
   const [userData, setUserData] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [copied, setCopied] = useState(false)
-  const { data: authSession } = authClient.useSession()
-  const sessionUser = authSession?.user
 
   useEffect(() => {
-    if (!sessionUser) return
-    setUserData({ id: sessionUser.id, fullName: sessionUser.name, email: sessionUser.email })
-  }, [sessionUser])
+    const storedUserData = localStorage.getItem("userData")
+    if (storedUserData) {
+      const user = JSON.parse(storedUserData)
+      setUserData(user)
+    }
+  }, [])
 
-  const handleLogout = async () => {
-    await signOutAndClearPinProof()
+  const handleLogout = () => {
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")
-    router.replace("/login")
+    localStorage.removeItem("registeredUsers")
+    router.push("/get-started")
   }
 
   const handleCopyPhone = () => {
@@ -77,8 +77,9 @@ export default function ProfilePage() {
 
               {/* Name and status */}
               <h2 className="text-2xl font-bold text-gray-900 text-center">{userData.fullName}</h2>
-              <div className="mt-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-                BLUEPAY profile
+              <div className="flex items-center gap-2 mt-2 bg-green-50 px-3 py-1 rounded-full">
+                <CheckCircle size={16} className="text-green-600" />
+                <span className="text-sm font-semibold text-green-600">Account Verified</span>
               </div>
             </div>
 

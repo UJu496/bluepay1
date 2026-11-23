@@ -31,7 +31,6 @@ import {
   LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
-import { authClient, signOutAndClearPinProof } from "@/lib/auth-client"
 
 const TypewriterText = ({
   text,
@@ -93,7 +92,6 @@ const WordByWordAnimation = ({ text, delay = 250 }: { text: string; delay?: numb
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { data: authSession } = authClient.useSession()
   const [showJoinGroup, setShowJoinGroup] = useState(false)
   const [userName, setUserName] = useState("")
   const [displayedName, setDisplayedName] = useState("")
@@ -237,11 +235,13 @@ export default function DashboardPage() {
   ]
 
   useEffect(() => {
-    if (authSession?.user.name) setUserName(authSession.user.name)
-  }, [authSession?.user.name])
-
-  useEffect(() => {
     setGreeting(getTimeBasedGreeting())
+
+    const userData = localStorage.getItem("userData")
+    if (userData) {
+      const parsedData = JSON.parse(userData)
+      setUserName(parsedData.fullName || "Account holder")
+    }
 
     const savedPhoto = localStorage.getItem("userProfilePhoto")
     if (savedPhoto) {
@@ -444,15 +444,15 @@ export default function DashboardPage() {
     router.push("/profile")
   }
 
-  const handleLogout = async () => {
-    await signOutAndClearPinProof()
+  const handleLogout = () => {
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")
+    localStorage.removeItem("registeredUsers")
     localStorage.removeItem("userProfilePhoto")
 
-    router.replace("/login")
+    router.push("/get-started")
   }
 
   const handleBellClick = () => {

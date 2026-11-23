@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { signOutAndClearPinProof } from "@/lib/auth-client"
 import {
   ArrowLeft,
   Palette,
@@ -17,7 +16,6 @@ import {
   Smartphone,
   Lock,
   CreditCard,
-  Landmark,
   Mail,
   MessageSquare,
   Info,
@@ -141,16 +139,16 @@ export default function SettingsPage() {
     router.push("/dashboard")
   }
 
-  const handleLogout = async () => {
-    await signOutAndClearPinProof()
+  const handleLogout = () => {
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
     localStorage.removeItem("lastTaskReset")
+    localStorage.removeItem("registeredUsers")
     localStorage.removeItem("userProfilePhoto")
     localStorage.removeItem("userTheme")
     localStorage.removeItem("darkMode")
-    router.replace("/login")
+    router.push("/get-started")
   }
 
   return (
@@ -281,20 +279,6 @@ export default function SettingsPage() {
               <div className="flex items-center gap-3">
                 <CreditCard size={20} className="text-gray-600" />
                 <span className="font-semibold text-gray-800">Payment Methods</span>
-              </div>
-              <div className="text-gray-400">›</div>
-            </button>
-
-            <button
-              onClick={() => router.push("/bank-details")}
-              className="w-full flex items-center justify-between rounded-xl bg-gray-50 p-4 text-left transition-colors hover:bg-gray-100"
-            >
-              <div className="flex items-center gap-3">
-                <Landmark size={20} className="text-gray-600" />
-                <div>
-                  <span className="block font-semibold text-gray-800">Bank Account Details</span>
-                  <span className="block text-xs text-gray-500">Manage your linked bank account information.</span>
-                </div>
               </div>
               <div className="text-gray-400">›</div>
             </button>

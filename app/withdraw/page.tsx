@@ -1,18 +1,45 @@
 "use client"
 
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, CheckCircle2, CircleAlert, ShieldCheck, UserRound, WalletCards } from "lucide-react"
-import { getCurrentUserBankDetails, type UserBankDetails } from "@/lib/user-bank-details"
-import { localBanks, type Bank } from "@/lib/banks"
-import { BankPicker } from "@/components/bank-picker"
+import { ArrowLeft, Check, ChevronDown, Landmark, Search, ShieldCheck, UserRound, WalletCards } from "lucide-react"
+import { saveTransaction } from "@/lib/transactions"
+import { formatCurrency } from "@/lib/utils"
+import { isValidBpcCode } from "@/lib/bpc"
+import type { Bank } from "@/lib/banks"
 
-function NairaSymbol({ className }: { className: string }) {
-  return (
-    <svg aria-label="Nigerian naira" role="img" viewBox="0 0 16 20" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 19V1L13 19V1M1 8H15M1 12H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
+const bankLogoDomains: Record<string, string> = {
+  "Access Bank": "accessbankplc.com",
+  "First Bank": "firstbanknigeria.com",
+  UBA: "ubagroup.com",
+  GTBank: "gtbank.com",
+  "Zenith Bank": "zenithbank.com",
+  FCMB: "fcmb.com",
+  "Fidelity Bank": "fidelitybank.ng",
+  "Wema Bank": "wemabank.com",
+  "Polaris Bank": "polarisbanklimited.com",
+  "Stanbic IBTC": "stanbicibtcbank.com",
+  "Sterling Bank": "sterling.ng",
+  "Union Bank": "unionbankng.com",
+  Ecobank: "ecobank.com",
+  "OPay": "opayweb.com",
+  PalmPay: "palmpay.com",
+  "Kuda MFB": "kuda.com",
+  "Moniepoint MFB": "moniepoint.com",
+  "VFD MFB": "vbank.ng",
+  FirstMonie: "firstbanknigeria.com",
+}
+
+function BankLogo({ bank, size = "md" }: { bank: Bank; size?: "sm" | "md" }) {
+  const initials = bank.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
+  const logoUrl = bank.logo || (bankLogoDomains[bank.name] ? `https://logo.clearbit.com/${bankLogoDomains[bank.name]}` : null)
+  const dimensions = size === "sm" ? "h-9 w-9 text-[10px]" : "h-14 w-14 text-xs"
+
+  return <span className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-white font-bold text-[#0000ff] shadow-sm ${dimensions}`}>
+    <span aria-hidden="true">{initials}</span>
+    {logoUrl && <img src={logoUrl} alt={`${bank.name} logo`} className="absolute inset-0 h-full w-full bg-white object-contain p-1.5" onError={(event) => { event.currentTarget.style.display = "none" }} />}
+    <span className="sr-only">{bank.name}</span>
+  </span>
 }
 
 export default function WithdrawPage() {
@@ -22,11 +49,12 @@ export default function WithdrawPage() {
   const [accountName, setAccountName] = useState("")
   const [amount, setAmount] = useState("")
   const [bpcCode, setBpcCode] = useState("")
+  const [search, setSearch] = useState("")
+  const [openBanks, setOpenBanks] = useState(false)
   const [error, setError] = useState("")
   const [balance, setBalance] = useState(0)
   const [banks, setBanks] = useState<Bank[]>([])
   const [banksLoading, setBanksLoading] = useState(true)
-  const [preferredAccount, setPreferredAccount] = useState<UserBankDetails | null>(null)
 
   useEffect(() => {
     const loadBalance = () => {
@@ -36,26 +64,12 @@ export default function WithdrawPage() {
       setBalance(authoritativeBalance)
     }
     loadBalance()
-    window.addEventListener("storage", loadBalance)
+    window.addEventListener("storage", (event) => event.key === "userBalance" && loadBalance())
     document.addEventListener("visibilitychange", loadBalance)
     return () => {
-      window.removeEventListener("storage", loadBalance)
       document.removeEventListener("visibilitychange", loadBalance)
     }
   }, [])
-
-  useEffect(() => {
-    const syncPreferredAccount = () => {
-      const details = getCurrentUserBankDetails()
-      setPreferredAccount(details)
-      setAccountNumber(details?.accountNumber || "")
-      setAccountName(details?.accountName || "")
-      setSelectedBank(banks.find((bank) => bank.name === details?.bankName) || null)
-    }
-    syncPreferredAccount()
-    window.addEventListener("storage", syncPreferredAccount)
-    return () => window.removeEventListener("storage", syncPreferredAccount)
-  }, [banks])
 
   useEffect(() => {
     fetch("/api/banks")
@@ -64,123 +78,43 @@ export default function WithdrawPage() {
         if (!response.ok) throw new Error(data.error || "Unable to load banks")
         setBanks(data.banks)
       })
-      .catch(() => setBanks(localBanks))
+      .catch(() => setError("Bank list is temporarily unavailable. Please try again."))
       .finally(() => setBanksLoading(false))
   }, [])
 
-  const hasPreferredAccount = Boolean(preferredAccount?.bankName && preferredAccount.accountNumber.length === 10 && preferredAccount.accountName.trim())
-  const canContinue = Boolean(selectedBank?.name && accountNumber.length === 10 && accountName.trim() && Number(amount) > 0 && bpcCode.trim())
+  const filteredBanks = useMemo(() => banks.filter((bank) => bank.name.toLowerCase().includes(search.toLowerCase())), [banks, search])
+  const canContinue = Boolean(selectedBank?.name && accountNumber.length === 10 && accountName && Number(amount) > 0 && bpcCode)
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  function submit(e: React.FormEvent) {
+    e.preventDefault()
     setError("")
     const value = Number(amount)
-    if (!selectedBank?.name || accountNumber.length !== 10 || !accountName.trim() || !value || !bpcCode.trim()) {
-      setError("Complete all transfer details to continue.")
-      return
-    }
-    setError("Secure transfer authorization is unavailable. No transfer was initiated.")
+    if (!selectedBank?.name || accountNumber.length !== 10 || !accountName || !value || !bpcCode) return setError("Complete all transfer details to continue.")
+    if (value > balance) return setError("Insufficient available balance.")
+    if (!isValidBpcCode(bpcCode)) return setError("This BPC code is invalid. Buy a valid code from BLUEPAY2026.")
+    const transaction = saveTransaction({ type: "expense", category: "Withdrawal", description: `Transfer to ${selectedBank.name}`, amount: value, date: new Date().toISOString().split("T")[0], accountNumber, bankName: selectedBank.name, userName: accountName, status: "pending" })
+    localStorage.setItem("withdrawalData", JSON.stringify({ accountName, accountNumber, selectedBank: selectedBank.name, bankCode: selectedBank.code, amount: value, balance, transactionId: transaction.id, reference: transaction.reference, trackingId: transaction.trackingId, createdAt: transaction.createdAt, status: "initiated" }))
+    router.push("/withdrawal-confirmation")
   }
 
-  return (
-    <main className="min-h-dvh bg-white text-[#172033]">
-      <header className="transfer-header flex h-14 items-center gap-3 bg-[#0000ff] px-3.5 text-white shadow-sm">
-        <button type="button" aria-label="Go back" onClick={() => router.back()} className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
-          <ArrowLeft size={21} />
-        </button>
-        <div className="leading-tight">
-          <p className="text-[11px] font-medium tracking-[0.05em] text-blue-100">BLUEPAY MOBILE</p>
-          <h1 className="mt-0.5 text-[16px] font-bold">Transfer to bank</h1>
-        </div>
-      </header>
-
-      <section className="transfer-content mx-auto flex w-full max-w-md flex-col gap-2.5 px-3 pb-4 pt-3 sm:px-4">
-        <section aria-label="Available balance" className="transfer-balance rounded-2xl bg-[#0000ff] px-4 py-3 text-white shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-blue-100">Available balance</p>
-              <p className="mt-1 flex items-center gap-1 text-[22px] font-bold leading-none"><NairaSymbol className="h-[22px] w-[17px] shrink-0" />{new Intl.NumberFormat("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number.isFinite(balance) ? balance : 0)}</p>
-            </div>
-            <WalletCards size={24} aria-hidden="true" className="text-blue-100" />
-          </div>
-          <div className="mt-2 grid gap-1">
-            <p role="status" aria-live="polite" className={`flex min-h-6 items-center gap-1.5 rounded-lg px-2 py-1 text-[10px] font-medium leading-tight ${hasPreferredAccount ? "bg-emerald-50 text-emerald-800" : "bg-white/15 text-blue-50"}`}>
-              {hasPreferredAccount ? <CheckCircle2 aria-hidden="true" size={14} className="shrink-0 text-emerald-600" /> : <CircleAlert aria-hidden="true" size={14} className="shrink-0 text-blue-100" />}
-              {hasPreferredAccount ? "Preferred Bank Account Successfully Added." : "Add a preferred bank account to continue."}
-            </p>
-            <p aria-label="Live bank payout status" className="flex items-center gap-1.5 px-1 text-[10px] leading-tight text-blue-50">
-              <CircleAlert aria-hidden="true" size={13} className="shrink-0 text-blue-100" />
-              Bank payout service is not connected.
-            </p>
-          </div>
-        </section>
-
-        <section aria-labelledby="preferred-account-heading" className="transfer-preferred flex items-center justify-between gap-2 rounded-2xl border border-[#e2e7ef] bg-white p-3 shadow-sm">
-          <div className="min-w-0">
-            <h2 id="preferred-account-heading" className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#0000ff]">Your preferred bank account</h2>
-            {preferredAccount?.bankName ? (
-              <>
-                <p className="mt-1 truncate text-[13px] font-semibold text-[#101a43]">{preferredAccount.bankName}</p>
-                <p className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
-                  {preferredAccount.accountNumber ? `••••••${preferredAccount.accountNumber.slice(-4)}` : "Account number not added"}
-                  {preferredAccount.accountName ? ` · ${preferredAccount.accountName}` : ""}
-                </p>
-              </>
-            ) : (
-              <p className="mt-1 text-[12px] text-slate-600">No bank account added yet.</p>
-            )}
-          </div>
-          <button type="button" onClick={() => router.push("/bank-details?returnTo=%2Fwithdraw")} className="transfer-preferred-action min-h-10 w-[132px] shrink-0 rounded-xl border border-blue-100 bg-blue-50 px-2 text-[10px] font-bold text-[#0000ff] hover:bg-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0000ff]">
-            {preferredAccount?.bankName ? "EDIT ACCOUNT" : "+ ADD BANK ACCOUNT"}
-          </button>
-        </section>
-
-        <form onSubmit={submit} className="transfer-form grid grid-cols-2 gap-x-2.5 gap-y-2 rounded-2xl border border-[#e2e7ef] bg-white p-3 shadow-sm">
-          <div className="col-span-2 min-w-0">
-            <label htmlFor="destination-bank" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Select bank</label>
-            <div id="destination-bank"><BankPicker compact banks={banks} value={selectedBank?.name || ""} loading={banksLoading} disabled={banksLoading} label="Select bank" placeholder="Choose destination bank" onSelect={(bank) => { setSelectedBank(bank); setAccountName("") }} /></div>
-          </div>
-
-          <div className="min-w-0">
-            <label htmlFor="account-number" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Account number</label>
-            <input id="account-number" inputMode="numeric" autoComplete="off" maxLength={10} value={accountNumber} onChange={(event) => setAccountNumber(event.target.value.replace(/\D/g, ""))} placeholder="10-digit account number" className="h-10 w-full rounded-lg border border-[#dbe3ef] bg-[#f8faff] px-2 text-[11px] font-normal text-[#172033] outline-none placeholder:text-[10px] placeholder:font-normal placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
-          </div>
-
-          <div className="min-w-0">
-            <label htmlFor="account-name" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Account name</label>
-            <div className="relative">
-              <UserRound aria-hidden="true" size={16} className="absolute left-2.5 top-3 text-[#788196]" />
-              <input id="account-name" autoComplete="off" value={accountName} onChange={(event) => setAccountName(event.target.value)} placeholder="Enter account name" className="h-10 w-full rounded-lg border border-[#dbe3ef] bg-[#f8faff] pl-8 pr-2 text-[11px] font-normal text-[#172033] outline-none placeholder:text-[10px] placeholder:font-normal placeholder:text-slate-400 focus:border-[#0000ff] focus:ring-1 focus:ring-[#0000ff]" />
-            </div>
-            <p className="mt-1 text-[10px] leading-tight text-[#788196]">Account names are not verified by BLUEPAY.</p>
-          </div>
-
-          <div className="min-w-0">
-            <label htmlFor="transfer-amount" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">Amount</label>
-            <div className="transfer-control flex h-10 items-center rounded-lg border border-[#dbe3ef] bg-[#f8faff] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
-              <span className="pl-2.5"><NairaSymbol className="h-4 w-3.5 text-[#788196]" /></span>
-              <input id="transfer-amount" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value.replace(/[^0-9]/g, ""))} placeholder="0" className="h-full w-full min-w-0 rounded-r-lg bg-transparent px-1.5 text-[12px] font-normal text-[#172033] outline-none placeholder:font-normal placeholder:text-slate-400" />
-            </div>
-          </div>
-
-          <div className="min-w-0">
-            <label htmlFor="bpc-code" className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#788196]">BPC code</label>
-            <div className="transfer-control flex h-10 min-w-0 items-center rounded-lg border border-[#dbe3ef] bg-[#f8faff] focus-within:border-[#0000ff] focus-within:ring-1 focus-within:ring-[#0000ff]">
-              <input id="bpc-code" value={bpcCode} onChange={(event) => setBpcCode(event.target.value)} placeholder="Enter code" className="h-full min-w-0 flex-1 rounded-l-lg bg-transparent px-1.5 text-[10px] font-normal text-[#172033] outline-none placeholder:text-[9px] placeholder:font-normal placeholder:text-slate-400" />
-              <button type="button" onClick={() => router.push("/buy-bpc")} className="h-full shrink-0 rounded-r-lg border-l border-[#dbe3ef] px-1 text-[8px] font-bold text-[#0000ff] hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0000ff]">BUY BPC CODE</button>
-            </div>
-          </div>
-
-          {error && <p role="alert" className="col-span-2 rounded-lg bg-red-50 px-3 py-2 text-[11px] font-medium text-red-600">{error}</p>}
-
-          <button type="submit" disabled={!canContinue} className="transfer-review col-span-2 h-11 rounded-xl bg-[#0000ff] text-[13px] font-bold tracking-[0.03em] text-white shadow-sm transition hover:bg-[#0000dd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0000ff] disabled:cursor-not-allowed disabled:opacity-100">REVIEW TRANSFER</button>
-
-          <p className="transfer-disclosure col-span-2 flex items-start gap-2 text-[10px] leading-relaxed text-[#788196]">
-            <ShieldCheck size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-[#0000ff]" />
-            BLUEPAY records this request locally. Live bank payout and account-name verification are not connected.
-          </p>
-        </form>
-      </section>
-    </main>
-  )
+  return <main className="min-h-screen bg-[#f5f7fc] text-[#172033]">
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-3 bg-[#0000ff] px-4 text-white shadow-lg">
+      <button aria-label="Go back" onClick={() => router.back()} className="rounded-full p-2 hover:bg-white/15"><ArrowLeft /></button>
+      <div><p className="text-[11px] font-medium text-blue-100">BLUEPAY MOBILE</p><h1 className="text-base font-bold">Transfer to bank</h1></div>
+    </header>
+    <section className="mx-auto flex w-full max-w-md flex-col gap-4 p-4 pb-8">
+      <div className="rounded-2xl bg-[#101a43] p-4 text-white shadow-md"><div className="flex items-center gap-2 text-xs text-blue-100"><WalletCards /> Available balance</div><p className="mt-2 text-2xl font-bold">{formatCurrency(balance)}</p><p className="mt-1 text-[11px] text-blue-100">Secure bank transfer</p></div>
+      <form onSubmit={submit} className="flex flex-col gap-3 rounded-2xl border border-[#e7eaf2] bg-white p-4 shadow-sm">
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Select bank</label><button type="button" onClick={() => setOpenBanks(!openBanks)} className="flex h-12 w-full items-center justify-between rounded-xl border border-[#e7eaf2] px-3 text-left text-sm"><span className="flex min-w-0 items-center gap-2">{selectedBank ? <BankLogo bank={selectedBank} size="sm" /> : <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#0000ff]"><Landmark size={16} /></span>}<span className={selectedBank ? "truncate font-semibold" : "text-[#788196]"}>{selectedBank?.name || (banksLoading ? "Loading supported banks..." : "Choose destination bank")}</span></span><ChevronDown /></button></div>
+        {openBanks && <div className="fixed inset-0 z-50 flex items-end bg-[#101a43]/35 p-3" role="dialog" aria-modal="true" aria-label="Select destination bank" onClick={() => setOpenBanks(false)}><div className="mx-auto w-full max-w-md rounded-[28px] bg-white p-4 shadow-2xl" onClick={(event) => event.stopPropagation()}><div className="mb-3 flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#788196]">Transfer to bank</p><h2 className="text-lg font-bold text-[#172033]">Select destination</h2></div><button type="button" aria-label="Close bank selector" onClick={() => setOpenBanks(false)} className="rounded-full px-3 py-1 text-xl text-[#788196]">×</button></div><div className="flex items-center gap-2 rounded-xl bg-[#f5f7fc] px-3"><Search className="text-[#788196]" size={18} /><input autoFocus value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search banks and fintechs" className="h-11 w-full bg-transparent text-sm outline-none" /></div><div className="mt-3 max-h-[52vh] overflow-y-auto">{filteredBanks.map((bank) => <button type="button" key={bank.id} onClick={() => { setSelectedBank(bank); setAccountName(""); setOpenBanks(false); setSearch("") }} className="flex w-full items-center justify-between rounded-xl px-2 py-2.5 text-left text-sm hover:bg-blue-50"><span className="flex items-center gap-3"><BankLogo bank={bank} size="sm" /><span className="font-medium">{bank.name}</span></span>{selectedBank?.id === bank.id && <Check className="text-[#0000ff]" size={18} />}</button>)}</div></div></div>}
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Account number</label><input inputMode="numeric" maxLength={10} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ""))} placeholder="10-digit account number" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /></div>
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Account name</label><div className="relative"><UserRound className="absolute left-3 top-3.5 text-[#788196]" /><input value={accountName} onChange={(e) => setAccountName(e.target.value)} placeholder="Verified recipient name" className="h-12 w-full rounded-xl border border-[#e7eaf2] pl-10 pr-3 text-sm outline-none focus:border-[#0000ff]" /></div><p className="mt-1 text-[11px] text-[#788196]">Enter the name returned by your provider&apos;s account enquiry.</p></div>
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">Amount</label><input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))} placeholder="₦0" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /></div>
+        <div><label className="mb-1 block text-xs font-semibold text-[#788196]">BPC code</label><input value={bpcCode} onChange={(e) => setBpcCode(e.target.value)} placeholder="Enter your valid BPC code" className="h-12 w-full rounded-xl border border-[#e7eaf2] px-3 text-sm outline-none focus:border-[#0000ff]" /><button type="button" onClick={() => router.push("/buy-bpc")} className="mt-1 text-xs font-semibold text-[#0000ff]">Buy BPC code</button></div>
+        {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">{error}</p>}
+        <div className="flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-[11px] text-[#101a43]"><ShieldCheck className="text-[#0000ff]" /> Your transfer is protected by BLUEPAY security checks.</div>
+        <button disabled={!canContinue} className="h-12 rounded-xl bg-[#0000ff] text-sm font-bold text-white shadow-md transition hover:bg-[#0000dd] disabled:cursor-not-allowed disabled:opacity-45">Review transfer</button>
+      </form>
+    </section>
+  </main>
 }

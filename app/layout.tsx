@@ -1,19 +1,19 @@
 import type React from "react"
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { FloatingWhatsappLady } from "@/components/floating-whatsapp-lady"
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
+const geistSans = Geist({ subsets: ["latin"] })
+const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bluepaymobile2026.vercel.app"),
   alternates: {
     canonical: "/",
   },
-  title: "BLUEPAY MOBILE | Secure Payments",
-  description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
+  title: "BLUEPAY MOBILE",
+  description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
   verification: {
     google: [
       "eR5tw2Q3nzT2G97TOSqYtRxLED76aXC2xnRwI16Iv0M",
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "BLUEPAY MOBILE | Secure Payments",
-    description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
+    title: "BLUEPAY MOBILE",
+    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
     images: [
       {
         url: "/og-image.jpg",
@@ -36,17 +36,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BLUEPAY MOBILE | Secure Payments",
-    description: "Secure account access, PIN-protected banking, and everyday digital payments with BLUEPAY MOBILE.",
+    title: "BLUEPAY MOBILE",
+    description: "Empowering Smarter Payments, Everyday Banking & Digital Finance.",
     images: ["https://www-bluepaymobile2026.vercel.app/og-image.jpg"],
   },
-}
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  userScalable: true,
-  themeColor: "#0000ff",
 }
 
 export default function RootLayout({
