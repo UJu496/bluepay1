@@ -7,7 +7,7 @@ import { pinCredentials } from "@/lib/db/schema"
 export const runtime = "nodejs"
 
 export async function GET(request: Request) {
-  const session = await auth.api.getSession({ headers: request.headers })
+  const { data: session } = await auth.getSession()
   if (!session?.user) return NextResponse.json({ error: "Not signed in" }, { status: 401 })
 
   const [credential] = await db

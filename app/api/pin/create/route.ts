@@ -12,7 +12,7 @@ const createPinSchema = z.object({ pin: z.string().regex(/^\d{4}$/) })
 export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) return NextResponse.json({ error: "Invalid request" }, { status: 403 })
 
-  const session = await auth.api.getSession({ headers: request.headers })
+  const { data: session } = await auth.getSession()
   if (!session?.user) return NextResponse.json({ error: "Not signed in" }, { status: 401 })
 
   const body = createPinSchema.safeParse(await request.json().catch(() => null))

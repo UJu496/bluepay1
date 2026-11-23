@@ -24,7 +24,7 @@ export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
   if (publicPaths.has(path)) return NextResponse.next()
 
-  const session = await auth.api.getSession({ headers: request.headers })
+  const { data: session } = await auth.getSession()
   if (!session?.user) return NextResponse.redirect(new URL("/login", request.url))
   if (pinSetupPaths.has(path)) return NextResponse.next()
 

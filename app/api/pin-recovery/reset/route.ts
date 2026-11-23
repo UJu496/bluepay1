@@ -1,7 +1,6 @@
 import { and, eq, gt, isNull } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { pinCredentials, pinRecoveryGrants } from "@/lib/db/schema"
 import { canAttemptPinReset } from "@/lib/pin-recovery"
@@ -18,19 +17,28 @@ const resetPinSchema = z.object({
 export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) return NextResponse.json({ error: "Invalid request" }, { status: 403 })
 
-  const session = await auth.api.getSession({ headers: request.headers })
-  if (!session?.user) return NextResponse.json({ error: "Please verify your account again" }, { status: 401 })
-
   const parsed = resetPinSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success || parsed.data.pin !== parsed.data.confirmPin) {
     return NextResponse.json({ error: "Enter matching 4-digit PINs" }, { status: 400 })
   }
 
-  if (!(await canAttemptPinReset(session.user.id, request))) {
+  const tokenHash = hashSecurityToken(`pin-recovery:${parsed.data.recoveryToken}`)
+  const [grantOwner] = await db
+    .select({ userId: pinRecoveryGrants.userId })
+    .from(pinRecoveryGrants)
+    .where(and(
+      eq(pinRecoveryGrants.tokenHash, tokenHash),
+      isNull(pinRecoveryGrants.consumedAt),
+      gt(pinRecoveryGrants.expiresAt, new Date()),
+    ))
+    .limit(1)
+
+  if (!grantOwner) return NextResponse.json({ error: "Recovery session expired. Verify your account again." }, { status: 400 })
+
+  if (!(await canAttemptPinReset(grantOwner.userId, request))) {
     return NextResponse.json({ error: "Too many attempts. Please wait and try again." }, { status: 429 })
   }
 
-  const tokenHash = hashSecurityToken(`pin-recovery:${parsed.data.recoveryToken}`)
   const newPinHash = await hashPin(parsed.data.pin)
   const updated = await db.transaction(async (transaction) => {
     const [grant] = await transaction
@@ -38,7 +46,7 @@ export async function POST(request: Request) {
       .from(pinRecoveryGrants)
       .where(and(
         eq(pinRecoveryGrants.tokenHash, tokenHash),
-        eq(pinRecoveryGrants.userId, session.user.id),
+        eq(pinRecoveryGrants.userId, grantOwner.userId),
         isNull(pinRecoveryGrants.consumedAt),
         gt(pinRecoveryGrants.expiresAt, new Date()),
       ))
@@ -54,13 +62,14 @@ export async function POST(request: Request) {
 
     await transaction
       .insert(pinCredentials)
-      .values({ userId: session.user.id, pinHash: newPinHash, failedAttempts: 0, lockedUntil: null })
+      .values({ userId: grant.userId, pinHash: newPinHash, failedAttempts: 0, lockedUntil: null })
       .onConflictDoUpdate({
         target: pinCredentials.userId,
         set: { pinHash: newPinHash, failedAttempts: 0, lockedUntil: null, updatedAt: new Date() },
       })
 
-    await transaction.delete(pinRecoveryGrants).where(eq(pinRecoveryGrants.userId, session.user.id))
+    await transaction.delete(pinRecoveryGrants).where(eq(pinRecoveryGrants.userId, grant.userId))
+
     return true
   })
 

@@ -1,10 +1,9 @@
 import { randomBytes } from "node:crypto"
-import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { pinRecoveryGrants, user } from "@/lib/db/schema"
+import { pinRecoveryGrants } from "@/lib/db/schema"
 import { canAttemptRecovery } from "@/lib/pin-recovery"
 import { hashSecurityToken, isSameOriginRequest, normalizeFullName } from "@/lib/pin-security"
 
@@ -35,20 +34,13 @@ export async function POST(request: Request) {
     )
   }
 
-  const [account] = await db
-    .select({ id: user.id, name: user.name, email: user.email })
-    .from(user)
-    .where(eq(user.email, email))
-    .limit(1)
-
-  if (!account || normalizeFullName(account.name) !== normalizeFullName(parsed.data.fullName)) return genericFailure()
-
   try {
-    const signInResult = await auth.api.signInEmail({
-      body: { email: account.email, password: parsed.data.password },
-      headers: request.headers,
-      returnHeaders: true,
-    })
+    const signInResult = await auth.signIn.email({ email, password: parsed.data.password })
+    const account = signInResult.data?.user
+    if (!account || normalizeFullName(account.name) !== normalizeFullName(parsed.data.fullName)) {
+      return genericFailure()
+    }
+
     const recoveryToken = randomBytes(32).toString("base64url")
     await db.insert(pinRecoveryGrants).values({
       tokenHash: hashSecurityToken(`pin-recovery:${recoveryToken}`),
@@ -56,12 +48,10 @@ export async function POST(request: Request) {
       expiresAt: new Date(Date.now() + 10 * 60_000),
     })
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       { recoveryToken },
       { headers: { "Cache-Control": "no-store" } },
     )
-    for (const cookie of signInResult.headers.getSetCookie()) response.headers.append("set-cookie", cookie)
-    return response
   } catch {
     return genericFailure()
   }
