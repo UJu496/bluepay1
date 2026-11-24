@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Bell, Check, ChevronDown, CreditCard, KeyRound, Landmark, Plane, Search, ShieldCheck, ShoppingCart, UserRound, WalletCards } from "lucide-react"
+import { ArrowLeft, Bell, Check, ChevronDown, CreditCard, Landmark, Plane, Search, ShieldCheck, ShoppingCart, UserRound, WalletCards } from "lucide-react"
 import { saveTransaction } from "@/lib/transactions"
 import { formatCurrency } from "@/lib/utils"
 import { BLUEPAY_BPC_PURCHASE_AMOUNT, isValidBpcCode } from "@/lib/bpc"
@@ -187,11 +187,6 @@ export default function WithdrawPage() {
           <p className="mt-2 text-[10px] text-slate-500">Minimum {formatCurrency(MIN_TRANSFER_AMOUNT)} · Available {formatCurrency(balance)}</p>
         </section>
 
-        <section className="rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm" aria-labelledby="authorization-title">
-          <div className="mb-3 flex items-center gap-2"><span className="flex size-6 items-center justify-center rounded-full bg-blue-50 text-[11px] font-bold text-[#0000ff]">3</span><div className="flex-1"><h2 id="authorization-title" className="text-sm font-bold">BPC authorization</h2><p className="mt-0.5 text-[10px] text-slate-500">Step 3 of 3 · Required to authorize external bank transfer</p></div><KeyRound size={18} className="text-[#0000ff]" /></div>
-          <label className={labelClass} htmlFor="bpc-code">BPC authorization code</label><input id="bpc-code" autoComplete="off" value={bpcCode} onChange={(event) => setBpcCode(event.target.value)} placeholder="Enter your BPC code" className={inputClass} />
-          <div className="mt-2 flex items-center justify-between gap-2"><button type="button" onClick={() => router.push("/notifications")} className="text-left text-[10px] font-semibold text-[#0000ff] underline-offset-2 hover:underline">Check Inbox for Approved Code</button><button type="button" onClick={() => router.push("/buy-bpc")} className="shrink-0 text-[10px] font-semibold text-[#0000ff] underline-offset-2 hover:underline">Buy BPC Code ({formatCurrency(BLUEPAY_BPC_PURCHASE_AMOUNT)})</button></div>
-        </section>
 
         <section className="rounded-2xl bg-[#111a3b] p-3.5 text-white shadow-sm" aria-labelledby="summary-title">
           <h2 id="summary-title" className="mb-3 text-xs font-bold">Transfer summary</h2>
