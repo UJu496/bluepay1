@@ -31,6 +31,7 @@ import {
   LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
+import { DashboardPromotionalBanners } from "@/components/dashboard-promotional-banners"
 
 const TypewriterText = ({
   text,
@@ -99,7 +100,6 @@ export default function DashboardPage() {
   const [isLoadingBPC, setIsLoadingBPC] = useState(false)
   const [nameIndex, setNameIndex] = useState(0)
   const [currentNotification, setCurrentNotification] = useState({ name: "", amount: "" })
-  const [currentSlide, setCurrentSlide] = useState(0)
   const [currentTestimony, setCurrentTestimony] = useState(0)
   const [userProfilePhoto, setUserProfilePhoto] = useState<string | null>(null)
   const [hasWithdrawalNotification, setHasWithdrawalNotification] = useState(false)
@@ -361,14 +361,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % 10)
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
       setCurrentTestimony((prev) => (prev + 1) % featuredTestimonies.length)
     }, 5000)
 
@@ -381,14 +373,6 @@ export default function DashboardPage() {
     }, 1000)
 
     return () => clearInterval(clockInterval)
-  }, [])
-
-  useEffect(() => {
-    const carouselInterval = setInterval(() => {
-      setCurrentSlide((prev) => prev + 1)
-    }, 5000)
-
-    return () => clearInterval(carouselInterval)
   }, [])
 
   const handleJoinGroup = () => {
@@ -935,100 +919,7 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* Compact Banner Carousel - PalmPay Style */}
-      <div className="mx-4 mb-4 overflow-hidden rounded-xl bg-white shadow-lg">
-        <div className="relative h-28">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-full h-full">
-              {/* Slide 2 - iPhone 17 Pro */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 0 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2877%29-C4aJJS243zPUm6vRMs51iGSbmE2dp4.jpeg"
-                  alt="iPhone 17 Pro"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 5 - Technizo Concept */}
-              <div
-                className={`absolute inset-0 transition-all duration-1000 ${
-                  currentSlide % 10 === 1 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2876%29-HtjxlRSTmRYeJIQHrdJUokCOLJaU5w.jpeg"
-                  alt="Technizo Concept"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 10 - Storefront with slide and fade */}
-              <div
-                className={`absolute inset-0 transition-all duration-1500 ${
-                  currentSlide % 10 === 2 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
-                }`}
-              >
-                <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2872%29-rsgIbTfPu4IBZq6QgtpaEL7Si6g7eo.jpeg"
-                  alt="Telecom Store"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Slide 11 - Dangote tanker operations */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 3 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%286%29-e5qXa141xrdBQNeXCjzLeEKOc5JZJ9.jpeg" alt="Dangote refinery tanker operations" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 12 - Refinery construction */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 4 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%2810%29-GOOBH8cY0ooKZEEb0Yiz6kVNnIcMZ5.jpeg" alt="Dangote refinery construction" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 13 - Dangote executive */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 5 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%288%29-kaC04hqKryBfWAuTEDI42Bc5z54n5i.jpeg" alt="Dangote Petroleum Refinery executive" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 14 - Aerial refinery */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 6 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%281%29%20%287%29-UkS8JK0lpN9IoNUMNpfM60gZwHdhUx.jpeg" alt="Aerial view of Dangote refinery" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 15 - IPO details */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 7 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%282%29-jI3iIxbxAtX306RnEw7IPxdYSmRBvT.jpeg" alt="Dangote Refinery IPO key details" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 16 - Refinery at sunset */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 8 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%287%29-Vns2ZxuisLAudsCIRjcBSzXbHBPU9W.jpeg" alt="Dangote refinery at sunset" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Slide 17 - How to buy Dangote shares */}
-              <div className={`absolute inset-0 transition-all duration-1000 ${currentSlide % 10 === 9 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"}`}>
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download%20%281%29-Yi2Rt3EzvXZ4ubbeUnrkoLdU0aUKyN.jpeg" alt="How to buy Dangote shares guide" className="w-full h-full object-cover" />
-              </div>
-            </div>
-          </div>
-
-          {/* Slideshow indicators - bottom positioned */}
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-            {[...Array(10)].map((_, index) => (
-              <div
-                key={index}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentSlide % 10 === index ? "w-6 bg-blue-500" : "w-1.5 bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      <DashboardPromotionalBanners />
 
       <div className="mx-4 mb-20 p-4 rounded-xl text-white overflow-hidden" style={{ backgroundColor: "#0000FF" }}>
         <h3 className="text-xl font-bold mb-4">Important Information</h3>
