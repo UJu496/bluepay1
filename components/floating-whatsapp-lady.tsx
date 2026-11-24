@@ -7,7 +7,7 @@ const TELEGRAM_GROUP_URL = "https://t.me/bluepay2"
 
 export function FloatingWhatsappLady() {
   const pathname = usePathname()
-  if (pathname === "/transactions" || pathname.startsWith("/transactions/")) return null
+  if (pathname === "/transactions" || pathname.startsWith("/transactions/") || pathname === "/withdraw") return null
 
   return (
     <a
