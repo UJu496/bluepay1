@@ -31,6 +31,7 @@ import {
   LineChart,
 } from "lucide-react"
 import { getRecentTransactions, getSpendingByCategory } from "@/lib/transactions"
+import { announceVoiceGuideExit } from "@/lib/voice-guide"
 import { DashboardPromotionalBanners } from "@/components/dashboard-promotional-banners"
 
 const TypewriterText = ({
@@ -429,6 +430,7 @@ export default function DashboardPage() {
   }
 
   const handleLogout = () => {
+    announceVoiceGuideExit()
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
