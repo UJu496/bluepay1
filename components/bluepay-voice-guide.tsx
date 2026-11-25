@@ -20,6 +20,8 @@ import {
 
 type SpeechStatus = "idle" | "playing" | "paused" | "unavailable"
 
+const VOICE_EXIT_SUPPRESSION_KEY = "bluepayVoiceExitSuppressedUntil"
+
 export function BluepayVoiceGuide() {
   const pathname = usePathname()
   const [preferences, setPreferences] = useState<VoicePreferences>(DEFAULT_VOICE_PREFERENCES)
@@ -117,7 +119,6 @@ export function BluepayVoiceGuide() {
       preferencesRef.current = next
       setPreferences(next)
       saveVoicePreferences(next)
-      notifyVoicePreferencesChanged(next, true)
     }
     if (typeof window !== "undefined") window.sessionStorage.setItem("bluepayVoiceActivated", "1")
     sessionActivatedRef.current = true
@@ -156,7 +157,11 @@ export function BluepayVoiceGuide() {
     if (!firstVisitToPath) return
     const isFirstPath = lastPathRef.current === null
     lastPathRef.current = pathname
-    if (farewellRef.current) return
+    const suppressedUntil = Number(window.sessionStorage.getItem(VOICE_EXIT_SUPPRESSION_KEY) || 0)
+    if (farewellRef.current || suppressedUntil > Date.now()) {
+      farewellRef.current = false
+      return
+    }
 
     const nextPreferences = readVoicePreferences()
     preferencesRef.current = nextPreferences
@@ -200,8 +205,12 @@ export function BluepayVoiceGuide() {
       const firstName = detail?.firstName || getVoiceProfile().firstName
       const currentPreferences = preferencesRef.current
       if (!currentPreferences.voiceGuideEnabled || currentPreferences.muted || isSupported === false) return
+      const now = Date.now()
+      const suppressedUntil = Number(window.sessionStorage.getItem(VOICE_EXIT_SUPPRESSION_KEY) || 0)
+      if (suppressedUntil > now) return
       const farewell = `Thanks for banking with us${firstName ? `, ${firstName}` : ""}. We hope to welcome you back to BLUEPAY MOBILE soon.`
       farewellRef.current = true
+      window.sessionStorage.setItem(VOICE_EXIT_SUPPRESSION_KEY, String(now + 5000))
       if (typeof window !== "undefined") window.sessionStorage.setItem("bluepayVoiceActivated", "1")
       sessionActivatedRef.current = true
       setSessionActivated(true)
