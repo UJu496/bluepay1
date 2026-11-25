@@ -227,3 +227,65 @@
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+@keyframes promo-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes promo-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes promo-slide-in {
+  from { opacity: 0; transform: translateX(2.5rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes promo-slide-out {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-2rem); }
+}
+
+@keyframes promo-rotate-in {
+  from { opacity: 0; transform: perspective(900px) rotateY(-12deg) scale(0.96); }
+  to { opacity: 1; transform: perspective(900px) rotateY(0) scale(1); }
+}
+
+@keyframes promo-rotate-out {
+  from { opacity: 1; transform: perspective(900px) rotateY(0) scale(1); }
+  to { opacity: 0; transform: perspective(900px) rotateY(12deg) scale(0.96); }
+}
+
+@keyframes promo-zoom-in {
+  from { opacity: 0; transform: scale(1.08); filter: blur(2px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes promo-zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.92); }
+}
+
+.promo-banner-in-fade { animation: promo-fade-in 760ms ease both; }
+.promo-banner-out-fade { animation: promo-fade-out 760ms ease both; }
+.promo-banner-in-slide { animation: promo-slide-in 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.promo-banner-out-slide { animation: promo-slide-out 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.promo-banner-in-rotate { animation: promo-rotate-in 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; transform-origin: center; }
+.promo-banner-out-rotate { animation: promo-rotate-out 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; transform-origin: center; }
+.promo-banner-in-zoom { animation: promo-zoom-in 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.promo-banner-out-zoom { animation: promo-zoom-out 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-banner-in-fade,
+  .promo-banner-out-fade,
+  .promo-banner-in-slide,
+  .promo-banner-out-slide,
+  .promo-banner-in-rotate,
+  .promo-banner-out-rotate,
+  .promo-banner-in-zoom,
+  .promo-banner-out-zoom {
+    animation-duration: 1ms;
+  }
+}
