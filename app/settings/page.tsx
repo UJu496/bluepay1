@@ -23,12 +23,24 @@ import {
   LogOut,
   Check,
   DollarSign,
+  AudioLines,
+  RefreshCw,
 } from "lucide-react"
+import {
+  announceVoiceGuideExit,
+  DEFAULT_VOICE_PREFERENCES,
+  notifyVoicePreferencesChanged,
+  readVoicePreferences,
+  saveVoicePreferences,
+  VOICE_REPLAY_EVENT,
+  type VoicePreferences,
+} from "@/lib/voice-guide"
 
 export default function SettingsPage() {
   const router = useRouter()
   const [selectedTheme, setSelectedTheme] = useState("blue")
   const [darkMode, setDarkMode] = useState(false)
+  const [voicePreferences, setVoicePreferences] = useState<VoicePreferences>(DEFAULT_VOICE_PREFERENCES)
   const [notifications, setNotifications] = useState({
     push: true,
     email: true,
@@ -69,9 +81,17 @@ export default function SettingsPage() {
     },
   ]
 
+  const voiceToggles = [
+    { key: "voiceGuideEnabled", title: "Voice Guide", description: "Enable or disable spoken guidance" },
+    { key: "automaticPageGuidance", title: "Automatic Page Guidance", description: "Speak a short introduction when a page opens" },
+    { key: "welcomeVoice", title: "Welcome Voice", description: "Use your registered first name in the welcome" },
+    { key: "financialDetailsVoice", title: "Financial-detail narration", description: "Allow wallet balances, fees, and limits to be spoken" },
+  ] as const
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("userTheme")
     const savedDarkMode = localStorage.getItem("darkMode")
+    setVoicePreferences(readVoicePreferences())
 
     if (savedTheme) {
       const theme = JSON.parse(savedTheme)
@@ -135,11 +155,23 @@ export default function SettingsPage() {
     setTimeout(() => setShowNotificationModal(false), 4000)
   }
 
+  const handleVoicePreferenceChange = <K extends keyof VoicePreferences>(key: K, value: VoicePreferences[K]) => {
+    const next = { ...readVoicePreferences(), [key]: value }
+    saveVoicePreferences(next)
+    setVoicePreferences(next)
+    notifyVoicePreferencesChanged(next, key === "voiceGuideEnabled" && value === true)
+  }
+
+  const replayVoiceIntroduction = () => {
+    window.dispatchEvent(new Event(VOICE_REPLAY_EVENT))
+  }
+
   const handleBack = () => {
     router.push("/dashboard")
   }
 
   const handleLogout = () => {
+    announceVoiceGuideExit()
     localStorage.removeItem("userData")
     localStorage.removeItem("userBalance")
     localStorage.removeItem("completedTasks")
@@ -295,6 +327,63 @@ export default function SettingsPage() {
             </button>
           </div>
         </div>
+
+        <section className="rounded-xl bg-white p-4 shadow-sm" aria-labelledby="voice-guide-title">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-full bg-blue-100 text-[#0000ff]">
+              <AudioLines size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <h2 id="voice-guide-title" className="text-lg font-bold text-gray-800">BLUEPAY VOICE GUIDE</h2>
+              <p className="text-xs text-gray-600">Personalized, on-device spoken guidance</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {voiceToggles.map((toggle) => {
+              const enabled = voicePreferences[toggle.key]
+              return (
+                <div key={toggle.key} className="flex items-center justify-between gap-3 rounded-xl bg-gray-50 p-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-800">{toggle.title}</p>
+                    <p className="mt-0.5 text-[11px] leading-4 text-gray-600">{toggle.description}</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={enabled}
+                    aria-label={`${toggle.title}: ${enabled ? "on" : "off"}`}
+                    onClick={() => handleVoicePreferenceChange(toggle.key, !enabled)}
+                    className={`relative h-7 w-12 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0000ff] focus-visible:ring-offset-2 ${enabled ? "bg-[#0000ff]" : "bg-gray-300"}`}
+                  >
+                    <span className={`absolute top-1 size-5 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-6" : "translate-x-1"}`} />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+
+          <label htmlFor="voice-speed" className="mt-4 block text-sm font-semibold text-gray-800">Voice Speed</label>
+          <select
+            id="voice-speed"
+            value={voicePreferences.speed}
+            onChange={(event) => handleVoicePreferenceChange("speed", event.target.value as VoicePreferences["speed"])}
+            className="mt-1.5 h-10 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-800 outline-none focus:border-[#0000ff] focus:ring-2 focus:ring-blue-100"
+          >
+            <option value="slow">Slow</option>
+            <option value="normal">Normal</option>
+            <option value="fast">Fast</option>
+          </select>
+          <button
+            type="button"
+            onClick={replayVoiceIntroduction}
+            disabled={!voicePreferences.voiceGuideEnabled || voicePreferences.muted}
+            className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0000ff] px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RefreshCw size={15} aria-hidden="true" /> Replay Voice Introduction
+          </button>
+          <p className="mt-2 text-[10px] leading-4 text-gray-500">For privacy, financial narration is off by default. Voice Guide never speaks passwords, PINs, full account numbers, one-time codes, or BPC authorization codes.</p>
+        </section>
 
         {/* Notifications */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
