@@ -3,18 +3,12 @@ import { getTransactionById } from "@/lib/transactions"
 export type VoiceSpeed = "slow" | "normal" | "fast"
 
 export type VoicePreferences = {
-  voiceGuideEnabled: boolean
-  automaticPageGuidance: boolean
-  welcomeVoice: boolean
   financialDetailsVoice: boolean
   muted: boolean
   speed: VoiceSpeed
 }
 
 export const DEFAULT_VOICE_PREFERENCES: VoicePreferences = {
-  voiceGuideEnabled: true,
-  automaticPageGuidance: true,
-  welcomeVoice: true,
   financialDetailsVoice: false,
   muted: false,
   speed: "normal",
@@ -54,7 +48,7 @@ const routeGuidance: Record<string, string> = {
   "/reviews": "Use this page to submit a review about your BLUEPAY experience. Enter only the feedback requested and choose Submit when ready. Do not include passwords, PINs, or BPC authorization codes.",
   "/security": "Review the security and privacy options shown here. Choose the setting you want to manage and follow its instructions. Never disclose your PIN, password, or one-time verification code.",
   "/security-pin": "Use this page to set or update your security PIN. Enter it only in the protected fields and confirm it as requested. The voice guide will not read or repeat your PIN.",
-  "/settings": "Manage your BLUEPAY preferences here, including the Voice Guide settings. Choose a setting to update it, then review the selected state. Voice Guide financial-detail narration is off by default for privacy.",
+  "/settings": "Manage your BLUEPAY preferences here. Voice guidance is built in and automatically introduces each page and transaction step. You can mute it using the floating voice control. Financial details are not spoken aloud by default for privacy.",
   "/spending-breakdown": "This page summarizes the spending breakdown available in your account. Review the categories shown and use the navigation controls to return to your transactions. Keep financial details private if other people can hear your device.",
   "/support": "Use this page to contact BLUEPAY support through the options shown. Describe the issue without including a password, PIN, full account number, one-time code, or BPC authorization code.",
   "/terms": "Review the BLUEPAY terms and privacy information on this page. Use the back button or navigation controls when you are finished.",
@@ -72,10 +66,10 @@ const routeGuidance: Record<string, string> = {
 function safeProfile() {
   if (typeof window === "undefined") return null
   try {
-    const profile = JSON.parse(window.localStorage.getItem("userData") || "null") as { id?: string; fullName?: string; name?: string; email?: string } | null
+    const profile = JSON.parse(window.localStorage.getItem("userData") || "null") as { id?: string; firstName?: string; fullName?: string; name?: string; email?: string } | null
     if (!profile) return null
     const fullName = typeof profile.fullName === "string" ? profile.fullName : typeof profile.name === "string" ? profile.name : ""
-    const candidateFirstName = fullName.trim().split(/\s+/)[0] || ""
+    const candidateFirstName = typeof profile.firstName === "string" ? profile.firstName.trim() : fullName.trim().split(/\s+/)[0] || ""
     const firstName = candidateFirstName.includes("@") ? "" : candidateFirstName
     const identity = profile.id || profile.email || fullName
     return { firstName, identity }
@@ -109,8 +103,8 @@ export function readVoicePreferences(): VoicePreferences {
     const saved = JSON.parse(window.localStorage.getItem(preferenceKey()) || "null") as Partial<VoicePreferences> | null
     const speed = saved?.speed === "slow" || saved?.speed === "fast" ? saved.speed : "normal"
     return {
-      ...DEFAULT_VOICE_PREFERENCES,
-      ...saved,
+      financialDetailsVoice: saved?.financialDetailsVoice === true,
+      muted: saved?.muted === true,
       speed,
     }
   } catch {
@@ -123,9 +117,9 @@ export function saveVoicePreferences(preferences: VoicePreferences) {
   window.localStorage.setItem(preferenceKey(), JSON.stringify(preferences))
 }
 
-export function notifyVoicePreferencesChanged(preferences: VoicePreferences, activationRequested = false) {
+export function notifyVoicePreferencesChanged(preferences: VoicePreferences) {
   if (typeof window === "undefined") return
-  window.dispatchEvent(new CustomEvent(VOICE_PREFERENCES_EVENT, { detail: { preferences, activationRequested } }))
+  window.dispatchEvent(new CustomEvent(VOICE_PREFERENCES_EVENT, { detail: { preferences } }))
 }
 
 export function announceVoiceGuideExit() {

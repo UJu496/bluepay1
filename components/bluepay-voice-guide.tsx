@@ -40,6 +40,8 @@ export function BluepayVoiceGuide() {
   const farewellRef = useRef(false)
   const utteranceIdRef = useRef(0)
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const pendingScriptRef = useRef("")
+  const pendingWelcomeProfileRef = useRef("")
 
   preferencesRef.current = preferences
 
@@ -51,9 +53,9 @@ export function BluepayVoiceGuide() {
     setSpeechStatus("idle")
   }, [])
 
-  const speak = useCallback((text: string) => {
+  const speak = useCallback((text: string, replaceCurrent = true) => {
     const currentPreferences = preferencesRef.current
-    if (!text.trim() || !currentPreferences.voiceGuideEnabled || currentPreferences.muted) return
+    if (!text.trim() || currentPreferences.muted) return
     if (typeof window === "undefined" || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
       setIsSupported(false)
       setSpeechStatus("unavailable")
@@ -61,7 +63,7 @@ export function BluepayVoiceGuide() {
     }
 
     const speech = window.speechSynthesis
-    speech.cancel()
+    if (replaceCurrent) speech.cancel()
     const requestId = utteranceIdRef.current + 1
     utteranceIdRef.current = requestId
 
@@ -76,7 +78,15 @@ export function BluepayVoiceGuide() {
     utterance.rate = currentPreferences.speed === "slow" ? 0.86 : currentPreferences.speed === "fast" ? 1.14 : 1
     utterance.pitch = 1.02
     utterance.onstart = () => {
-      if (utteranceIdRef.current === requestId) setSpeechStatus("playing")
+      if (utteranceIdRef.current === requestId) {
+        pendingScriptRef.current = ""
+        if (pendingWelcomeProfileRef.current) {
+          welcomedProfileRef.current = pendingWelcomeProfileRef.current
+          pendingWelcomeProfileRef.current = ""
+          initialGuidancePendingRef.current = false
+        }
+        setSpeechStatus("playing")
+      }
     }
     utterance.onend = () => {
       if (utteranceIdRef.current === requestId) {
@@ -105,40 +115,35 @@ export function BluepayVoiceGuide() {
     const currentPreferences = preferencesRef.current
     const { firstName } = getVoiceProfile()
     const parts: string[] = []
-    if (includeWelcome && currentPreferences.welcomeVoice) parts.push(buildWelcomeScript(firstName))
-    if (currentPreferences.automaticPageGuidance) {
-      parts.push(getPageVoiceScript(pathname, firstName, currentPreferences))
-    }
+    if (includeWelcome) parts.push(buildWelcomeScript(firstName))
+    parts.push(getPageVoiceScript(pathname, firstName, currentPreferences))
     return parts.filter(Boolean).join(" ")
   }, [pathname])
 
   const activateAndPlay = useCallback((includeInitialWelcome = true) => {
     const currentPreferences = preferencesRef.current
-    if (!currentPreferences.voiceGuideEnabled) {
-      const next = { ...currentPreferences, voiceGuideEnabled: true, muted: false }
-      preferencesRef.current = next
-      setPreferences(next)
-      saveVoicePreferences(next)
-    }
+    if (currentPreferences.muted) return
     if (typeof window !== "undefined") window.sessionStorage.setItem("bluepayVoiceActivated", "1")
     sessionActivatedRef.current = true
     setSessionActivated(true)
 
     const { profileKey } = getVoiceProfile()
     const includeWelcome = includeInitialWelcome && (initialGuidancePendingRef.current || (profileKey && profileKey !== welcomedProfileRef.current))
-    const willSpeakWelcome = Boolean(includeWelcome && currentPreferences.welcomeVoice)
     const script = buildCurrentIntroduction(Boolean(includeWelcome))
-    if (profileKey && willSpeakWelcome) welcomedProfileRef.current = profileKey
-    if (willSpeakWelcome) initialGuidancePendingRef.current = false
+    pendingWelcomeProfileRef.current = includeWelcome ? profileKey : ""
+    pendingScriptRef.current = script
     speak(script)
   }, [buildCurrentIntroduction, speak])
 
-  const updatePreferences = useCallback((next: VoicePreferences, activationRequested = false) => {
+  const updatePreferences = useCallback((next: VoicePreferences) => {
     preferencesRef.current = next
     setPreferences(next)
     saveVoicePreferences(next)
-    notifyVoicePreferencesChanged(next, activationRequested)
-    if (!next.voiceGuideEnabled || next.muted) stopSpeech()
+    notifyVoicePreferencesChanged(next)
+    if (next.muted) {
+      pendingScriptRef.current = ""
+      stopSpeech()
+    }
   }, [stopSpeech])
 
   useEffect(() => {
@@ -151,6 +156,29 @@ export function BluepayVoiceGuide() {
     sessionActivatedRef.current = activated
     setSessionActivated(activated)
   }, [])
+
+  useEffect(() => {
+    const unlockSpeech = () => {
+      if (sessionActivatedRef.current) return
+      sessionActivatedRef.current = true
+      setSessionActivated(true)
+      window.sessionStorage.setItem("bluepayVoiceActivated", "1")
+      window.speechSynthesis?.resume()
+      if (!preferencesRef.current.muted && pendingScriptRef.current) speak(pendingScriptRef.current)
+      window.removeEventListener("pointerdown", unlockSpeech, true)
+      window.removeEventListener("keydown", unlockSpeech, true)
+      window.removeEventListener("touchstart", unlockSpeech, true)
+    }
+
+    window.addEventListener("pointerdown", unlockSpeech, true)
+    window.addEventListener("keydown", unlockSpeech, true)
+    window.addEventListener("touchstart", unlockSpeech, true)
+    return () => {
+      window.removeEventListener("pointerdown", unlockSpeech, true)
+      window.removeEventListener("keydown", unlockSpeech, true)
+      window.removeEventListener("touchstart", unlockSpeech, true)
+    }
+  }, [speak])
 
   useEffect(() => {
     const firstVisitToPath = lastPathRef.current !== pathname
@@ -172,39 +200,34 @@ export function BluepayVoiceGuide() {
     if (!profileKey) welcomedProfileRef.current = ""
 
     if (isFirstPath) initialGuidancePendingRef.current = true
-    if (!sessionActivatedRef.current || !nextPreferences.voiceGuideEnabled || nextPreferences.muted) return
-
     stopSpeech()
     const parts: string[] = []
-    if (includeWelcome && nextPreferences.welcomeVoice) parts.push(buildWelcomeScript(firstName))
-    if (nextPreferences.automaticPageGuidance) parts.push(getPageVoiceScript(pathname, firstName, nextPreferences))
-    if (parts.length) {
-      const willSpeakWelcome = includeWelcome && nextPreferences.welcomeVoice
-      if (willSpeakWelcome && profileKey) welcomedProfileRef.current = profileKey
-      if (willSpeakWelcome || !isFirstPath) initialGuidancePendingRef.current = false
-      speak(parts.join(" "))
-    }
+    if (includeWelcome) parts.push(buildWelcomeScript(firstName))
+    parts.push(getPageVoiceScript(pathname, firstName, nextPreferences))
+    const script = parts.filter(Boolean).join(" ")
+    pendingWelcomeProfileRef.current = includeWelcome ? profileKey : ""
+    pendingScriptRef.current = nextPreferences.muted ? "" : script
+    if (!nextPreferences.muted) speak(script)
   }, [pathname, speak, stopSpeech])
 
   useEffect(() => {
     const handlePreferences = (event: Event) => {
-      const detail = (event as CustomEvent<{ preferences?: VoicePreferences; activationRequested?: boolean }>).detail
+      const detail = (event as CustomEvent<{ preferences?: VoicePreferences }>).detail
       const previous = preferencesRef.current
       const next = detail?.preferences || readVoicePreferences()
       preferencesRef.current = next
       setPreferences(next)
-      if (!next.voiceGuideEnabled || next.muted || (previous.financialDetailsVoice && !next.financialDetailsVoice) || (previous.automaticPageGuidance && !next.automaticPageGuidance) || (previous.welcomeVoice && !next.welcomeVoice)) {
+      if (next.muted || (previous.financialDetailsVoice && !next.financialDetailsVoice)) {
         stopSpeech()
-        if (!next.voiceGuideEnabled || next.muted) return
+        if (next.muted) return
       }
-      if (detail?.activationRequested) activateAndPlay(true)
     }
     const handleReplay = () => activateAndPlay(true)
     const handleExit = (event: Event) => {
       const detail = (event as CustomEvent<{ firstName?: string }>).detail
       const firstName = detail?.firstName || getVoiceProfile().firstName
       const currentPreferences = preferencesRef.current
-      if (!currentPreferences.voiceGuideEnabled || currentPreferences.muted || isSupported === false) return
+      if (currentPreferences.muted || isSupported === false) return
       const now = Date.now()
       const suppressedUntil = Number(window.sessionStorage.getItem(VOICE_EXIT_SUPPRESSION_KEY) || 0)
       if (suppressedUntil > now) return
@@ -222,7 +245,7 @@ export function BluepayVoiceGuide() {
         const next = readVoicePreferences()
         preferencesRef.current = next
         setPreferences(next)
-        if (!next.voiceGuideEnabled || next.muted || (previous.financialDetailsVoice && !next.financialDetailsVoice) || (previous.automaticPageGuidance && !next.automaticPageGuidance) || (previous.welcomeVoice && !next.welcomeVoice)) stopSpeech()
+        if (next.muted || (previous.financialDetailsVoice && !next.financialDetailsVoice)) stopSpeech()
       }
     }
 
@@ -248,7 +271,7 @@ export function BluepayVoiceGuide() {
       if (!allowRepeat) spokenInteractions.add(key)
       const { firstName } = getVoiceProfile()
       const script = getInteractionVoiceScript(kind, firstName, currentPreferences, value)
-      if (script) speak(script)
+      if (script) speak(script, false)
     }
     const onFocusIn = (event: FocusEvent) => {
       const target = event.target instanceof HTMLElement ? event.target : null
@@ -330,16 +353,6 @@ export function BluepayVoiceGuide() {
     }
   }, [pathname])
 
-  const toggleEnabled = () => {
-    if (preferences.voiceGuideEnabled) {
-      updatePreferences({ ...preferences, voiceGuideEnabled: false })
-      return
-    }
-    updatePreferences({ ...preferences, voiceGuideEnabled: true, muted: false })
-    activateAndPlay(true)
-    setIsOpen(false)
-  }
-
   const handleMute = () => {
     const next = { ...preferences, muted: !preferences.muted }
     updatePreferences(next)
@@ -350,7 +363,7 @@ export function BluepayVoiceGuide() {
     stopSpeech()
   }
 
-  const statusText = speechStatus === "playing" ? "Speaking" : speechStatus === "paused" ? "Paused" : speechStatus === "unavailable" || isSupported === false ? "Voice unavailable" : sessionActivated ? "Ready" : "Not enabled yet"
+  const statusText = speechStatus === "playing" ? "Speaking" : speechStatus === "paused" ? "Paused" : speechStatus === "unavailable" || isSupported === false ? "Voice unavailable" : "Ready"
 
   return (
     <div id="bluepay-voice-guide" className="fixed z-40" style={{ left: controlPosition.left, top: controlPosition.top }}>
@@ -368,13 +381,8 @@ export function BluepayVoiceGuide() {
             <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900">Speech is not available in this browser. You can still follow all on-screen instructions.</p>
           ) : (
             <>
-              {!sessionActivated && preferences.voiceGuideEnabled && (
-                <button type="button" onClick={() => { activateAndPlay(true); setIsOpen(false) }} className="mt-3 w-full rounded-xl bg-[#0000ff] px-3 py-2.5 text-xs font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2">
-                  Enable Voice Guide
-                </button>
-              )}
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => activateAndPlay(true)} disabled={!preferences.voiceGuideEnabled || !isSupported} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-blue-50 px-2 py-2 text-xs font-semibold text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-40" aria-label="Play current page guidance">
+                <button type="button" onClick={() => activateAndPlay(true)} disabled={!isSupported || preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-blue-50 px-2 py-2 text-xs font-semibold text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-40" aria-label="Play current page guidance">
                   <Play size={14} aria-hidden="true" /> Play
                 </button>
                 <button type="button" onClick={() => {
@@ -385,28 +393,22 @@ export function BluepayVoiceGuide() {
                     window.speechSynthesis.pause()
                     setSpeechStatus("paused")
                   }
-                }} disabled={!preferences.voiceGuideEnabled || !sessionActivated || (speechStatus !== "playing" && speechStatus !== "paused")} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
+                }} disabled={!sessionActivated || (speechStatus !== "playing" && speechStatus !== "paused")} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
                   {speechStatus === "paused" ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
                   {speechStatus === "paused" ? "Resume" : "Pause"}
                 </button>
                 <button type="button" onClick={handleStop} disabled={speechStatus !== "playing" && speechStatus !== "paused"} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
                   <span className="size-2.5 rounded-sm bg-slate-600" aria-hidden="true" /> Stop
                 </button>
-                <button type="button" onClick={() => activateAndPlay(false)} disabled={!preferences.voiceGuideEnabled || !sessionActivated} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
+                <button type="button" onClick={() => activateAndPlay(false)} disabled={!sessionActivated || preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
                   <RotateCcw size={14} aria-hidden="true" /> Replay page
-                </button>
-              </div>
-              <div className="mt-2 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
-                <span className="text-xs font-medium text-slate-600">Voice Guide</span>
-                <button type="button" onClick={toggleEnabled} aria-pressed={preferences.voiceGuideEnabled} className={`rounded-full px-3 py-1 text-[11px] font-bold ${preferences.voiceGuideEnabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
-                  {preferences.voiceGuideEnabled ? "On" : "Off"}
                 </button>
               </div>
               <button type="button" onClick={handleMute} aria-pressed={preferences.muted} className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
                 {preferences.muted ? <VolumeX size={15} aria-hidden="true" /> : <Volume2 size={15} aria-hidden="true" />}
                 {preferences.muted ? "Unmute voice" : "Mute voice"}
               </button>
-              <p className="mt-2 text-[10px] leading-4 text-slate-500">Financial details stay silent unless narration is enabled in Settings. Passwords, PINs, full account numbers, and BPC codes are never spoken.</p>
+              <p className="mt-2 text-[10px] leading-4 text-slate-500">Page and transaction guidance starts automatically. Financial details stay silent unless narration is enabled in Settings. Passwords, PINs, full account numbers, and BPC codes are never spoken.</p>
             </>
           )}
         </section>

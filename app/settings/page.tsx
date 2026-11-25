@@ -82,9 +82,6 @@ export default function SettingsPage() {
   ]
 
   const voiceToggles = [
-    { key: "voiceGuideEnabled", title: "Voice Guide", description: "Enable or disable spoken guidance" },
-    { key: "automaticPageGuidance", title: "Automatic Page Guidance", description: "Speak a short introduction when a page opens" },
-    { key: "welcomeVoice", title: "Welcome Voice", description: "Use your registered first name in the welcome" },
     { key: "financialDetailsVoice", title: "Financial-detail narration", description: "Allow wallet balances, fees, and limits to be spoken" },
   ] as const
 
@@ -159,7 +156,7 @@ export default function SettingsPage() {
     const next = { ...readVoicePreferences(), [key]: value }
     saveVoicePreferences(next)
     setVoicePreferences(next)
-    notifyVoicePreferencesChanged(next, key === "voiceGuideEnabled" && value === true)
+    notifyVoicePreferencesChanged(next)
   }
 
   const replayVoiceIntroduction = () => {
@@ -377,12 +374,12 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={replayVoiceIntroduction}
-            disabled={!voicePreferences.voiceGuideEnabled || voicePreferences.muted}
+            disabled={voicePreferences.muted}
             className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0000ff] px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw size={15} aria-hidden="true" /> Replay Voice Introduction
           </button>
-          <p className="mt-2 text-[10px] leading-4 text-gray-500">For privacy, financial narration is off by default. Voice Guide never speaks passwords, PINs, full account numbers, one-time codes, or BPC authorization codes.</p>
+          <p className="mt-2 text-[10px] leading-4 text-gray-500">Voice guidance introduces pages and explains transaction steps automatically. Use the floating voice control to mute or unmute it. Financial narration is off by default for privacy; passwords, PINs, full account numbers, one-time codes, and BPC authorization codes are never spoken.</p>
         </section>
 
         {/* Notifications */}
