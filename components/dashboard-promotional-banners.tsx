@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 
@@ -12,6 +12,7 @@ const banners = [
     title: "Banking that moves with your community.",
     description: "A simpler way to keep up with the money moments that matter.",
     style: "hero",
+    animation: "fade",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2821%29-IzTJ31PZkl7Rx8fAhjm1nNWHA2T9ou.jpeg",
@@ -20,6 +21,7 @@ const banners = [
     title: "Everyday payments, made easier.",
     description: "Send money, pay bills and stay in control from one app.",
     style: "split",
+    animation: "slide",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2822%29-3qhEICNeIgpc4vyLw0E1wDePl1fKam.jpeg",
@@ -28,6 +30,7 @@ const banners = [
     title: "Simple money tools for everyone.",
     description: "Get the essentials for managing your money, all in BLUEPAY.",
     style: "photo",
+    animation: "rotate",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2823%29-9UazJ1v74o4sVUsPdj2Dj55hpgJ3Oq.jpeg",
@@ -36,6 +39,7 @@ const banners = [
     title: "A little more ease in every day.",
     description: "Handle your everyday banking with a few quick taps.",
     style: "editorial",
+    animation: "fade",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2817%29-e4fW0BuIPAObcmC1CMIf97IWmBYCMC.jpeg",
@@ -44,6 +48,7 @@ const banners = [
     title: "Make room for what comes next.",
     description: "Explore simple ways to pay, transfer and manage your money.",
     style: "portrait",
+    animation: "zoom",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2812%29-6VSxWuosiRfA9YrS8eHTW8pKWuPxjC.jpeg",
@@ -52,6 +57,7 @@ const banners = [
     title: "Make every money move count.",
     description: "Everyday banking tools, right where you need them.",
     style: "poster",
+    animation: "rotate",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2824%29-hs2Vw4x7czDWnJVcQeeGah6ukowftE.jpeg",
@@ -60,6 +66,7 @@ const banners = [
     title: "Your everyday banking, reimagined.",
     description: "Discover a simpler way to manage the way money moves.",
     style: "future",
+    animation: "slide",
   },
   {
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/images%20%2820%29-TPRvxU61DQkBOLkMLwYgMak5ZI288Z.jpeg",
@@ -68,55 +75,122 @@ const banners = [
     title: "Take your next step with BLUEPAY.",
     description: "Explore money tools designed for everyday progress.",
     style: "illustration",
+    animation: "zoom",
   },
 ] as const
+
+type PromoBanner = (typeof banners)[number]
+type BannerAnimation = PromoBanner["animation"]
+
+function PromoBannerLayer({
+  banner,
+  animationClass,
+  onExplore,
+  outgoing = false,
+}: {
+  banner: PromoBanner
+  animationClass: string
+  onExplore?: () => void
+  outgoing?: boolean
+}) {
+  const isSplit = banner.style === "split"
+  const overlayClass = isSplit
+    ? "bg-gradient-to-r from-white via-white/95 to-white/20"
+    : banner.style === "future"
+      ? "bg-gradient-to-r from-[#062718]/95 via-[#062718]/70 to-transparent"
+      : banner.style === "illustration"
+        ? "bg-gradient-to-r from-[#061334]/95 via-[#061334]/70 to-transparent"
+        : banner.style === "poster"
+          ? "bg-gradient-to-r from-[#061334]/90 via-[#061334]/65 to-transparent"
+          : "bg-gradient-to-r from-[#07143b]/95 via-[#07143b]/70 to-[#07143b]/10"
+  const contentPosition = banner.style === "editorial"
+    ? "justify-end pb-14"
+    : banner.style === "portrait"
+      ? "justify-center pb-10 pt-6"
+      : "justify-center pb-10"
+
+  return (
+    <div className={`absolute inset-0 ${animationClass} ${outgoing ? "pointer-events-none" : ""}`} aria-hidden={outgoing || undefined}>
+      <img
+        src={banner.image}
+        alt={outgoing ? "" : banner.alt}
+        className={`absolute inset-0 size-full object-cover ${banner.style === "split" ? "object-center sm:object-right" : "object-center"}`}
+      />
+      <div className={`absolute inset-0 ${overlayClass}`} />
+      <div className={`relative flex h-full max-w-[78%] flex-col px-5 sm:max-w-[64%] sm:px-7 ${contentPosition} ${isSplit ? "text-slate-900" : "text-white"}`}>
+        <span className={`mb-2 w-fit rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] ${isSplit ? "bg-blue-100 text-blue-800" : "bg-white/15 text-white backdrop-blur-sm"}`}>
+          {banner.eyebrow}
+        </span>
+        <h2 className="max-w-sm text-[1.55rem] font-bold leading-[1.08] tracking-tight sm:text-3xl">{banner.title}</h2>
+        <p className={`mt-2 max-w-xs text-xs leading-5 sm:text-sm ${isSplit ? "text-slate-600" : "text-white/85"}`}>
+          {banner.description}
+        </p>
+        {!outgoing && (
+          <button
+            type="button"
+            onClick={onExplore}
+            className={`mt-4 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-[11px] font-bold transition hover:gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${isSplit ? "bg-[#0000ff] text-white focus-visible:ring-blue-500" : "bg-white text-[#101a3b] focus-visible:ring-white"}`}
+          >
+            Explore BLUEPAY <ArrowRight size={14} aria-hidden="true" />
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export function DashboardPromotionalBanners() {
   const router = useRouter()
   const [activeIndex, setActiveIndex] = useState(0)
+  const [outgoingBanner, setOutgoingBanner] = useState<{ index: number; animation: BannerAnimation } | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const activeBanner = banners[activeIndex]
+
+  const goToBanner = useCallback((nextIndex: number) => {
+    if (nextIndex === activeIndex) return
+
+    setOutgoingBanner({ index: activeIndex, animation: banners[nextIndex].animation })
+    setActiveIndex(nextIndex)
+  }, [activeIndex])
 
   useEffect(() => {
     if (isPaused) return
 
     const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % banners.length)
+      goToBanner((activeIndex + 1) % banners.length)
     }, 6000)
 
     return () => window.clearInterval(timer)
-  }, [isPaused])
+  }, [activeIndex, goToBanner, isPaused])
+
+  useEffect(() => {
+    if (!outgoingBanner) return
+
+    const timer = window.setTimeout(() => setOutgoingBanner(null), 850)
+    return () => window.clearTimeout(timer)
+  }, [outgoingBanner])
 
   const changeBanner = (offset: number) => {
-    setActiveIndex((index) => (index + offset + banners.length) % banners.length)
+    goToBanner((activeIndex + offset + banners.length) % banners.length)
   }
 
   return (
     <section className="mx-3 mb-5" aria-label="BLUEPAY promotional banners">
       <div className="relative isolate h-[17.5rem] overflow-hidden rounded-[1.4rem] bg-[#101a3b] shadow-lg shadow-blue-950/10 sm:h-56" aria-roledescription="carousel" aria-label="BLUEPAY promotions" onFocusCapture={() => setIsPaused(true)}>
-        <img
-          key={activeBanner.image}
-          src={activeBanner.image}
-          alt={activeBanner.alt}
-          className={`absolute inset-0 -z-20 size-full object-cover ${activeBanner.style === "split" ? "object-center sm:object-right" : "object-center"}`}
+        <PromoBannerLayer
+          key={`active-${activeIndex}`}
+          banner={activeBanner}
+          animationClass={`promo-banner-in-${activeBanner.animation}`}
+          onExplore={() => router.push("/features")}
         />
-        <div className={`absolute inset-0 -z-10 ${activeBanner.style === "split" ? "bg-gradient-to-r from-white via-white/95 to-white/20" : activeBanner.style === "illustration" ? "bg-gradient-to-r from-[#061334]/95 via-[#061334]/70 to-transparent" : activeBanner.style === "poster" ? "bg-gradient-to-r from-[#061334]/90 via-[#061334]/65 to-transparent" : "bg-gradient-to-r from-[#07143b]/95 via-[#07143b]/70 to-[#07143b]/10"}`} />
-        <div className={`flex h-full max-w-[78%] flex-col justify-center px-5 pb-10 sm:max-w-[64%] sm:px-7 ${activeBanner.style === "split" ? "text-slate-900" : "text-white"}`}>
-          <span className={`mb-2 w-fit rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] ${activeBanner.style === "split" ? "bg-blue-100 text-blue-800" : "bg-white/15 text-white backdrop-blur-sm"}`}>
-            {activeBanner.eyebrow}
-          </span>
-          <h2 className="max-w-sm text-[1.55rem] font-bold leading-[1.08] tracking-tight sm:text-3xl">{activeBanner.title}</h2>
-          <p className={`mt-2 max-w-xs text-xs leading-5 sm:text-sm ${activeBanner.style === "split" ? "text-slate-600" : "text-white/85"}`}>
-            {activeBanner.description}
-          </p>
-          <button
-            type="button"
-            onClick={() => router.push("/features")}
-            className={`mt-4 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-[11px] font-bold transition hover:gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${activeBanner.style === "split" ? "bg-[#0000ff] text-white focus-visible:ring-blue-500" : "bg-white text-[#101a3b] focus-visible:ring-white"}`}
-          >
-            Explore BLUEPAY <ArrowRight size={14} aria-hidden="true" />
-          </button>
-        </div>
+        {outgoingBanner && (
+          <PromoBannerLayer
+            key={`outgoing-${outgoingBanner.index}-${activeIndex}`}
+            banner={banners[outgoingBanner.index]}
+            animationClass={`promo-banner-out-${outgoingBanner.animation}`}
+            outgoing
+          />
+        )}
 
         <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/30 p-1 backdrop-blur-sm">
           <button type="button" onClick={() => setIsPaused((paused) => !paused)} aria-label={isPaused ? "Resume promotions" : "Pause promotions"} aria-pressed={isPaused} className="grid size-7 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
