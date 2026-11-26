@@ -23,6 +23,11 @@ export default function SecurityPage() {
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const [biometricEnabled, setBiometricEnabled] = useState(false)
+  const [loginAlerts, setLoginAlerts] = useState(true)
+  const [deviceManagement, setDeviceManagement] = useState(true)
 
   useEffect(() => {
     const userData = localStorage.getItem("userData")
@@ -48,11 +53,6 @@ export default function SecurityPage() {
   if (!isAuthorized) {
     return null
   }
-  const [showPassword, setShowPassword] = useState(false)
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
-  const [biometricEnabled, setBiometricEnabled] = useState(false)
-  const [loginAlerts, setLoginAlerts] = useState(true)
-  const [deviceManagement, setDeviceManagement] = useState(true)
 
   const securityScore = 85
 
