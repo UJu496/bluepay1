@@ -23,6 +23,7 @@ const routeGuidance: Record<string, string> = {
   "/about": "This page explains BLUEPAY MOBILE. Read the information on screen, then use the navigation controls to return or continue. Contact official support if you need clarification.",
   "/airtime": "Use this page to buy airtime. Choose the mobile network and enter the phone number and amount requested on screen, then enter your BPC authorization code. Check the number and amount before confirming; never share your BPC code.",
   "/bills": "Use this page to pay a bill listed by BLUEPAY. Select the bill type and provider shown, enter only the account details requested, review the amount and recipient, then follow the on-screen payment button. Confirm the details with your provider before paying.",
+  "/budgets": "This is your Budget Tracker. Review the total budget, total spent, and each category's progress shown on screen. Use Add Budget to set a weekly or monthly limit for a category, and use the available controls to edit or remove a budget. Review your choices before saving.",
   "/buy-bpc": "You are about to purchase a BLUEPAY BPC authorization code. Review the purchase amount and follow the payment instructions displayed on your screen. Select Next to continue. Never share an authorization code or payment credentials.",
   "/create-pin": "Create your BLUEPAY security PIN using the on-screen instructions, then continue. Do not say your PIN aloud or share it with anyone, including support.",
   "/dashboard": "This is your BLUEPAY dashboard. Check your wallet and recent activity, then choose the service you need, such as Transfer To Bank, Withdraw, Airtime, Data, Bills, or Earn. Review every transaction before you confirm it.",
@@ -265,6 +266,21 @@ export function getPageVoiceScript(pathname: string, firstName: string, preferen
   const script = routeGuidance[pathname]
   const guidance = script || "Review the page title and instructions shown on screen. Complete only the requested fields, check the details before continuing, and use the page's visible action button. Keep passwords, PINs, one-time codes, full account numbers and BPC authorization codes private."
   return firstName ? `Hello ${firstName}. ${guidance}` : guidance
+}
+
+export function getVoiceGuideAudioPath(pathname: string) {
+  if (pathname === "/welcome") return "/audio/voice-guide/welcome.mp3"
+  if (pathname === "/farewell") return "/audio/voice-guide/farewell.mp3"
+  if (pathname.startsWith("/transactions/")) return "/audio/voice-guide/transaction-details.mp3"
+  if (routeGuidance[pathname] !== undefined) {
+    const slug = pathname === "/" ? "home" : pathname.slice(1).replaceAll("/", "-")
+    return `/audio/voice-guide/${slug || "default"}.mp3`
+  }
+  return "/audio/voice-guide/default.mp3"
+}
+
+export function getInteractionVoiceAudioPath(kind: string) {
+  return `/audio/voice-guide/interactions/${kind}.mp3`
 }
 
 export function getInteractionVoiceScript(kind: string, firstName: string, preferences: VoicePreferences, value?: string) {

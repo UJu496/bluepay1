@@ -6,8 +6,10 @@ import { AudioLines, Pause, Play, RotateCcw, Volume2, VolumeX, X } from "lucide-
 import {
   buildWelcomeScript,
   DEFAULT_VOICE_PREFERENCES,
+  getInteractionVoiceAudioPath,
   getInteractionVoiceScript,
   getPageVoiceScript,
+  getVoiceGuideAudioPath,
   getVoiceProfile,
   notifyVoicePreferencesChanged,
   readVoicePreferences,
@@ -19,6 +21,7 @@ import {
 } from "@/lib/voice-guide"
 
 type SpeechStatus = "idle" | "playing" | "paused" | "unavailable"
+type ActiveEngine = "browser" | "audio" | null
 
 const VOICE_EXIT_SUPPRESSION_KEY = "bluepayVoiceExitSuppressedUntil"
 
@@ -26,12 +29,12 @@ export function BluepayVoiceGuide() {
   const pathname = usePathname()
   const [preferences, setPreferences] = useState<VoicePreferences>(DEFAULT_VOICE_PREFERENCES)
   const [isOpen, setIsOpen] = useState(false)
-  const [isSupported, setIsSupported] = useState<boolean | null>(null)
   const [sessionActivated, setSessionActivated] = useState(false)
   const [speechStatus, setSpeechStatus] = useState<SpeechStatus>("idle")
   const [controlPosition, setControlPosition] = useState({ left: 16, top: 16 })
   const [panelPlacement, setPanelPlacement] = useState<"above" | "below">("below")
   const [panelAlignment, setPanelAlignment] = useState<"left-0" | "right-0">("left-0")
+  const [panelMaxHeight, setPanelMaxHeight] = useState(320)
   const preferencesRef = useRef(preferences)
   const sessionActivatedRef = useRef(false)
   const lastPathRef = useRef<string | null>(null)
@@ -40,75 +43,175 @@ export function BluepayVoiceGuide() {
   const farewellRef = useRef(false)
   const utteranceIdRef = useRef(0)
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const activeEngineRef = useRef<ActiveEngine>(null)
   const pendingScriptRef = useRef("")
+  const pendingAudioSourcesRef = useRef<string[]>([])
   const pendingWelcomeProfileRef = useRef("")
+  const pendingWelcomeRef = useRef(false)
 
   preferencesRef.current = preferences
 
   const stopSpeech = useCallback(() => {
     farewellRef.current = false
     utteranceIdRef.current += 1
-    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel()
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel()
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
     utteranceRef.current = null
+    audioRef.current = null
+    activeEngineRef.current = null
+    pendingScriptRef.current = ""
+    pendingAudioSourcesRef.current = []
+    pendingWelcomeProfileRef.current = ""
+    pendingWelcomeRef.current = false
     setSpeechStatus("idle")
   }, [])
 
-  const speak = useCallback((text: string, replaceCurrent = true) => {
-    const currentPreferences = preferencesRef.current
-    if (!text.trim() || currentPreferences.muted) return
-    if (typeof window === "undefined" || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
-      setIsSupported(false)
-      setSpeechStatus("unavailable")
-      return
-    }
+  const playAudioSources = useCallback((sources: string[], requestId: number) => {
+    pendingAudioSourcesRef.current = sources
+    const playNext = (index: number, sourceFailed = false) => {
+      if (utteranceIdRef.current !== requestId) return
+      if (index >= sources.length) {
+        audioRef.current = null
+        activeEngineRef.current = null
+        setSpeechStatus(sourceFailed ? "unavailable" : "idle")
+        farewellRef.current = false
+        return
+      }
 
-    const speech = window.speechSynthesis
-    if (replaceCurrent) speech.cancel()
-    const requestId = utteranceIdRef.current + 1
-    utteranceIdRef.current = requestId
-
-    const utterance = new SpeechSynthesisUtterance(text)
-    const voices = speech.getVoices()
-    const voice = voices.find((candidate) => candidate.lang.toLowerCase() === "en-ng")
-      || voices.find((candidate) => candidate.lang.toLowerCase() === "en-gb")
-      || voices.find((candidate) => candidate.lang.toLowerCase().startsWith("en-"))
-      || voices.find((candidate) => candidate.lang.toLowerCase().startsWith("en"))
-    if (voice) utterance.voice = voice
-    utterance.lang = voice?.lang || "en-NG"
-    utterance.rate = currentPreferences.speed === "slow" ? 0.86 : currentPreferences.speed === "fast" ? 1.14 : 1
-    utterance.pitch = 1.02
-    utterance.onstart = () => {
-      if (utteranceIdRef.current === requestId) {
+      const audio = new Audio(sources[index])
+      audio.preload = "auto"
+      audioRef.current = audio
+      activeEngineRef.current = "audio"
+      audio.onplay = () => {
+        if (utteranceIdRef.current !== requestId) return
         pendingScriptRef.current = ""
-        if (pendingWelcomeProfileRef.current) {
-          welcomedProfileRef.current = pendingWelcomeProfileRef.current
+        pendingAudioSourcesRef.current = []
+        if (pendingWelcomeRef.current) {
+          if (pendingWelcomeProfileRef.current) {
+            welcomedProfileRef.current = pendingWelcomeProfileRef.current
+          }
           pendingWelcomeProfileRef.current = ""
+          pendingWelcomeRef.current = false
           initialGuidancePendingRef.current = false
         }
         setSpeechStatus("playing")
       }
-    }
-    utterance.onend = () => {
-      if (utteranceIdRef.current === requestId) {
+      audio.onended = () => {
+        if (utteranceIdRef.current !== requestId) return
+        audioRef.current = null
+        playNext(index + 1)
+      }
+      audio.onerror = () => {
+        if (utteranceIdRef.current !== requestId) return
+        audioRef.current = null
+        playNext(index + 1, true)
+      }
+      void audio.play().then(() => {
+        if (utteranceIdRef.current === requestId) setSpeechStatus("playing")
+      }).catch(() => {
+        if (utteranceIdRef.current !== requestId) return
+        audioRef.current = null
+        activeEngineRef.current = null
         setSpeechStatus("idle")
+        pendingAudioSourcesRef.current = sources
+      })
+    }
+    playNext(0)
+  }, [])
+
+  const speak = useCallback((text: string, fallbackSources: string[], includesWelcome = false) => {
+    const currentPreferences = preferencesRef.current
+    if (!text.trim() || currentPreferences.muted) return
+
+    const requestId = utteranceIdRef.current + 1
+    utteranceIdRef.current = requestId
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current = null
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel()
+    utteranceRef.current = null
+    activeEngineRef.current = null
+    pendingScriptRef.current = text
+    pendingAudioSourcesRef.current = fallbackSources
+    pendingWelcomeRef.current = includesWelcome
+    pendingWelcomeProfileRef.current = includesWelcome ? getVoiceProfile().profileKey : ""
+
+    const canUseBrowserSpeech = typeof window !== "undefined"
+      && typeof window.speechSynthesis?.speak === "function"
+      && typeof window.SpeechSynthesisUtterance === "function"
+
+    if (!canUseBrowserSpeech) {
+      playAudioSources(fallbackSources, requestId)
+      return
+    }
+
+    try {
+      const speech = window.speechSynthesis
+      const utterance = new SpeechSynthesisUtterance(text)
+      const voices = speech.getVoices()
+      const voice = voices.find((candidate) => candidate.lang.toLowerCase() === "en-ng")
+        || voices.find((candidate) => candidate.lang.toLowerCase() === "en-gb")
+        || voices.find((candidate) => candidate.lang.toLowerCase().startsWith("en-"))
+        || voices.find((candidate) => candidate.lang.toLowerCase().startsWith("en"))
+      if (voice) utterance.voice = voice
+      utterance.lang = voice?.lang || "en-NG"
+      utterance.rate = currentPreferences.speed === "slow" ? 0.86 : currentPreferences.speed === "fast" ? 1.14 : 1
+      utterance.pitch = 1.02
+      utterance.onstart = () => {
+        if (utteranceIdRef.current !== requestId) return
+        activeEngineRef.current = "browser"
+        pendingScriptRef.current = ""
+        pendingAudioSourcesRef.current = []
+        if (pendingWelcomeRef.current) {
+          if (pendingWelcomeProfileRef.current) {
+            welcomedProfileRef.current = pendingWelcomeProfileRef.current
+          }
+          pendingWelcomeProfileRef.current = ""
+          pendingWelcomeRef.current = false
+          initialGuidancePendingRef.current = false
+        }
+        setSpeechStatus("playing")
+      }
+      utterance.onend = () => {
+        if (utteranceIdRef.current !== requestId) return
+        activeEngineRef.current = null
         utteranceRef.current = null
+        setSpeechStatus("idle")
         farewellRef.current = false
       }
-    }
-    utterance.onerror = (event) => {
-      if (utteranceIdRef.current !== requestId || event.error === "canceled" || event.error === "interrupted") return
-      if (event.error === "not-allowed") {
-        sessionActivatedRef.current = false
-        setSessionActivated(false)
-        window.sessionStorage.removeItem("bluepayVoiceActivated")
+      utterance.onerror = (event) => {
+        if (utteranceIdRef.current !== requestId || event.error === "canceled" || event.error === "interrupted") return
+        utteranceRef.current = null
+        activeEngineRef.current = null
+        playAudioSources(fallbackSources, requestId)
       }
-      setSpeechStatus("idle")
-      utteranceRef.current = null
-      farewellRef.current = false
+      utteranceRef.current = utterance
+      activeEngineRef.current = "browser"
+      speech.speak(utterance)
+    } catch {
+      playAudioSources(fallbackSources, requestId)
     }
-    utteranceRef.current = utterance
-    setSpeechStatus("playing")
-    speech.speak(utterance)
+  }, [playAudioSources])
+
+  const pauseSpeech = useCallback(() => {
+    if (activeEngineRef.current === "audio") audioRef.current?.pause()
+    else if (activeEngineRef.current === "browser") window.speechSynthesis.pause()
+    setSpeechStatus("paused")
+  }, [])
+
+  const resumeSpeech = useCallback(() => {
+    if (activeEngineRef.current === "audio" && audioRef.current) {
+      void audioRef.current.play().then(() => setSpeechStatus("playing")).catch(() => setSpeechStatus("idle"))
+    } else if (activeEngineRef.current === "browser") {
+      window.speechSynthesis.resume()
+      setSpeechStatus("playing")
+    }
   }, [])
 
   const buildCurrentIntroduction = useCallback((includeWelcome: boolean) => {
@@ -131,9 +234,12 @@ export function BluepayVoiceGuide() {
     const includeWelcome = includeInitialWelcome && (initialGuidancePendingRef.current || (profileKey && profileKey !== welcomedProfileRef.current))
     const script = buildCurrentIntroduction(Boolean(includeWelcome))
     pendingWelcomeProfileRef.current = includeWelcome ? profileKey : ""
-    pendingScriptRef.current = script
-    speak(script)
-  }, [buildCurrentIntroduction, speak])
+    const audioSources = [
+      ...(includeWelcome ? [getVoiceGuideAudioPath("/welcome")] : []),
+      getVoiceGuideAudioPath(pathname),
+    ]
+    speak(script, audioSources, Boolean(includeWelcome))
+  }, [buildCurrentIntroduction, pathname, speak])
 
   const updatePreferences = useCallback((next: VoicePreferences) => {
     preferencesRef.current = next
@@ -147,11 +253,12 @@ export function BluepayVoiceGuide() {
   }, [stopSpeech])
 
   useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => undefined)
+    }
     const loadedPreferences = readVoicePreferences()
     preferencesRef.current = loadedPreferences
     setPreferences(loadedPreferences)
-    const supported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window
-    setIsSupported(supported)
     const activated = window.sessionStorage.getItem("bluepayVoiceActivated") === "1"
     sessionActivatedRef.current = activated
     setSessionActivated(activated)
@@ -163,8 +270,18 @@ export function BluepayVoiceGuide() {
       sessionActivatedRef.current = true
       setSessionActivated(true)
       window.sessionStorage.setItem("bluepayVoiceActivated", "1")
-      window.speechSynthesis?.resume()
-      if (!preferencesRef.current.muted && pendingScriptRef.current) speak(pendingScriptRef.current)
+      if (window.speechSynthesis) window.speechSynthesis.resume()
+      if (!preferencesRef.current.muted && pendingScriptRef.current) {
+        speak(
+          pendingScriptRef.current,
+          pendingAudioSourcesRef.current,
+          pendingAudioSourcesRef.current[0] === getVoiceGuideAudioPath("/welcome"),
+        )
+      } else if (!preferencesRef.current.muted && pendingAudioSourcesRef.current.length) {
+        const requestId = utteranceIdRef.current + 1
+        utteranceIdRef.current = requestId
+        playAudioSources(pendingAudioSourcesRef.current, requestId)
+      }
       window.removeEventListener("pointerdown", unlockSpeech, true)
       window.removeEventListener("keydown", unlockSpeech, true)
       window.removeEventListener("touchstart", unlockSpeech, true)
@@ -206,8 +323,13 @@ export function BluepayVoiceGuide() {
     parts.push(getPageVoiceScript(pathname, firstName, nextPreferences))
     const script = parts.filter(Boolean).join(" ")
     pendingWelcomeProfileRef.current = includeWelcome ? profileKey : ""
-    pendingScriptRef.current = nextPreferences.muted ? "" : script
-    if (!nextPreferences.muted) speak(script)
+    if (!nextPreferences.muted) {
+      const audioSources = [
+        ...(includeWelcome ? [getVoiceGuideAudioPath("/welcome")] : []),
+        getVoiceGuideAudioPath(pathname),
+      ]
+      speak(script, audioSources, includeWelcome)
+    }
   }, [pathname, speak, stopSpeech])
 
   useEffect(() => {
@@ -227,7 +349,7 @@ export function BluepayVoiceGuide() {
       const detail = (event as CustomEvent<{ firstName?: string }>).detail
       const firstName = detail?.firstName || getVoiceProfile().firstName
       const currentPreferences = preferencesRef.current
-      if (currentPreferences.muted || isSupported === false) return
+      if (currentPreferences.muted) return
       const now = Date.now()
       const suppressedUntil = Number(window.sessionStorage.getItem(VOICE_EXIT_SUPPRESSION_KEY) || 0)
       if (suppressedUntil > now) return
@@ -237,7 +359,7 @@ export function BluepayVoiceGuide() {
       if (typeof window !== "undefined") window.sessionStorage.setItem("bluepayVoiceActivated", "1")
       sessionActivatedRef.current = true
       setSessionActivated(true)
-      speak(farewell)
+      speak(farewell, [getVoiceGuideAudioPath("/farewell")])
     }
     const onStorage = (event: StorageEvent) => {
       if (event.key?.startsWith("bluepayVoicePreferences:")) {
@@ -259,7 +381,7 @@ export function BluepayVoiceGuide() {
       window.removeEventListener(VOICE_EXIT_EVENT, handleExit)
       window.removeEventListener("storage", onStorage)
     }
-  }, [activateAndPlay, isSupported, speak, stopSpeech])
+  }, [activateAndPlay, speak, stopSpeech])
 
   useEffect(() => {
     const spokenInteractions = new Set<string>()
@@ -271,7 +393,7 @@ export function BluepayVoiceGuide() {
       if (!allowRepeat) spokenInteractions.add(key)
       const { firstName } = getVoiceProfile()
       const script = getInteractionVoiceScript(kind, firstName, currentPreferences, value)
-      if (script) speak(script, false)
+      if (script) speak(script, [getInteractionVoiceAudioPath(kind)])
     }
     const onFocusIn = (event: FocusEvent) => {
       const target = event.target instanceof HTMLElement ? event.target : null
@@ -283,6 +405,9 @@ export function BluepayVoiceGuide() {
       const target = event.target instanceof HTMLInputElement ? event.target : null
       if (target?.dataset.voiceComplete === "account-number" && target.value.replace(/\D/g, "").length === 10) {
         announceInteraction("account-number-entered")
+      }
+      if (target?.id === "account-name" && target.value.trim()) {
+        announceInteraction("recipient-name-entered")
       }
     }
     const onClick = (event: MouseEvent) => {
@@ -340,7 +465,11 @@ export function BluepayVoiceGuide() {
         .sort((first, second) => first.collisions - second.collisions)[0]
 
       setControlPosition((current) => current.left === bestPosition.left && current.top === bestPosition.top ? current : { left: bestPosition.left, top: bestPosition.top })
-      setPanelPlacement(bestPosition.top > window.innerHeight / 2 ? "above" : "below")
+      const availableAbove = Math.max(180, bestPosition.top - 24)
+      const availableBelow = Math.max(180, window.innerHeight - bestPosition.top - size - 24)
+      const placeAbove = availableBelow < 300 && availableAbove > availableBelow
+      setPanelPlacement(placeAbove ? "above" : "below")
+      setPanelMaxHeight(Math.min(300, placeAbove ? availableAbove : availableBelow))
       setPanelAlignment(bestPosition.left > window.innerWidth / 2 ? "right-0" : "left-0")
     }
 
@@ -351,7 +480,7 @@ export function BluepayVoiceGuide() {
       window.removeEventListener("resize", repositionControl)
       window.removeEventListener("scroll", repositionControl)
     }
-  }, [pathname])
+  }, [isOpen, pathname])
 
   const handleMute = () => {
     const next = { ...preferences, muted: !preferences.muted }
@@ -363,12 +492,18 @@ export function BluepayVoiceGuide() {
     stopSpeech()
   }
 
-  const statusText = speechStatus === "playing" ? "Speaking" : speechStatus === "paused" ? "Paused" : speechStatus === "unavailable" || isSupported === false ? "Voice unavailable" : "Ready"
+  const statusText = speechStatus === "playing"
+    ? "Speaking"
+    : speechStatus === "paused"
+      ? "Paused"
+      : speechStatus === "unavailable"
+        ? "Voice could not play. Please follow the on-screen instructions."
+        : "Ready"
 
   return (
     <div id="bluepay-voice-guide" className="fixed z-40" style={{ left: controlPosition.left, top: controlPosition.top }}>
       {isOpen && (
-        <section aria-label="BLUEPAY Voice Guide controls" className={`absolute ${panelPlacement === "above" ? "bottom-full mb-3" : "top-full mt-3"} ${panelAlignment} w-[min(18rem,calc(100vw-2rem))] rounded-2xl border border-blue-100 bg-white p-3.5 text-slate-900 shadow-2xl shadow-blue-950/20`}>
+        <section aria-label="BLUEPAY Voice Guide controls" style={{ maxHeight: panelMaxHeight }} className={`absolute ${panelPlacement === "above" ? "bottom-full mb-3" : "top-full mt-3"} ${panelAlignment} w-[min(18rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-blue-100 bg-white p-3.5 text-slate-900 shadow-2xl shadow-blue-950/20`}>
           <div className="flex items-start justify-between gap-2">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#0000ff]">BLUEPAY VOICE GUIDE</p>
@@ -377,40 +512,26 @@ export function BluepayVoiceGuide() {
             <button type="button" onClick={() => setIsOpen(false)} aria-label="Close voice guide controls" className="grid size-8 place-items-center rounded-full text-slate-500 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0000ff]"><X size={16} /></button>
           </div>
 
-          {isSupported === false ? (
-            <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900">Speech is not available in this browser. You can still follow all on-screen instructions.</p>
-          ) : (
-            <>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => activateAndPlay(true)} disabled={!isSupported || preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-blue-50 px-2 py-2 text-xs font-semibold text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-40" aria-label="Play current page guidance">
-                  <Play size={14} aria-hidden="true" /> Play
-                </button>
-                <button type="button" onClick={() => {
-                  if (speechStatus === "paused") {
-                    window.speechSynthesis.resume()
-                    setSpeechStatus("playing")
-                  } else if (speechStatus === "playing") {
-                    window.speechSynthesis.pause()
-                    setSpeechStatus("paused")
-                  }
-                }} disabled={!sessionActivated || (speechStatus !== "playing" && speechStatus !== "paused")} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
-                  {speechStatus === "paused" ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
-                  {speechStatus === "paused" ? "Resume" : "Pause"}
-                </button>
-                <button type="button" onClick={handleStop} disabled={speechStatus !== "playing" && speechStatus !== "paused"} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
-                  <span className="size-2.5 rounded-sm bg-slate-600" aria-hidden="true" /> Stop
-                </button>
-                <button type="button" onClick={() => activateAndPlay(false)} disabled={!sessionActivated || preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
-                  <RotateCcw size={14} aria-hidden="true" /> Replay page
-                </button>
-              </div>
-              <button type="button" onClick={handleMute} aria-pressed={preferences.muted} className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                {preferences.muted ? <VolumeX size={15} aria-hidden="true" /> : <Volume2 size={15} aria-hidden="true" />}
-                {preferences.muted ? "Unmute voice" : "Mute voice"}
-              </button>
-              <p className="mt-2 text-[10px] leading-4 text-slate-500">Page and transaction guidance starts automatically. Financial details stay silent unless narration is enabled in Settings. Passwords, PINs, full account numbers, and BPC codes are never spoken.</p>
-            </>
-          )}
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => activateAndPlay(true)} disabled={preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-blue-50 px-2 py-2 text-xs font-semibold text-[#0000ff] disabled:cursor-not-allowed disabled:opacity-40" aria-label="Play current page guidance">
+              <Play size={14} aria-hidden="true" /> Play
+            </button>
+            <button type="button" onClick={speechStatus === "paused" ? resumeSpeech : pauseSpeech} disabled={speechStatus !== "playing" && speechStatus !== "paused"} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
+              {speechStatus === "paused" ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+              {speechStatus === "paused" ? "Resume" : "Pause"}
+            </button>
+            <button type="button" onClick={handleStop} disabled={speechStatus !== "playing" && speechStatus !== "paused"} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
+              <span className="size-2.5 rounded-sm bg-slate-600" aria-hidden="true" /> Stop
+            </button>
+            <button type="button" onClick={() => activateAndPlay(false)} disabled={preferences.muted} className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">
+              <RotateCcw size={14} aria-hidden="true" /> Replay page
+            </button>
+          </div>
+          <button type="button" onClick={handleMute} aria-pressed={preferences.muted} className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+            {preferences.muted ? <VolumeX size={15} aria-hidden="true" /> : <Volume2 size={15} aria-hidden="true" />}
+            {preferences.muted ? "Unmute voice" : "Mute voice"}
+          </button>
+          <p className="mt-2 text-[10px] leading-4 text-slate-500">Page and transaction guidance starts automatically. Financial details stay silent unless narration is enabled in Settings. Passwords, PINs, full account numbers, and BPC codes are never spoken.</p>
         </section>
       )}
       <button
